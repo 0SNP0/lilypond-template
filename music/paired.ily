@@ -1,23 +1,24 @@
-% Concert-pitch paired desks. Independent Voice contexts keep parts I (stems up)
-% and II (stems down) distinct even at unisons, for both conductor scores
-% and the paired PDFs. Individual part files still print each player alone.
+% Shared, concert-pitch desk music. LilyPond's part combiner uses
+% ONE notehead + ONE stem when players I and II are in exact unison;
+% otherwise the two independent voices retain opposing stem directions.
+% #'(0 . 0) combines unisons only: different pitches are NOT silently
+% merged into chords. "a2" marks passages played together.
+% Use \partCombineApart / \partCombineAutomatic in the source phrases if
+% automatic decisions need to be overridden for a particular passage.
+% The original music/*.ily files also feed separate player PDFs and MIDI.
 
-flutesTogether = <<
-  \new Voice = "flutesOne" { \voiceOne \global \introMark \fluteOneMusic }
-  \new Voice = "flutesTwo" { \voiceTwo \global \fluteTwoMusic }
->>
+flutesTogether = \partCombine #'(0 . 0)
+  { \global \introMark \fluteOneMusic }
+  { \global \fluteTwoMusic }
 
-clarinetsTogether = <<
-  \new Voice = "clarinetsOne" { \voiceOne \global \introMark \clarinetOneMusic }
-  \new Voice = "clarinetsTwo" { \voiceTwo \global \clarinetTwoMusic }
->>
+clarinetsTogether = \partCombine #'(0 . 0)
+  { \global \introMark \clarinetOneMusic }
+  { \global \clarinetTwoMusic }
 
-trumpetsTogether = <<
-  \new Voice = "trumpetsOne" { \voiceOne \global \introMark \trumpetOneMusic }
-  \new Voice = "trumpetsTwo" { \voiceTwo \global \trumpetTwoMusic }
->>
+trumpetsTogether = \partCombine #'(0 . 0)
+  { \global \introMark \trumpetOneMusic }
+  { \global \trumpetTwoMusic }
 
-trombonesTogether = <<
-  \new Voice = "trombonesOne" { \voiceOne \global \introMark \tromboneOneMusic }
-  \new Voice = "trombonesTwo" { \voiceTwo \global \tromboneTwoMusic }
->>
+trombonesTogether = \partCombine #'(0 . 0)
+  { \global \introMark \tromboneOneMusic }
+  { \global \tromboneTwoMusic }

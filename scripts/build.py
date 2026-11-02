@@ -20,7 +20,6 @@ PACKAGES = ROOT / "dist" / "packages"
 BUILD = ROOT / "build"
 README = ROOT / "README.md"
 METADATA = ROOT / "metadata.ily"
-REPOSITORY = "0SNP0/lilypond-template"
 METADATA_START = "<!-- SCORE-METADATA:START -->"
 METADATA_END = "<!-- SCORE-METADATA:END -->"
 

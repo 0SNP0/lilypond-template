@@ -1,24 +1,33 @@
-% Shared, concert-pitch desk music. LilyPond's part combiner uses
-% ONE notehead + ONE stem when players I and II are in exact unison;
-% otherwise the two independent voices retain opposing stem directions.
-% #'(0 . 0) combines unisons only: different pitches are NOT silently
-% merged into chords. "a2" marks passages played together.
-% Use \partCombineApart / \partCombineAutomatic in the source phrases if
-% automatic decisions need to be overridden for a particular passage.
-% The original music/*.ily files also feed separate player PDFs and MIDI.
+% CONSERVATIVE paired desks: no automatic single-note unison / "a2".
+% The default \partCombineApart keeps both voices separate even if
+% one individual note happens to match.
+%
+% MANUAL WHOLE-MEASURE UNISON:
+% In music/flute-1.ily, clarinet-1.ily, trumpet-1.ily or trombone-1.ily,
+% insert \partCombineUnisono before the first note of a measure if and
+% only if BOTH players have identical pitches, durations and rests for
+% the ENTIRE measure. At the beginning of the next differing measure,
+% insert \partCombineApart. The first player's original music variable
+% is used for both combined score and solo PDF; the commands do not
+% affect the solo staff, which has no part combiner.
+%
+% Automatic mode can be explicitly re-enabled with
+% \partCombineAutomatic, but it can mark isolated notes "a2" again.
+% For editable examples see docs/PART_COMBINING.md.
+% #'(0 . 0) prevents non-unisons from becoming combined chords.
 
 flutesTogether = \partCombine #'(0 . 0)
-  { \global \introMark \fluteOneMusic }
+  { \partCombineApart \global \introMark \fluteOneMusic }
   { \global \fluteTwoMusic }
 
 clarinetsTogether = \partCombine #'(0 . 0)
-  { \global \introMark \clarinetOneMusic }
+  { \partCombineApart \global \introMark \clarinetOneMusic }
   { \global \clarinetTwoMusic }
 
 trumpetsTogether = \partCombine #'(0 . 0)
-  { \global \introMark \trumpetOneMusic }
+  { \partCombineApart \global \introMark \trumpetOneMusic }
   { \global \trumpetTwoMusic }
 
 trombonesTogether = \partCombine #'(0 . 0)
-  { \global \introMark \tromboneOneMusic }
+  { \partCombineApart \global \introMark \tromboneOneMusic }
   { \global \tromboneTwoMusic }

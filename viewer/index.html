@@ -63,8 +63,7 @@ async function setView(id){
     sheet.className="page";
     sheet.dataset.page=String(page+1);
     const svg=document.importNode(xml.documentElement,true);
-    svg.removeAttribute("width");
-    svg.removeAttribute("height");
+    // Preserve LilyPond's native page dimensions/aspect ratio.
     sheet.appendChild(svg);
     const cursor=document.createElement("div");
     cursor.className="cursor";

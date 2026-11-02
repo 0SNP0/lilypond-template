@@ -35,7 +35,7 @@ class ProjectTests(unittest.TestCase):
         self.assertNotIn('set-paper-size "a3"', normal)
         self.assertIn("instrumentName = \\markup \\fontsize #-3", normal)
         self.assertNotIn("Clarinet in B-flat I", normal)
-        self.assertIn("indent = 18\\\\mm", normal)
+        self.assertIn("indent = 18\\mm", normal)
         self.assertIn("ensembleCompactBookTitle", normal)
         self.assertIn("\\new DrumStaff", normal)
         self.assertEqual(normal.count("\\include \"music/"), 22)
@@ -54,7 +54,7 @@ class ProjectTests(unittest.TestCase):
         self.assertIn("\\compressMMRests", part)
         self.assertNotIn("instrumentName =", part)
         self.assertNotIn("shortInstrumentName =", part)
-        self.assertIn("indent = 0\\\\mm", part)
+        self.assertIn("indent = 0\\mm", part)
         self.assertIn("stretchability . 0", part)
         self.assertIn("\\transpose c d", part)
 

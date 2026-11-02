@@ -243,9 +243,7 @@ def build(*, audio: bool, font: str | None) -> None:
     if audio:
         render_audio(parts, font, naming)
     verify(audio=audio)
-    if audio:
-        # Both PDF and SVG are LilyPond-native; the SVG export also produces
-        # timing, per-view fingerprints and stable measure identifiers.
+    if audio and os.environ.get("LILYPOND_EXPORT_VIEWER") == "1":
         run([sys.executable, str(ROOT / "scripts" / "export.py")])
 
 
@@ -370,23 +368,18 @@ def package() -> None:
             archive.write(item, f"audio/stems/{item.name}")
         archive.write(BUILD / "build-info.json", "build-info.json")
     viewer = ROOT / "dist" / "viewer"
-    if not (viewer / "manifest.json").is_file() or not (viewer / "timeline.json").is_file():
-        raise RuntimeError("Missing SVG synchronization data; run build --audio")
-    print_manifest = ROOT / "dist" / "print-manifest.json"
-    if not print_manifest.is_file():
-        raise RuntimeError("Missing print-manifest.json; run build --audio")
-    with zipfile.ZipFile(PACKAGES / (naming["slug"] + "-viewer-" + naming["revision"] + ".zip"),
-                         "w", zipfile.ZIP_DEFLATED) as archive:
-        for item in sorted(viewer.rglob("*")):
-            if item.is_file():
-                archive.write(item, str(item.relative_to(ROOT / "dist")))
-        archive.write(BUILD / "build-info.json", "build-info.json")
-        # The web bundle is self-contained: include the mix AND all 21 stems.
-        mix = AUDIO / (naming["mix"] + ".mp3")
-        archive.write(mix, f"audio/{mix.name}")
-        for stem in sorted((AUDIO / "stems").glob("*.mp3")):
-            archive.write(stem, f"audio/stems/{stem.name}")
-    print("Ready:", naming["pdf_zip"], naming["audio_zip"], "and SVG viewer data")
+    if (viewer / "manifest.json").is_file() and (viewer / "timeline.json").is_file():
+        archive_name = naming["slug"] + "-viewer-" + naming["revision"] + ".zip"
+        with zipfile.ZipFile(PACKAGES / archive_name, "w", zipfile.ZIP_DEFLATED) as archive:
+            for item in sorted(viewer.rglob("*")):
+                if item.is_file():
+                    archive.write(item, str(item.relative_to(ROOT / "dist")))
+            archive.write(BUILD / "build-info.json", "build-info.json")
+            mix = AUDIO / (naming["mix"] + ".mp3")
+            archive.write(mix, f"audio/{mix.name}")
+            for stem in sorted((AUDIO / "stems").glob("*.mp3")):
+                archive.write(stem, f"audio/stems/{stem.name}")
+    print("Ready:", naming["pdf_zip"], naming["audio_zip"])
 
 
 def main() -> None:

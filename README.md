@@ -1,33 +1,33 @@
-# Orchestral Sketch — Ensemble, Assemble
+# The Snowstorm — Waltz · Ensemble, Assemble
 
 [![Build](https://github.com/0SNP0/lilypond-template/actions/workflows/build.yml/badge.svg)](https://github.com/0SNP0/lilypond-template/actions/workflows/build.yml)
 [![Releases](https://img.shields.io/github/v/release/0SNP0/lilypond-template?label=latest%20release)](https://github.com/0SNP0/lilypond-template/releases/latest)
 
 ## Партитура и партии
 
-Короткий оркестровый этюд для **Ensemble, Assemble**. PDF отдельных партий, общая партитура в транспонированном и концертном строе, а также звуковые дорожки доступны в выпусках проекта.
+Вальс Георгия Свиридова из «Метели» для **Ensemble, Assemble**. PDF отдельных партий, общая партитура в транспонированном и концертном строе, а также звуковые дорожки доступны в выпусках проекта.
 
 **[Скачать последнюю опубликованную партитуру и партии](https://github.com/0SNP0/lilypond-template/releases/latest)** · [Все версии](https://github.com/0SNP0/lilypond-template/releases).
 
-В каждом релизе: **27 PDF-файлов** (две общие партитуры, 21 индивидуальная партия и четыре совмещённые партии), два архива PDF и аудио и отдельный архив SVG с просмотрщиком и данными синхронизации. Отпечатки партий отдельно входят в архив PDF. В именах всех готовых файлов — короткое название произведения и версия Git. Аудиоархив содержит общий MP3 (с нормализацией громкости до −16 LUFS и ограничением пиков −1,5 dBTP), 21 отдельную инструментальную MP3-дорожку и MIDI. Дополнительно GitHub Actions хранит артефакты новых сборок на ограниченный срок.
+В каждом релизе: PDF полной и концертной партитур и всех имеющихся партий, два архива PDF и аудио и отдельный архив SVG с просмотрщиком и данными синхронизации. Отпечатки партий отдельно входят в архив PDF. В именах всех готовых файлов — короткое название произведения и версия Git. Аудиоархив содержит общий MP3 (с нормализацией громкости до −16 LUFS и ограничением пиков −1,5 dBTP), 21 отдельную инструментальную MP3-дорожку и MIDI. Дополнительно GitHub Actions хранит артефакты новых сборок на ограниченный срок.
 
 ## Сведения о произведении
 
 | Поле | Значение |
 |---|---|
 <!-- SCORE-METADATA:START -->
-| Произведение | Orchestral Sketch |
-| Короткое имя файлов | orchestral-sketch |
-| Подзаголовок | An original eight-bar orchestral example |
+| Произведение | The Snowstorm |
+| Короткое имя файлов | sviridov-snowstorm-waltz |
+| Подзаголовок | Waltz |
 | Оркестр | Ensemble, Assemble |
-| Композитор | Original demonstration music |
+| Композитор | Georgy Sviridov |
 | Автор текста | — |
 | Перевод | — |
 | Транскрипция | — |
-| Аранжировка | Template contributor — replace for your arrangement |
+| Аранжировка | — |
 | Корректура | — |
-| Источник | Original demo, no external score used |
-| Авторские права | Original demonstration music; replace credits and rights for real arrangements |
+| Источник | Imported from user-provided MusicXML; proofread before performance |
+| Авторские права | Copyright belongs to the respective rightsholders |
 <!-- SCORE-METADATA:END -->
 
 ## Для аранжировщика

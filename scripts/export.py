@@ -210,7 +210,6 @@ def render_svg(source: Path, view_id: str, naming: dict) -> list[Path]:
     # Only SVG gets tiny bar numbers on each measure. These grobs carry
     # a class, so the rendered coordinates can be extracted reliably.
     wrapper.write_text(
-        '\\version "2.26.0"\n'
         '\\layout {\n'
         '  \\context { \\Score\n'
         '    barNumberVisibility = #all-bar-numbers-visible\n'
@@ -320,21 +319,22 @@ def main() -> None:
             music_file = ROOT / "build" / "midi" / (b.part_name(part, naming) + ".midi")
             music_hash = music_digest(music_file)
         elif kind == "combined":
-            # Special combined desk names are pluralized and not always equal
-            # to the stable source name; list both musical dependencies below.
-            component_map = {
-                "flutes-1-2": ("flute-1", "flute-2"),
-                "clarinets-1-2": ("clarinet-1", "clarinet-2"),
-                "trumpets-1-2": ("trumpet-1", "trumpet-2"),
-                "trombones-1-2": ("trombone-1", "trombone-2"),
-            }
-            identities = component_map.get(part.stem)
-            if identities is None:
-                raise RuntimeError("Combined desk needs a source mapping: " + part.stem)
-            music_hash = digest(json.dumps([
-                music_digest(ROOT / "build" / "midi" / (b.part_name(ROOT / "parts" / (ident + ".ly"), naming) + ".midi"))
-                for ident in identities
-            ], separators=(",", ":")).encode())
+            # Resolve musical dependencies from the part's own LilyPond
+            # include statements, not a hardcoded list of instrument names.
+            includes = re.findall(
+                r'\\include\s+"(?:\\.\\./)+music/([^"]+)"',
+                part.read_text(encoding="utf-8"),
+            )
+            sources = [
+                ROOT / "music" / name for name in includes
+                if name not in ("global.ily", "paired.ily")
+            ]
+            if not sources or any(not path.is_file() for path in sources):
+                raise RuntimeError("Combined part music sources missing: " + str(part))
+            music_hash = digest(json.dumps(
+                [digest(path.read_bytes()) for path in sources],
+                separators=(",", ":"),
+            ).encode())
         else:
             music_hash = music_digest(b.AUDIO / (naming["mix"] + ".midi"))
         print_hash = print_digest(pages, naming["revision"])

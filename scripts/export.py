@@ -216,7 +216,7 @@ def render_svg(source: Path, view_id: str, naming: dict) -> list[Path]:
         '    barNumberVisibility = #all-bar-numbers-visible\n'
         '    \\override BarNumber.break-visibility = ##(#t #t #t)\n'
         '    \\override BarNumber.font-size = #-7\n'
-        '    \\override BarNumber.output-attributes = #\\\'((class . "ea-measure-number"))\n'
+        '    \\override BarNumber.output-attributes = #\'((class . "ea-measure-number"))\n'
         '  }\n'
         '}\n'
         f'\\include "{source.as_posix()}"\n',

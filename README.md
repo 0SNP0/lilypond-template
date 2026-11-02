@@ -8,7 +8,7 @@
 Короткий оркестровый этюд для **Ensemble, Assemble**. PDF отдельных партий, общая партитура в транспонированном и концертном строе, а также звуковые дорожки доступны в выпусках проекта.
 
 <!-- LATEST-RELEASE:START -->
-**Последняя опубликованная версия: [v0.1](https://github.com/0SNP0/lilypond-template/releases/tag/v0.1).** [Скачать партии и аудио](https://github.com/0SNP0/lilypond-template/releases/tag/v0.1).
+**Последняя опубликованная версия: [v0.2](https://github.com/0SNP0/lilypond-template/releases/tag/v0.2).** [Скачать партии и аудио](https://github.com/0SNP0/lilypond-template/releases/tag/v0.2).
 <!-- LATEST-RELEASE:END -->
 
 В каждом релизе: **23 PDF-файла** по отдельности, архив `scores-pdf.zip` со всеми PDF и `audio.zip` со сводным MP3, 21 отдельной инструментальной MP3-дорожкой и MIDI. Дополнительно GitHub Actions хранит артефакты новых сборок на ограниченный срок.

@@ -150,6 +150,7 @@ violinsTwoMusic = {
   gis'8 \ff e''8 \ff e''4-. dis''4-. |
   cis''4-. r4 r4 |
   % Bars 117–120
+  \set Staff.midiInstrument = "pizzicato strings"
   r4 ^\markup \italic { "pizz." } e'4 ^\markup \italic { "pizz." } \p e'4 \p |
   r4 e'4 e'4 |
   r4 e'4 e'4 |
@@ -198,6 +199,7 @@ violinsTwoMusic = {
   R2. |
   R2. |
   R2. |
+  \set Staff.midiInstrument = "violin"
   R2. ^\markup \italic { "arco" } |
   % Bars 157–160
   r4 ^\markup \italic { "div." } <e' gis'>4 ^\markup \italic { "div." } \mf <e' gis'>4 \mf |

@@ -150,6 +150,7 @@ contrabassesMusic = {
   gis,4 \ff r4 \ff gis,4 |
   cis4 r4 r4 |
   % Bars 117–120
+  \set Staff.midiInstrument = "pizzicato strings"
   e4 ^\markup \italic { "pizz." } \p r4 ^\markup \italic { "pizz." } \p r4 |
   e4 r4 r4 |
   e4 r4 r4 |
@@ -198,6 +199,7 @@ contrabassesMusic = {
   R2. |
   R2. |
   R2. |
+  \set Staff.midiInstrument = "contrabass"
   R2. ^\markup \italic { "arco" } |
   % Bars 157–160
   cis4 \mf r4 \mf r4 |

@@ -150,6 +150,7 @@ violoncellosMusic = {
   gis,4 \ff r4 \ff gis,4 |
   cis4 r4 r4 |
   % Bars 117–120
+  \set Staff.midiInstrument = "pizzicato strings"
   r4 ^\markup \italic { "pizz." } gis4 ^\markup \italic { "pizz." } \p gis4 \p |
   r4 gis4 gis4 |
   r4 a4 a4 |
@@ -198,6 +199,7 @@ violoncellosMusic = {
   R2. |
   R2. |
   R2. |
+  \set Staff.midiInstrument = "cello"
   R2. ^\markup \italic { "arco" } |
   % Bars 157–160
   cis4 \mf r4 \mf r4 |

@@ -150,6 +150,7 @@ violasMusic = {
   e'8 \ff gis'8 \ff gis'4-. fis'4-. |
   e'4-. r4 r4 |
   % Bars 117–120
+  \set Staff.midiInstrument = "pizzicato strings"
   r4 ^\markup \italic { "pizz." } b4 ^\markup \italic { "pizz." } \p b4 \p |
   r4 b4 b4 |
   r4 cis'4 cis'4 |
@@ -198,6 +199,7 @@ violasMusic = {
   R2. |
   R2. |
   R2. |
+  \set Staff.midiInstrument = "viola"
   R2. ^\markup \italic { "arco" } |
   % Bars 157–160
   r4 ^\markup \italic { "div." } <gis cis'>4-_ ^\markup \italic { "div." } \mf <gis cis'>4 \mf |

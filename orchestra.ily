@@ -25,7 +25,7 @@
 
 ensembleScore = <<
   \new StaffGroup <<
-    \new Staff \with { instrumentName = \markup \abs-fontsize #10 "Picc." shortInstrumentName = \markup \abs-fontsize #10 "Picc." midiInstrument = "piccolo" } { << { \global } { \tag #'written { \piccoloMusic } \tag #'concert { \transpose c c' \piccoloMusic } } >> }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #10 "Picc." shortInstrumentName = \markup \abs-fontsize #10 "Picc." midiInstrument = "piccolo" } { << { \global } { \rehearsalMarks } { \tag #'written { \piccoloMusic } \tag #'concert { \transpose c c' \piccoloMusic } } >> }
     \new Staff \with { instrumentName = \markup \abs-fontsize #10 "Fl. I–II" shortInstrumentName = \markup \abs-fontsize #10 "Fl. I–II" midiInstrument = "flute" } { << { \global } { \tag #'written { \flutesOneTwoMusic } \tag #'concert { \transpose c c \flutesOneTwoMusic } } >> }
     \new Staff \with { instrumentName = \markup \abs-fontsize #10 "Ob. I–II" shortInstrumentName = \markup \abs-fontsize #10 "Ob. I–II" midiInstrument = "oboe" } { << { \global } { \tag #'written { \oboesOneTwoMusic } \tag #'concert { \transpose c c \oboesOneTwoMusic } } >> }
     \new Staff \with { instrumentName = \markup \abs-fontsize #10 "E. Hn." shortInstrumentName = \markup \abs-fontsize #10 "E. Hn." midiInstrument = "english horn" } { << { \global } { \tag #'written { \englishHornMusic } \tag #'concert { \transpose c f, \englishHornMusic } } >> }

@@ -1,7 +1,11 @@
-% Universal rhythmic / rehearsal timeline for this score.
-% This is musical data, not build configuration: every part includes it.
+% Common metric timeline: source of time and measure lengths.
+% The first conductor staff uses rehearsalMarks; every individual part
+% also uses it, so boxes do not repeat on all staves in the full score.
 global = {
   \time 3/4
+  s2.*268
+}
+rehearsalMarks = {
   \tempo 2. = 66
   % Bars 1–4
   s2. |

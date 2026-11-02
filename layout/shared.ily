@@ -1,4 +1,6 @@
-% Common A4 paper and headers for preview, local build and CI.
+% One title design for both conductor scores and individual parts.
+% Text sizes are absolute, so shrinking a full score's staff does not
+% shrink its title, credits, headers or footers.
 ensembleHeader = \markup {
   \overlay {
     \fill-line {
@@ -6,7 +8,13 @@ ensembleHeader = \markup {
       \null
       \abs-fontsize #10 \fromproperty #'page:page-number-string
     }
-    \fill-line { \null \abs-fontsize #10 \fromproperty #'header:title \null }
+    \fill-line {
+      \null
+      % The first page already has the work title in the title block.
+      \unless \on-first-page
+        \abs-fontsize #10 \fromproperty #'header:title
+      \null
+    }
   }
 }
 
@@ -14,50 +22,38 @@ ensembleFooter = \markup {
   \fill-line { \null \abs-fontsize #10 \footerLabel \null }
 }
 
-ensemblePartTitle = \markup {
-  \column {
-    \vspace #1
-    \fill-line {
-      \null
-      \center-column {
-        \abs-fontsize #25 \bold \fromproperty #'header:title
-        \abs-fontsize #14 \fromproperty #'header:subtitle
+% Elegant book-serif typography. Crucially, title/subtitle and credits
+% occupy SEPARATE vertical rows: right-aligned credits never sit over
+% the center-aligned work title. Use the same markup for score and parts.
+ensembleBookTitle = \markup {
+  \override #'(fonts . ((serif . "TeX Gyre Pagella"))) {
+    \column {
+      \vspace #0.8
+      \fill-line {
+        \null
+        \center-column {
+          \serif \bold \abs-fontsize #23
+            \fromproperty #'header:title
+          \vspace #0.35
+          \serif \italic \abs-fontsize #12
+            \fromproperty #'header:subtitle
+        }
+        \null
       }
-      \null
-    }
-    \vspace #1
-    \fill-line {
-      \left-column {
-        \fromproperty #'header:poet
-        \fromproperty #'header:translator
+      \vspace #1.4
+      \fill-line {
+        \left-column {
+          \serif \abs-fontsize #10 \fromproperty #'header:poet
+          \serif \abs-fontsize #10 \fromproperty #'header:translator
+        }
+        \null
+        \right-column {
+          \serif \abs-fontsize #10 \fromproperty #'header:composer
+          \serif \abs-fontsize #10 \fromproperty #'header:transcriber
+          \serif \abs-fontsize #10 \fromproperty #'header:arranger
+        }
       }
-      \null
-      \right-column {
-        \fromproperty #'header:composer
-        \fromproperty #'header:transcriber
-        \fromproperty #'header:arranger
-      }
-    }
-  }
-}
-
-ensembleScoreTitle = \markup {
-  \column {
-    \fill-line {
-      \null
-      \center-column {
-        \abs-fontsize #21 \bold \fromproperty #'header:title
-        \abs-fontsize #12 \fromproperty #'header:subtitle
-      }
-      \null
-    }
-    \vspace #0.3
-    \fill-line {
-      \null
-      \right-column {
-        \abs-fontsize #10 \fromproperty #'header:composer
-        \abs-fontsize #10 \fromproperty #'header:arranger
-      }
+      \vspace #0.7
     }
   }
 }

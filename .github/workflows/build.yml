@@ -30,7 +30,7 @@ jobs:
       - name: Install audio and validation dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends fluidsynth fluid-soundfont-gm ffmpeg python3-pypdf
+          sudo apt-get install -y --no-install-recommends fluidsynth fluid-soundfont-gm ffmpeg python3-pypdf fonts-texgyre
       - name: Check README matches score metadata
         run: python3 scripts/build.py readme-check
       - name: Build all PDFs and MP3 tracks

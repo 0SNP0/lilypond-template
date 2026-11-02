@@ -23,6 +23,6 @@
   evenHeaderMarkup = \ensembleHeader
   oddFooterMarkup = \ensembleFooter
   evenFooterMarkup = \ensembleFooter
-  bookTitleMarkup = \ensemblePartTitle
+  bookTitleMarkup = \ensembleBookTitle
 }
 % Set page-count inside a specific part .ly if it must occupy N pages.

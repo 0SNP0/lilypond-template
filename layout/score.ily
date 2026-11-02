@@ -40,7 +40,7 @@
   evenHeaderMarkup = \ensembleHeader
   oddFooterMarkup = \ensembleFooter
   evenFooterMarkup = \ensembleFooter
-  bookTitleMarkup = \ensembleScoreTitle
+  bookTitleMarkup = \ensembleBookTitle
 }
 
 scoreCompactLayout = \layout {

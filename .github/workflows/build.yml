@@ -51,6 +51,7 @@ jobs:
             dist/packages/*.zip
             dist/viewer/**/*.svg
             dist/viewer/*.json
+            dist/print-manifest.json
           if-no-files-found: error
           retention-days: 14
   release:

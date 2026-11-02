@@ -101,7 +101,7 @@ def names(rev: str) -> dict[str, str]:
         raise RuntimeError("Invalid workFileSlug in metadata.ily")
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._+-]*", rev):
         raise RuntimeError(f"Invalid revision for filename: {rev}")
-    return dict(slug=slug, revision=rev, score=f"{slug}-{rev}",
+    return dict(slug=slug, revision=rev, score=f"{slug}-score-{rev}",
                 concert=f"{slug}-concert-score-{rev}", mix=f"{slug}-orchestra-{rev}",
                 pdf_zip=f"{slug}-pdf-{rev}.zip", audio_zip=f"{slug}-audio-{rev}.zip")
 
@@ -289,12 +289,20 @@ def render_audio(parts: list[Path], soundfont_path: str | None,
         ])
     # No MP3 generation loss: mix PCM files, not already encoded stems.
     inputs = [arg for path in wavs for arg in ("-i", str(path))]
-    mix = (f"amix=inputs={len(wavs)}:duration=longest:"
-           "dropout_transition=0:normalize=1,alimiter=limit=0.95")
+    # The previous amix normalize=1 divided by the number of instruments
+    # (21), leaving a noticeably quieter result than any individual stem.
+    # Sum in floating point and then perform EBU R128 loudness normalization;
+    # loudnorm also imposes a true-peak limit so the mix does not clip.
+    mix = (
+        f"amix=inputs={len(wavs)}:duration=longest:"
+        "dropout_transition=0:normalize=0,"
+        "loudnorm=I=-16:TP=-1.5:LRA=11"
+    )
     run([
         ffmpeg, "-hide_banner", "-loglevel", "error", "-y",
         *inputs, "-filter_complex", mix,
-        "-c:a", "libmp3lame", "-q:a", "0", str(AUDIO / (naming["mix"] + ".mp3")),
+        "-ar", "48000", "-c:a", "libmp3lame", "-q:a", "0",
+        str(AUDIO / (naming["mix"] + ".mp3")),
     ])
     shutil.rmtree(wav_dir)
 
@@ -353,6 +361,7 @@ def package() -> None:
                    else "parts")
             archive.write(item, f"{sub}/{item.name}")
         archive.write(BUILD / "build-info.json", "build-info.json")
+        archive.write(ROOT / "dist" / "print-manifest.json", "print-manifest.json")
     with zipfile.ZipFile(PACKAGES / naming["audio_zip"], "w", zipfile.ZIP_DEFLATED) as archive:
         for ext in (".mp3", ".midi"):
             item = AUDIO / (naming["mix"] + ext)
@@ -362,16 +371,21 @@ def package() -> None:
         archive.write(BUILD / "build-info.json", "build-info.json")
     viewer = ROOT / "dist" / "viewer"
     if not (viewer / "manifest.json").is_file() or not (viewer / "timeline.json").is_file():
-        raise RuntimeError("Missing SVG synchronization/print hashes; run build --audio")
+        raise RuntimeError("Missing SVG synchronization data; run build --audio")
+    print_manifest = ROOT / "dist" / "print-manifest.json"
+    if not print_manifest.is_file():
+        raise RuntimeError("Missing print-manifest.json; run build --audio")
     with zipfile.ZipFile(PACKAGES / (naming["slug"] + "-viewer-" + naming["revision"] + ".zip"),
                          "w", zipfile.ZIP_DEFLATED) as archive:
         for item in sorted(viewer.rglob("*")):
             if item.is_file():
                 archive.write(item, str(item.relative_to(ROOT / "dist")))
         archive.write(BUILD / "build-info.json", "build-info.json")
-        # Standalone web bundle includes its audio; it works without audio.zip.
+        # The web bundle is self-contained: include the mix AND all 21 stems.
         mix = AUDIO / (naming["mix"] + ".mp3")
         archive.write(mix, f"audio/{mix.name}")
+        for stem in sorted((AUDIO / "stems").glob("*.mp3")):
+            archive.write(stem, f"audio/stems/{stem.name}")
     print("Ready:", naming["pdf_zip"], naming["audio_zip"], "and SVG viewer data")
 
 

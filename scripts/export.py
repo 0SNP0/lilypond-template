@@ -320,7 +320,6 @@ def main() -> None:
             music_file = ROOT / "build" / "midi" / (b.part_name(part, naming) + ".midi")
             music_hash = music_digest(music_file)
         elif kind == "combined":
-            stem1, stem2 = part.stem.rsplit("-", 2)[0] + "-1", part.stem.rsplit("-", 2)[0] + "-2"
             # Special combined desk names are pluralized and not always equal
             # to the stable source name; list both musical dependencies below.
             component_map = {
@@ -345,28 +344,74 @@ def main() -> None:
             "pages": [str(file.relative_to(VIEWER)) for file in pages],
             "measure_anchors": anchors,
             "anchors_found": len({a["measure_id"] for a in anchors}),
+        }
+        if kind == "score":
+            pdf_basename = naming["score"]
+        elif kind == "concert-score":
+            pdf_basename = naming["concert"]
+        else:
+            pdf_basename = b.part_name(part, naming)
+        notation[view_id] = {
+            "kind": kind,
+            "pdf": pdf_basename + ".pdf",
             "music_hash": music_hash,
             "print_hash": print_hash,
         }
-        notation[view_id] = {"music_hash": music_hash, "print_hash": print_hash}
     manifest = {
         "schema": SCHEMA,
         "revision": naming["revision"],
         "work_slug": naming["slug"],
         "audio": "../audio/" + naming["mix"] + ".mp3",
+        "audio_tracks": [
+            {
+                "id": "orchestra",
+                "label": "Весь оркестр",
+                "path": "../audio/" + naming["mix"] + ".mp3",
+            },
+            *[
+                {
+                    "id": part.stem,
+                    "label": part.stem.replace("-", " ").title(),
+                    "path": "../audio/stems/" + b.part_name(part, naming) + ".mp3",
+                }
+                for part in parts
+            ],
+        ],
         "shared_timeline": "timeline.json",
         "views": views,
-        "hashes": notation,
         "notes": [
             "Every measure ID is shared across all score and part views.",
             "Only recovered LilyPond SVG anchors have a geometric target; missing anchors are never fabricated.",
-            "music_hash ignores nonmusical MIDI track metadata.",
-            "print_hash is provisional; it is a rendered SVG fingerprint with textual Git revision masked.",
+            "Audio tracks share the same MIDI-derived measure timeline; MP3 delay is not compensated.",
         ],
     }
     (VIEWER / "manifest.json").write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8",
     )
+    print_manifest = {
+        "schema": "ensemble-assemble-print-manifest-v1",
+        "revision": naming["revision"],
+        "work_slug": naming["slug"],
+        "documents": notation,
+        "notes": [
+            "This manifest is independent of the SVG playback viewer.",
+            "music_hash fingerprints normalized MIDI music events, not printed engraving.",
+            "print_hash is a provisional SVG rendering fingerprint with Git revision masked.",
+            "Do not automatically approve reuse of printed parts based on these hashes yet.",
+        ],
+    }
+    (ROOT / "dist" / "print-manifest.json").write_text(
+        json.dumps(print_manifest, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    if len(manifest["audio_tracks"]) != 1 + len(parts):
+        raise RuntimeError("Audio track manifest is incomplete")
+    for track in manifest["audio_tracks"]:
+        target = (VIEWER / track["path"]).resolve()
+        if not target.is_file():
+            raise RuntimeError("Missing viewer audio track: " + str(target))
+    if not all(v["anchors_found"] == len(timeline["measures"]) for v in views.values()):
+        raise RuntimeError("Some SVG views are missing their measure anchors")
     print("SVG and synchronization data:", len(views), "views,",
           len(timeline["measures"]), "measures")
     for key, view in views.items():

@@ -3,6 +3,12 @@
 % in ../flute-1.ly and ../flute-2.ly (analogous for the other pairs).
 \include "../../metadata.ily"
 \include "../../music/global.ily"
+\include "../../music/flute-1.ily"
+\include "../../music/flute-2.ily"
+\include "../../music/clarinet-1.ily"
+\include "../../music/clarinet-2.ily"
+\include "../../music/trumpet-1.ily"
+\include "../../music/trumpet-2.ily"
 \include "../../music/trombone-1.ily"
 \include "../../music/trombone-2.ily"
 \include "../../music/paired.ily"

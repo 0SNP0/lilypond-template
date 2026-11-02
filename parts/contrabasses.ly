@@ -1,33 +1,6 @@
-\version "2.24.3"
-% Standalone, directly previewable part; edit music in ../music/contrabasses.ily
+\version "2.26.0"
 \include "../metadata.ily"
-\include "../music/global.ily"
 \include "../music/contrabasses.ily"
-\include "../layout/part.ily"
-
-\header {
-  title = \workTitle
-  subtitle = \workSubtitle
-  composer = \composerCredit
-  poet = \lyricistCredit
-  translator = \translatorCredit
-  transcriber = \transcriberCredit
-  arranger = \arrangerCredit
-  instrument = "Contrabasses"
-  copyright = \rightsCredit
-  tagline = ##f
-}
-
-% If necessary: add \paper { page-count = #2 } here, only for this part.
-% No instrumentName: the part is identified in the page header.
-
-\score {
-  \new Staff \with { midiInstrument = "contrabass" } { \clef bass \compressMMRests { \transpose c c' { \global \introMark \doubleBassMusic } } }
-  \layout { }
-}
-
-% Separate concert-pitch MIDI for independently rendered rehearsal audio.
-\score {
-  \new Staff \with { midiInstrument = "contrabass" } { \clef bass \global \introMark \doubleBassMusic }
-  \midi { }
-}
+\paper { #(set-paper-size "a4") top-margin=15\mm bottom-margin=15\mm left-margin=15\mm right-margin=15\mm ragged-last-bottom=##t }
+\header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Contrabasses" tagline = ##f }
+\score { \new Staff { \contrabassesMusic } \layout { } }

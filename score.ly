@@ -1,28 +1,7 @@
-\version "2.24.3"
-% Open THIS file in Frescobaldi or VS Code to preview the full score.
+\version "2.26.0"
 \include "orchestra.ily"
-\include "layout/score.ily"
-
-\header {
-  title = \workTitle
-  subtitle = \workSubtitle
-  composer = \composerCredit
-  poet = \lyricistCredit
-  translator = \translatorCredit
-  transcriber = \transcriberCredit
-  arranger = \arrangerCredit
-  instrument = "Full Score"
-  copyright = \rightsCredit
-  tagline = ##f
-}
-
-\score {
-  \keepWithTag #'written \ensembleScore
-  \scoreCompactLayout
-}
-
-% Concert pitch MIDI; written transpositions are only for printed score.
-\score {
-  \keepWithTag #'concert \ensembleScore
-  \midi { \context { \Score midiChannelMapping = #'instrument } }
-}
+\paper { #(set-paper-size "a4") top-margin=4\mm bottom-margin=4\mm left-margin=3\mm right-margin=3\mm ragged-last-bottom=##f }
+#(set-global-staff-size 9)
+\header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit tagline = ##f }
+\score { \keepWithTag #'written \sviridovScore \layout { } }
+\score { \keepWithTag #'concert \sviridovScore \midi { } }

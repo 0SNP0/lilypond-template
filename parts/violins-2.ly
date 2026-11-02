@@ -1,33 +1,6 @@
-\version "2.24.3"
-% Standalone, directly previewable part; edit music in ../music/violins-2.ily
+\version "2.26.0"
 \include "../metadata.ily"
-\include "../music/global.ily"
 \include "../music/violins-2.ily"
-\include "../layout/part.ily"
-
-\header {
-  title = \workTitle
-  subtitle = \workSubtitle
-  composer = \composerCredit
-  poet = \lyricistCredit
-  translator = \translatorCredit
-  transcriber = \transcriberCredit
-  arranger = \arrangerCredit
-  instrument = "Violins II"
-  copyright = \rightsCredit
-  tagline = ##f
-}
-
-% If necessary: add \paper { page-count = #2 } here, only for this part.
-% No instrumentName: the part is identified in the page header.
-
-\score {
-  \new Staff \with { midiInstrument = "violin" } { \compressMMRests { \global \introMark \violinTwoMusic } }
-  \layout { }
-}
-
-% Separate concert-pitch MIDI for independently rendered rehearsal audio.
-\score {
-  \new Staff \with { midiInstrument = "violin" } { \global \introMark \violinTwoMusic }
-  \midi { }
-}
+\paper { #(set-paper-size "a4") top-margin=15\mm bottom-margin=15\mm left-margin=15\mm right-margin=15\mm ragged-last-bottom=##t }
+\header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Violins II" tagline = ##f }
+\score { \new Staff { \violins2Music } \layout { } }

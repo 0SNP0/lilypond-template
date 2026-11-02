@@ -1,3 +1,11 @@
+% Custom predicate defined here rather than relying on version-specific
+% internal title helpers: hide the work title on the first page only.
+#(define (ea-not-first-page layout props arg)
+   (if (not (= (chain-assoc-get 'page:page-number props -1)
+               (ly:output-def-lookup layout 'first-page-number)))
+       (interpret-markup layout props arg)
+       empty-stencil))
+
 % One title design for both conductor scores and individual parts.
 % Text sizes are absolute, so shrinking a full score's staff does not
 % shrink its title, credits, headers or footers.
@@ -11,7 +19,7 @@ ensembleHeader = \markup {
     \fill-line {
       \null
       % The first page already has the work title in the title block.
-      \on-the-fly #not-first-page
+      \on-the-fly #ea-not-first-page
         \abs-fontsize #10 \fromproperty #'header:title
       \null
     }

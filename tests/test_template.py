@@ -31,7 +31,7 @@ class ProjectTests(unittest.TestCase):
         self.assertIn("\\transpose c d'", normal)
         self.assertNotIn("\\transpose c d'", concert)
         self.assertIn('set-paper-size "a4"', normal)
-        self.assertIn('ragged-last-bottom = ##t', normal)
+        self.assertIn('ragged-last-bottom = ##f', normal)
         self.assertNotIn('set-paper-size "a3"', normal)
         self.assertIn("instrumentName = \\markup \\fontsize #-3", normal)
         self.assertNotIn("Clarinet in B-flat I", normal)

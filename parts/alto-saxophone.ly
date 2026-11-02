@@ -1,8 +1,8 @@
 \version "2.24.3"
-% Standalone, directly previewable part; edit music in ../music/alto-sax.ily
+% Standalone, directly previewable part; edit music in ../music/alto-saxophone.ily
 \include "../metadata.ily"
 \include "../music/global.ily"
-\include "../music/alto-sax.ily"
+\include "../music/alto-saxophone.ily"
 \include "../layout/part.ily"
 
 \header {

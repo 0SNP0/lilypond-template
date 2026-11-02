@@ -1,8 +1,8 @@
 \version "2.24.3"
-% Standalone, directly previewable part; edit music in ../music/soprano-sax.ily
+% Standalone, directly previewable part; edit music in ../music/violins-1.ily
 \include "../metadata.ily"
 \include "../music/global.ily"
-\include "../music/soprano-sax.ily"
+\include "../music/violins-1.ily"
 \include "../layout/part.ily"
 
 \header {
@@ -13,7 +13,7 @@
   translator = \translatorCredit
   transcriber = \transcriberCredit
   arranger = \arrangerCredit
-  instrument = "Soprano Saxophone in B-flat"
+  instrument = "Violins I"
   copyright = \rightsCredit
   tagline = ##f
 }
@@ -22,12 +22,12 @@
 % No instrumentName: the part is identified in the page header.
 
 \score {
-  \new Staff \with { midiInstrument = "soprano sax" } { \compressMMRests { \transpose c d { \global \introMark \sopranoSaxMusic } } }
+  \new Staff \with { midiInstrument = "violin" } { \compressMMRests { \global \introMark \violinOneMusic } }
   \layout { }
 }
 
 % Separate concert-pitch MIDI for independently rendered rehearsal audio.
 \score {
-  \new Staff \with { midiInstrument = "soprano sax" } { \global \introMark \sopranoSaxMusic }
+  \new Staff \with { midiInstrument = "violin" } { \global \introMark \violinOneMusic }
   \midi { }
 }

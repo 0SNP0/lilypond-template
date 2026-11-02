@@ -1,8 +1,8 @@
 \version "2.24.3"
-% Standalone, directly previewable part; edit music in ../music/violin-1.ily
+% Standalone, directly previewable part; edit music in ../music/violoncellos.ily
 \include "../metadata.ily"
 \include "../music/global.ily"
-\include "../music/violin-1.ily"
+\include "../music/violoncellos.ily"
 \include "../layout/part.ily"
 
 \header {
@@ -13,7 +13,7 @@
   translator = \translatorCredit
   transcriber = \transcriberCredit
   arranger = \arrangerCredit
-  instrument = "Violin I"
+  instrument = "Violoncellos"
   copyright = \rightsCredit
   tagline = ##f
 }
@@ -22,12 +22,12 @@
 % No instrumentName: the part is identified in the page header.
 
 \score {
-  \new Staff \with { midiInstrument = "violin" } { \compressMMRests { \global \introMark \violinOneMusic } }
+  \new Staff \with { midiInstrument = "cello" } { \clef bass \compressMMRests { \global \introMark \celloMusic } }
   \layout { }
 }
 
 % Separate concert-pitch MIDI for independently rendered rehearsal audio.
 \score {
-  \new Staff \with { midiInstrument = "violin" } { \global \introMark \violinOneMusic }
+  \new Staff \with { midiInstrument = "cello" } { \clef bass \global \introMark \celloMusic }
   \midi { }
 }

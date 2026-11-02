@@ -1,8 +1,8 @@
 \version "2.24.3"
-% Standalone, directly previewable part; edit music in ../music/viola.ily
+% Standalone, directly previewable part; edit music in ../music/contrabasses.ily
 \include "../metadata.ily"
 \include "../music/global.ily"
-\include "../music/viola.ily"
+\include "../music/contrabasses.ily"
 \include "../layout/part.ily"
 
 \header {
@@ -13,7 +13,7 @@
   translator = \translatorCredit
   transcriber = \transcriberCredit
   arranger = \arrangerCredit
-  instrument = "Viola"
+  instrument = "Contrabasses"
   copyright = \rightsCredit
   tagline = ##f
 }
@@ -22,12 +22,12 @@
 % No instrumentName: the part is identified in the page header.
 
 \score {
-  \new Staff \with { midiInstrument = "viola" } { \clef alto \compressMMRests { \global \introMark \violaMusic } }
+  \new Staff \with { midiInstrument = "contrabass" } { \clef bass \compressMMRests { \transpose c c' { \global \introMark \doubleBassMusic } } }
   \layout { }
 }
 
 % Separate concert-pitch MIDI for independently rendered rehearsal audio.
 \score {
-  \new Staff \with { midiInstrument = "viola" } { \clef alto \global \introMark \violaMusic }
+  \new Staff \with { midiInstrument = "contrabass" } { \clef bass \global \introMark \doubleBassMusic }
   \midi { }
 }

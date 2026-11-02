@@ -1,6 +1,8 @@
 \version "2.24.3"
 % Canonical credits: Ensemble, Assemble is the orchestra, not the arranger.
 workTitle = "Orchestral Sketch"
+% Portable short basename for exports; the full title stays on the score.
+workFileSlug = "orchestral-sketch"
 workSubtitle = "An original eight-bar orchestral example"
 composerCredit = "Original demonstration music"
 lyricistCredit = ""

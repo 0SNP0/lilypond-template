@@ -1,8 +1,8 @@
 \version "2.24.3"
-% Standalone, directly previewable part; edit music in ../music/tenor-sax.ily
+% Standalone, directly previewable part; edit music in ../music/soprano-saxophone.ily
 \include "../metadata.ily"
 \include "../music/global.ily"
-\include "../music/tenor-sax.ily"
+\include "../music/soprano-saxophone.ily"
 \include "../layout/part.ily"
 
 \header {
@@ -13,7 +13,7 @@
   translator = \translatorCredit
   transcriber = \transcriberCredit
   arranger = \arrangerCredit
-  instrument = "Tenor Saxophone in B-flat"
+  instrument = "Soprano Saxophone in B-flat"
   copyright = \rightsCredit
   tagline = ##f
 }
@@ -22,12 +22,12 @@
 % No instrumentName: the part is identified in the page header.
 
 \score {
-  \new Staff \with { midiInstrument = "tenor sax" } { \compressMMRests { \transpose c d' { \global \introMark \tenorSaxMusic } } }
+  \new Staff \with { midiInstrument = "soprano sax" } { \compressMMRests { \transpose c d { \global \introMark \sopranoSaxMusic } } }
   \layout { }
 }
 
 % Separate concert-pitch MIDI for independently rendered rehearsal audio.
 \score {
-  \new Staff \with { midiInstrument = "tenor sax" } { \global \introMark \tenorSaxMusic }
+  \new Staff \with { midiInstrument = "soprano sax" } { \global \introMark \sopranoSaxMusic }
   \midi { }
 }

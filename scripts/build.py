@@ -92,6 +92,25 @@ def instruments() -> list[Path]:
     return paths
 
 
+def names(rev: str) -> dict[str, str]:
+    slug = metadata().get("workFileSlug", "")
+    if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug):
+        raise RuntimeError("Invalid workFileSlug in metadata.ily")
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._+-]*", rev):
+        raise RuntimeError(f"Invalid revision for filename: {rev}")
+    return dict(slug=slug, revision=rev, score=f"{slug}-{rev}",
+                concert=f"{slug}-concert-score-{rev}", mix=f"{slug}-orchestra-{rev}",
+                pdf_zip=f"{slug}-pdf-{rev}.zip", audio_zip=f"{slug}-audio-{rev}.zip")
+
+
+def current_names() -> dict[str, str]:
+    return names(json.loads((BUILD / "build-info.json").read_text(encoding="utf-8"))["revision"])
+
+
+def part_name(part: Path, naming: dict[str, str]) -> str:
+    return f"{naming['slug']}-{part.stem}-{naming['revision']}"
+
+
 def replace_section(markdown: str, start: str, end: str, body: str) -> str:
     a = markdown.find(start)
     b = markdown.find(end)
@@ -104,6 +123,7 @@ def metadata_section() -> str:
     m = metadata()
     fields = [
         ("Произведение", "workTitle"),
+        ("Короткое имя файлов", "workFileSlug"),
         ("Подзаголовок", "workSubtitle"),
         ("Оркестр", "ensembleName"),
         ("Композитор", "composerCredit"),
@@ -190,21 +210,23 @@ def build(*, audio: bool, font: str | None) -> None:
                     "ensemble": metadata().get("ensembleName"),
                     "parts": [p.stem for p in parts]}, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8")
+    naming = names(rev)
     print("Revision:", rev)
-    compile_lilypond(ROOT / "score.ly", PDF / "full-score", rev, score=True)
-    score_midi = PDF / "full-score.midi"
+    compile_lilypond(ROOT / "score.ly", PDF / naming["score"], rev, score=True)
+    score_midi = PDF / (naming["score"] + ".midi")
     if not score_midi.is_file():
         raise RuntimeError("Score did not emit orchestra MIDI")
-    shutil.move(str(score_midi), str(AUDIO / "orchestra.midi"))
-    compile_lilypond(ROOT / "concert-score.ly", PDF / "concert-score", rev, score=True)
+    shutil.move(str(score_midi), str(AUDIO / (naming["mix"] + ".midi"))
+    compile_lilypond(ROOT / "concert-score.ly", PDF / naming["concert"], rev, score=True)
     for source in parts:
-        compile_lilypond(source, PDF / source.stem, rev)
-        midi = PDF / (source.stem + ".midi")
+        stem = part_name(source, naming)
+        compile_lilypond(source, PDF / stem, rev)
+        midi = PDF / (stem + ".midi")
         if not midi.is_file():
             raise RuntimeError(f"No concert-pitch MIDI from part {source.name}")
         shutil.move(str(midi), str(BUILD / "midi" / midi.name))
     if audio:
-        render_audio(parts, font)
+        render_audio(parts, font, naming)
     verify(audio=audio)
 
 
@@ -221,7 +243,8 @@ def locate_soundfont(override: str | None) -> Path:
     raise RuntimeError("No SoundFont; use --soundfont PATH or SOUNDFONT")
 
 
-def render_audio(parts: list[Path], soundfont_path: str | None) -> None:
+def render_audio(parts: list[Path], soundfont_path: str | None,
+                 naming: dict[str, str]) -> None:
     soundfont = locate_soundfont(soundfont_path)
     fluidsynth, ffmpeg = shutil.which("fluidsynth"), shutil.which("ffmpeg")
     if not fluidsynth or not ffmpeg:
@@ -233,16 +256,17 @@ def render_audio(parts: list[Path], soundfont_path: str | None) -> None:
     mp3_dir.mkdir(parents=True)
     wavs: list[Path] = []
     for part in parts:
-        wav = wav_dir / f"{part.stem}.wav"
+        stem = part_name(part, naming)
+        wav = wav_dir / f"{stem}.wav"
         wavs.append(wav)
         run([
             fluidsynth, "-ni", "-g", "0.25", "-r", "48000",
-            "-F", str(wav), str(soundfont), str(BUILD / "midi" / f"{part.stem}.midi"),
+            "-F", str(wav), str(soundfont), str(BUILD / "midi" / f"{stem}.midi"),
         ])
         run([
             ffmpeg, "-hide_banner", "-loglevel", "error", "-y",
             "-i", str(wav), "-c:a", "libmp3lame", "-q:a", "1",
-            str(mp3_dir / f"{part.stem}.mp3"),
+            str(mp3_dir / f"{stem}.mp3"),
         ])
     # No MP3 generation loss: mix PCM files, not already encoded stems.
     inputs = [arg for path in wavs for arg in ("-i", str(path))]
@@ -251,15 +275,16 @@ def render_audio(parts: list[Path], soundfont_path: str | None) -> None:
     run([
         ffmpeg, "-hide_banner", "-loglevel", "error", "-y",
         *inputs, "-filter_complex", mix,
-        "-c:a", "libmp3lame", "-q:a", "0", str(AUDIO / "orchestra.mp3"),
+        "-c:a", "libmp3lame", "-q:a", "0", str(AUDIO / (naming["mix"] + ".mp3")),
     ])
     shutil.rmtree(wav_dir)
 
 
 def verify(*, audio: bool = False) -> None:
     parts = instruments()
-    expected = {"full-score.pdf", "concert-score.pdf"}
-    expected |= {f"{p.stem}.pdf" for p in parts}
+    naming = current_names()
+    expected = {naming["score"] + ".pdf", naming["concert"] + ".pdf"}
+    expected |= {part_name(p, naming) + ".pdf" for p in parts}
     found = {p.name for p in PDF.glob("*.pdf")}
     if found != expected:
         raise RuntimeError(f"PDF set mismatch: missing={expected-found}, extra={found-expected}")
@@ -267,7 +292,7 @@ def verify(*, audio: bool = False) -> None:
         data = (PDF / name).read_bytes()
         if not data.startswith(b"%PDF"):
             raise RuntimeError(f"Invalid PDF {name}")
-    if not (AUDIO / "orchestra.midi").read_bytes().startswith(b"MThd"):
+    if not (AUDIO / (naming["mix"] + ".midi")).read_bytes().startswith(b"MThd"):
         raise RuntimeError("Invalid orchestra MIDI")
     try:
         from pypdf import PdfReader
@@ -285,10 +310,10 @@ def verify(*, audio: bool = False) -> None:
             print(f"{path.name}: {len(doc.pages)} A4 page(s)")
     if audio:
         stem_names = {p.name for p in (AUDIO / "stems").glob("*.mp3")}
-        expected_stems = {p.stem + ".mp3" for p in parts}
+        expected_stems = {part_name(p, naming) + ".mp3" for p in parts}
         if stem_names != expected_stems:
             raise RuntimeError(f"MP3 stems mismatch: {expected_stems - stem_names}")
-        for path in [AUDIO / "orchestra.mp3", *((AUDIO / "stems" / n) for n in expected_stems)]:
+        for path in [AUDIO / (naming["mix"] + ".mp3"), *((AUDIO / "stems" / n) for n in expected_stems)]:
             if not path.is_file() or path.stat().st_size < 128:
                 raise RuntimeError(f"Missing/empty MP3: {path}")
     print(f"Verified {len(expected)} PDFs, MIDI" + (f", {len(parts)} MP3 stems and mixed MP3" if audio else ""))
@@ -296,19 +321,23 @@ def verify(*, audio: bool = False) -> None:
 
 def package() -> None:
     verify(audio=True)
+    naming = current_names()
     PACKAGES.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(PACKAGES / "scores-pdf.zip", "w", zipfile.ZIP_DEFLATED) as archive:
+    for old in PACKAGES.glob("*.zip"):
+        old.unlink()
+    with zipfile.ZipFile(PACKAGES / naming["pdf_zip"], "w", zipfile.ZIP_DEFLATED) as archive:
         for item in sorted(PDF.glob("*.pdf")):
-            sub = "scores" if item.stem in ("full-score", "concert-score") else "parts"
+            sub = "scores" if item.stem in (naming["score"], naming["concert"]) else "parts"
             archive.write(item, f"{sub}/{item.name}")
         archive.write(BUILD / "build-info.json", "build-info.json")
-    with zipfile.ZipFile(PACKAGES / "audio.zip", "w", zipfile.ZIP_DEFLATED) as archive:
-        for item in (AUDIO / "orchestra.mp3", AUDIO / "orchestra.midi"):
+    with zipfile.ZipFile(PACKAGES / naming["audio_zip"], "w", zipfile.ZIP_DEFLATED) as archive:
+        for ext in (".mp3", ".midi"):
+            item = AUDIO / (naming["mix"] + ext)
             archive.write(item, f"audio/{item.name}")
         for item in sorted((AUDIO / "stems").glob("*.mp3")):
             archive.write(item, f"audio/stems/{item.name}")
         archive.write(BUILD / "build-info.json", "build-info.json")
-    print("Ready: dist/packages/scores-pdf.zip and dist/packages/audio.zip")
+    print("Ready:", naming["pdf_zip"], naming["audio_zip"])
 
 
 def main() -> None:

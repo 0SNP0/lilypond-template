@@ -1,8 +1,8 @@
 \version "2.24.3"
-% Standalone, directly previewable part; edit music in ../music/double-bass.ily
+% Standalone, directly previewable part; edit music in ../music/tenor-saxophone.ily
 \include "../metadata.ily"
 \include "../music/global.ily"
-\include "../music/double-bass.ily"
+\include "../music/tenor-saxophone.ily"
 \include "../layout/part.ily"
 
 \header {
@@ -13,7 +13,7 @@
   translator = \translatorCredit
   transcriber = \transcriberCredit
   arranger = \arrangerCredit
-  instrument = "Double Bass"
+  instrument = "Tenor Saxophone in B-flat"
   copyright = \rightsCredit
   tagline = ##f
 }
@@ -22,12 +22,12 @@
 % No instrumentName: the part is identified in the page header.
 
 \score {
-  \new Staff \with { midiInstrument = "contrabass" } { \clef bass \compressMMRests { \transpose c c' { \global \introMark \doubleBassMusic } } }
+  \new Staff \with { midiInstrument = "tenor sax" } { \compressMMRests { \transpose c d' { \global \introMark \tenorSaxMusic } } }
   \layout { }
 }
 
 % Separate concert-pitch MIDI for independently rendered rehearsal audio.
 \score {
-  \new Staff \with { midiInstrument = "contrabass" } { \clef bass \global \introMark \doubleBassMusic }
+  \new Staff \with { midiInstrument = "tenor sax" } { \global \introMark \tenorSaxMusic }
   \midi { }
 }

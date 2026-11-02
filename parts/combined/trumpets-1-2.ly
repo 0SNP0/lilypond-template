@@ -30,6 +30,6 @@
 % One physical staff for both players, marked by opposing stem directions.
 % For independent page control add \paper { page-count = #2 } here.
 \score {
-  \new Staff \with { midiInstrument = "trumpet" } { \transpose c d \trumpetsTogether }
+  \new Staff \with { \consists Merge_rests_engraver midiInstrument = "trumpet" } { \transpose c d \trumpetsTogether }
   \layout { }
 }

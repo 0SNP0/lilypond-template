@@ -29,10 +29,10 @@ ensembleScore = <<
   % Woodwinds
   \new StaffGroup <<
     % Flutes I–II: one staff; automatic a2 unisons use one stem, other notes stay separate.
-    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Fl. I–II" shortInstrumentName = \markup \abs-fontsize #9.5 "Fl. I–II" midiInstrument = "flute" } \flutesTogether
+    \new Staff \with { \consists Merge_rests_engraver instrumentName = \markup \abs-fontsize #9.5 "Fl. I–II" shortInstrumentName = \markup \abs-fontsize #9.5 "Fl. I–II" midiInstrument = "flute" } \flutesTogether
     \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Ob." shortInstrumentName = \markup \abs-fontsize #9.5 "Ob." midiInstrument = "oboe" } { \global \oboeMusic }
     % Clarinets in B-flat I–II: one staff; automatic a2 unisons use one stem, other notes stay separate.
-    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Cl. I–II" shortInstrumentName = \markup \abs-fontsize #9.5 "Cl. I–II" midiInstrument = "clarinet" } { \tag #'written { \transpose c d \clarinetsTogether } \tag #'concert { \clarinetsTogether } }
+    \new Staff \with { \consists Merge_rests_engraver instrumentName = \markup \abs-fontsize #9.5 "Cl. I–II" shortInstrumentName = \markup \abs-fontsize #9.5 "Cl. I–II" midiInstrument = "clarinet" } { \tag #'written { \transpose c d \clarinetsTogether } \tag #'concert { \clarinetsTogether } }
     \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "B. Cl." shortInstrumentName = \markup \abs-fontsize #9.5 "B. Cl." midiInstrument = "clarinet" } { \tag #'written { \clef treble \transpose c d' { \global \bassClarinetMusic } } \tag #'concert { \clef "treble_8" \global \bassClarinetMusic } }
     \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "S. Sax." shortInstrumentName = \markup \abs-fontsize #9.5 "S. Sax." midiInstrument = "soprano sax" } { \tag #'written { \transpose c d { \global \sopranoSaxMusic } } \tag #'concert { \global \sopranoSaxMusic } }
     \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "A. Sax." shortInstrumentName = \markup \abs-fontsize #9.5 "A. Sax." midiInstrument = "alto sax" } { \tag #'written { \transpose c a { \global \altoSaxMusic } } \tag #'concert { \global \altoSaxMusic } }
@@ -41,9 +41,9 @@ ensembleScore = <<
   % Brass
   \new StaffGroup <<
     % Trumpets in B-flat I–II: one staff; automatic a2 unisons use one stem, other notes stay separate.
-    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Tpt. I–II" shortInstrumentName = \markup \abs-fontsize #9.5 "Tpt. I–II" midiInstrument = "trumpet" } { \tag #'written { \transpose c d \trumpetsTogether } \tag #'concert { \trumpetsTogether } }
+    \new Staff \with { \consists Merge_rests_engraver instrumentName = \markup \abs-fontsize #9.5 "Tpt. I–II" shortInstrumentName = \markup \abs-fontsize #9.5 "Tpt. I–II" midiInstrument = "trumpet" } { \tag #'written { \transpose c d \trumpetsTogether } \tag #'concert { \trumpetsTogether } }
     % Trombones I–II: one staff; automatic a2 unisons use one stem, other notes stay separate.
-    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Tbn. I–II" shortInstrumentName = \markup \abs-fontsize #9.5 "Tbn. I–II" midiInstrument = "trombone" } { \clef bass \trombonesTogether }
+    \new Staff \with { \consists Merge_rests_engraver instrumentName = \markup \abs-fontsize #9.5 "Tbn. I–II" shortInstrumentName = \markup \abs-fontsize #9.5 "Tbn. I–II" midiInstrument = "trombone" } { \clef bass \trombonesTogether }
   >>
   % Percussion
   \new StaffGroup <<

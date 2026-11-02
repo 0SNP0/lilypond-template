@@ -30,6 +30,6 @@
 % One physical staff for both players, marked by opposing stem directions.
 % For independent page control add \paper { page-count = #2 } here.
 \score {
-  \new Staff \with { midiInstrument = "trombone" } { \clef bass \trombonesTogether }
+  \new Staff \with { \consists Merge_rests_engraver midiInstrument = "trombone" } { \clef bass \trombonesTogether }
   \layout { }
 }

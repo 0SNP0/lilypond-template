@@ -28,11 +28,15 @@ METADATA_END = "<!-- SCORE-METADATA:END -->"
 def run(args: list[str], *, capture: bool = False,
         environment: dict[str, str] | None = None) -> str:
     print("+", " ".join(args), flush=True)
-    p = subprocess.run(args, cwd=ROOT, check=True,
+    p = subprocess.run(args, cwd=ROOT, check=False,
                        env={**os.environ, **(environment or {})},
                        stdout=subprocess.PIPE if capture else None,
                        stderr=subprocess.STDOUT if capture else None,
                        text=True, errors="replace")
+    if p.returncode:
+        if capture and p.stdout:
+            print(p.stdout, flush=True)
+        raise subprocess.CalledProcessError(p.returncode, args)
     return p.stdout or ""
 
 

@@ -115,6 +115,13 @@ def part_name(part: Path, naming: dict[str, str]) -> str:
     return f"{naming['slug']}-{part.stem}-{naming['revision']}"
 
 
+def combined_parts() -> list[Path]:
+    """Optional two-voice desks. Never render these as audio stems:
+    their voices already appear in the individual player MIDI tracks.
+    """
+    return sorted((ROOT / "parts" / "combined").glob("*.ly"))
+
+
 def replace_section(markdown: str, start: str, end: str, body: str) -> str:
     a = markdown.find(start)
     b = markdown.find(end)
@@ -212,7 +219,9 @@ def build(*, audio: bool, font: str | None) -> None:
     (BUILD / "build-info.json").write_text(
         json.dumps({"revision": rev, "commit": sha, "work": metadata().get("workTitle"),
                     "ensemble": metadata().get("ensembleName"),
-                    "parts": [p.stem for p in parts]}, ensure_ascii=False, indent=2) + "\n",
+                    "parts": [p.stem for p in parts],
+                    "combined_parts": [p.stem for p in combined_parts()]},
+                   ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8")
     naming = names(rev)
     print("Revision:", rev)
@@ -229,6 +238,9 @@ def build(*, audio: bool, font: str | None) -> None:
         if not midi.is_file():
             raise RuntimeError(f"No concert-pitch MIDI from part {source.name}")
         shutil.move(str(midi), str(BUILD / "midi" / midi.name))
+    # PDF-only paired parts; do not duplicate these voices in the audio mix.
+    for source in combined_parts():
+        compile_lilypond(source, PDF / part_name(source, naming), rev)
     if audio:
         render_audio(parts, font, naming)
     verify(audio=audio)
@@ -289,6 +301,7 @@ def verify(*, audio: bool = False) -> None:
     naming = current_names()
     expected = {naming["score"] + ".pdf", naming["concert"] + ".pdf"}
     expected |= {part_name(p, naming) + ".pdf" for p in parts}
+    expected |= {part_name(p, naming) + ".pdf" for p in combined_parts()}
     found = {p.name for p in PDF.glob("*.pdf")}
     if found != expected:
         raise RuntimeError(f"PDF set mismatch: missing={expected-found}, extra={found-expected}")
@@ -320,7 +333,7 @@ def verify(*, audio: bool = False) -> None:
         for path in [AUDIO / (naming["mix"] + ".mp3"), *((AUDIO / "stems" / n) for n in expected_stems)]:
             if not path.is_file() or path.stat().st_size < 128:
                 raise RuntimeError(f"Missing/empty MP3: {path}")
-    print(f"Verified {len(expected)} PDFs, MIDI" + (f", {len(parts)} MP3 stems and mixed MP3" if audio else ""))
+    print(f"Verified {len(expected)} PDFs (individual + paired), MIDI" + (f", {len(parts)} MP3 stems and mixed MP3" if audio else ""))
 
 
 def package() -> None:
@@ -331,7 +344,10 @@ def package() -> None:
         old.unlink()
     with zipfile.ZipFile(PACKAGES / naming["pdf_zip"], "w", zipfile.ZIP_DEFLATED) as archive:
         for item in sorted(PDF.glob("*.pdf")):
-            sub = "scores" if item.stem in (naming["score"], naming["concert"]) else "parts"
+            paired_ids = {part_name(p, naming) for p in combined_parts()}
+            sub = ("scores" if item.stem in (naming["score"], naming["concert"])
+                   else "parts/combined" if item.stem in paired_ids
+                   else "parts")
             archive.write(item, f"{sub}/{item.name}")
         archive.write(BUILD / "build-info.json", "build-info.json")
     with zipfile.ZipFile(PACKAGES / naming["audio_zip"], "w", zipfile.ZIP_DEFLATED) as archive:

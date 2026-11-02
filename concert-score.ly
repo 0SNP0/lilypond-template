@@ -1,6 +1,23 @@
 \version "2.26.0"
+% Concert pitch edition, sharing exactly the same orchestra.ily source.
 \include "orchestra.ily"
-\paper { #(set-paper-size "a4") top-margin=4\mm bottom-margin=4\mm left-margin=3\mm right-margin=3\mm ragged-last-bottom=##f }
-#(set-global-staff-size 9)
-\header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit tagline = ##f }
-\score { \keepWithTag #'concert \sviridovScore \layout { } }
+\include "music/global.ily"
+\include "layout/score.ily"
+
+\header {
+  title = \workTitle
+  subtitle = \workSubtitle
+  composer = \composerCredit
+  poet = \lyricistCredit
+  translator = \translatorCredit
+  transcriber = \transcriberCredit
+  arranger = \arrangerCredit
+  instrument = "Concert Score"
+  copyright = \rightsCredit
+  tagline = ##f
+}
+
+\score {
+  \keepWithTag #'concert \ensembleScore
+  \scoreCompactLayout
+}

@@ -298,6 +298,7 @@ def main() -> None:
     if VIEWER.exists():
         shutil.rmtree(VIEWER)
     VIEWER.mkdir(parents=True)
+    shutil.copy2(ROOT / "viewer" / "index.html", VIEWER / "index.html")
     timeline = make_timeline(b.AUDIO / (naming["mix"] + ".midi"))
     (VIEWER / "timeline.json").write_text(
         json.dumps(timeline, indent=2, ensure_ascii=False) + "\n", encoding="utf-8",

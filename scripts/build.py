@@ -369,6 +369,9 @@ def package() -> None:
             if item.is_file():
                 archive.write(item, str(item.relative_to(ROOT / "dist")))
         archive.write(BUILD / "build-info.json", "build-info.json")
+        # Standalone web bundle includes its audio; it works without audio.zip.
+        mix = AUDIO / (naming["mix"] + ".mp3")
+        archive.write(mix, f"audio/{mix.name}")
     print("Ready:", naming["pdf_zip"], naming["audio_zip"], "and SVG viewer data")
 
 

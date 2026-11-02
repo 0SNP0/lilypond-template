@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orchestral score viewer</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:light;background:#f2f3f5;color:#17212b}
+*{box-sizing:border-box}body{margin:0}header{background:white;border-bottom:1px solid #dce0e5;padding:12px 20px;position:sticky;top:0;z-index:2}
+h1{font-size:16px;margin:0 0 10px;font-weight:650}.controls{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+select,button{font:inherit;padding:6px 10px;border:1px solid #b6bdc7;background:white;border-radius:6px}
+select{max-width:min(100%,360px)}button{cursor:pointer}button:hover{background:#eaf0f8}
+audio{height:34px;min-width:240px;flex:1}#position{font-variant-numeric:tabular-nums;color:#485669;font-size:13px}
+main{margin:16px auto;max-width:1100px;padding:0 10px}#status{font-size:13px;color:#596879;margin:8px 0 16px}
+.page{position:relative;background:white;box-shadow:0 2px 16px #12203322;margin:0 auto 18px;max-width:100%;width:fit-content}
+.page svg{display:block;max-width:100%;height:auto}
+.cursor{position:absolute;top:0;bottom:0;width:2px;background:#cc5b27;box-shadow:0 0 5px #cc5b2760;pointer-events:none;display:none;z-index:1}
+.page g[data-measure-id]{cursor:pointer}
+.page g[data-measure-id]:hover{opacity:.6}
+@media(max-width:750px){header{position:static}audio{min-width:100%}h1{font-size:15px}}
+</style>
+</head>
+<body>
+<header>
+<h1>Ensemble, Assemble · Просмотр партитуры</h1>
+<div class="controls">
+<label>Ноты: <select id="view"><option>Загрузка…</option></select></label>
+<audio id="audio" controls preload="metadata"></audio>
+<label>Скорость: <select id="speed"><option value="0.5">0,5×</option><option value="0.75">0,75×</option><option value="1" selected>1×</option><option value="1.25">1,25×</option><option value="1.5">1,5×</option></select></label>
+<span id="position">Такт —</span>
+</div>
+</header>
+<main>
+<p id="status">Загрузка общих данных синхронизации…</p>
+<div id="pages"></div>
+</main>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+let timeline, manifest, measures=[], currentView="", shown=-1;
+const docs=new Map();
+
+async function loadJSON(path){
+  const response=await fetch(path);
+  if(!response.ok)throw new Error(path+": HTTP "+response.status);
+  return response.json();
+}
+async function setView(id){
+  const view=manifest.views[id];
+  if(!view)return;
+  currentView=id;
+  shown=-1;
+  docs.clear();
+  $("pages").replaceChildren();
+  $("status").textContent="Загрузка нот: "+id+"…";
+  for(let page=0;page<view.pages.length;page++){
+    if(currentView!==id)return;
+    const response=await fetch(view.pages[page]);
+    if(!response.ok)throw new Error("SVG: HTTP "+response.status);
+    const xml=new DOMParser().parseFromString(await response.text(),"image/svg+xml");
+    if(xml.querySelector("parsererror"))throw new Error("Некорректный SVG");
+    const sheet=document.createElement("div");
+    sheet.className="page";
+    sheet.dataset.page=String(page+1);
+    const svg=document.importNode(xml.documentElement,true);
+    svg.removeAttribute("width");
+    svg.removeAttribute("height");
+    sheet.appendChild(svg);
+    const cursor=document.createElement("div");
+    cursor.className="cursor";
+    sheet.appendChild(cursor);
+    sheet.addEventListener("click",ev=>{
+      const target=ev.target.closest?.("[data-measure-id]");
+      if(!target)return;
+      const measure=measures.find(m=>m.id===target.getAttribute("data-measure-id"));
+      if(measure)$("audio").currentTime=measure.start_ms/1000;
+    });
+    $("pages").appendChild(sheet);
+    docs.set(page+1,sheet);
+  }
+  $("status").textContent=view.pages.length+" стр. · "+view.anchors_found+" меток тактов · "+(manifest.revision||"");
+  updateCursor(true);
+}
+function activeMeasure(t){
+  // The MIDI timeline is shared by every score and part.
+  let lo=0,hi=measures.length;
+  while(lo<hi){const mid=(lo+hi)>>1;if(measures[mid].start_ms<=t)lo=mid+1;else hi=mid;}
+  return measures[Math.max(0,lo-1)];
+}
+function updateCursor(force=false){
+  if(!timeline||!currentView||!docs.size)return;
+  const measure=activeMeasure($("audio").currentTime*1000);
+  if(!measure)return;
+  $("position").textContent="Такт "+measure.number+" / "+measures.length;
+  if(!force&&shown===measure.number)return;
+  shown=measure.number;
+  for(const node of docs.values())node.querySelector(".cursor").style.display="none";
+  const anchors=manifest.views[currentView].measure_anchors.filter(a=>a.measure_id===measure.id);
+  if(!anchors.length)return;
+  const anchor=anchors[0];
+  const sheet=docs.get(anchor.page);
+  if(!sheet)return;
+  const grob=sheet.querySelector('[id="'+anchor.element_id+'"]');
+  if(!grob)return;
+  const box=grob.getBoundingClientRect(),page=sheet.getBoundingClientRect();
+  const cursor=sheet.querySelector(".cursor");
+  cursor.style.left=Math.max(0,box.left-page.left)+"px";
+  cursor.style.display="block";
+  if(!sheet.matches(":hover"))sheet.scrollIntoView({block:"nearest",behavior:"smooth"});
+}
+async function boot(){
+  try{
+    [manifest,timeline]=await Promise.all([loadJSON("manifest.json"),loadJSON("timeline.json")]);
+    measures=timeline.measures;
+    $("audio").src=manifest.audio;
+    const select=$("view");
+    select.replaceChildren();
+    for(const [id,view] of Object.entries(manifest.views)){
+      const opt=document.createElement("option");
+      opt.value=id;
+      opt.textContent=(view.kind==="score"?"Партитура":view.kind==="concert-score"?"Партитура (концертный строй)":view.kind==="combined"?"Совмещённая партия":"Партия")+" · "+id;
+      select.appendChild(opt);
+    }
+    select.addEventListener("change",()=>setView(select.value).catch(showError));
+    $("speed").addEventListener("change",()=>{$("audio").playbackRate=Number($("speed").value)});
+    $("audio").addEventListener("timeupdate",()=>updateCursor());
+    $("audio").addEventListener("seeked",()=>updateCursor(true));
+    window.addEventListener("resize",()=>updateCursor(true));
+    await setView("score");
+    select.value="score";
+  }catch(err){showError(err)}
+}
+function showError(err){
+ $("status").textContent="Ошибка: "+err.message+". Откройте через локальный HTTP-сервер (python -m http.server), а не file://.";
+ console.error(err);
+}
+boot();
+</script>
+</body>
+</html>

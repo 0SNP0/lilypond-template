@@ -50,6 +50,37 @@ jobs:
               marker.write_text('268 measures x 21 original MusicXML part staves; initial converter snapshot.\n')
               print('Extracted', len(paths), 'editable LilyPond files')
           PY
+      - name: Normalize imported LilyPond identifiers and drum music
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          names = {
+              'flutes12Music': 'flutesOneTwoMusic',
+              'oboes12Music': 'oboesOneTwoMusic',
+              'clarinetsInA12Music': 'clarinetsInAOneTwoMusic',
+              'bassoons12Music': 'bassoonsOneTwoMusic',
+              'horns13Music': 'hornsOneThreeMusic',
+              'horns24Music': 'hornsTwoFourMusic',
+              'trumpets12Music': 'trumpetsOneTwoMusic',
+              'trumpet3Music': 'trumpetThreeMusic',
+              'trombones12Music': 'trombonesOneTwoMusic',
+              'trombone3AndTubaMusic': 'tromboneThreeAndTubaMusic',
+          }
+          for directory in (Path('music'), Path('parts')):
+              for file in directory.glob('*.ily' if directory.name == 'music' else '*.ly'):
+                  data = file.read_text()
+                  for old, new in names.items():
+                      data = data.replace(old, new)
+                  if file.name in ('snare-drum.ily', 'cymbals.ily', 'bass-drum.ily'):
+                      import re
+                      data = re.sub(r'(\\w+Music\\s*=\\s*)\\{', r'\\1\\\\drummode {', data, count=1)
+                  file.write_text(data)
+          o = Path('orchestra.ily')
+          data = o.read_text()
+          for old, new in names.items():
+              data = data.replace(old, new)
+          o.write_text(data)
+          PY
       - name: Commit imported score to the work branch
         run: |
           git config user.name "github-actions[bot]"

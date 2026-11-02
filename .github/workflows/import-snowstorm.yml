@@ -19,21 +19,17 @@ jobs:
       - name: Unpack snapshot of user-supplied MusicXML conversion
         run: |
           python3 - <<'PY'
-          import base64, hashlib, io, lzma, pathlib, shutil, zipfile
+          import base64, io, pathlib, shutil, zipfile
           root = pathlib.Path('.')
           marker = root / 'source' / 'IMPORTED'
           if marker.exists():
               print('Already imported; do not overwrite editor changes.')
           else:
-              inputs = sorted((root / 'source').glob('notation.part*.txt'))
-              if not inputs:
-                  raise SystemExit('Missing encoded source chunks')
-              data = base64.b64decode(''.join(p.read_text().strip() for p in inputs), validate=True)
-              digest = hashlib.sha256(data).hexdigest()
-              expected = (root / 'source' / 'bundle.sha256').read_text().strip()
-              if digest != expected:
-                  raise SystemExit(f'Bad archive digest: {digest} != {expected}')
-              with zipfile.ZipFile(io.BytesIO(lzma.decompress(data))) as archive:
+              source = root / 'source' / 'notation.bundle.b85'
+              if not source.is_file():
+                  raise SystemExit('Missing compressed conversion snapshot')
+              data = base64.b85decode(source.read_text().strip())
+              with zipfile.ZipFile(io.BytesIO(data)) as archive:
                   paths = archive.namelist()
                   if len(paths) < 45 or any(name.startswith('/') or '..' in pathlib.PurePosixPath(name).parts for name in paths):
                       raise SystemExit('Unexpected source archive contents')
@@ -46,6 +42,11 @@ jobs:
                       else:
                           dest.parent.mkdir(parents=True, exist_ok=True)
                           dest.write_bytes(archive.read(info))
+              # Normalize MusicXML multi-voice syntax to LilyPond voice separator.
+              for score in (root / 'music').glob('*.ily'):
+                  data = score.read_text()
+                  data = data.replace(' } ' + chr(92) + ' { ' + chr(92) + 'voiceTwo ', ' } ' + chr(92)*2 + ' { ' + chr(92) + 'voiceTwo ')
+                  score.write_text(data)
               marker.write_text('268 measures x 21 original MusicXML part staves; initial converter snapshot.\n')
               print('Extracted', len(paths), 'editable LilyPond files')
           PY

@@ -19,7 +19,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          version="$(curl --retry 3 -fsSL https://api.github.com/repos/lilypond/lilypond/releases/latest | python3 -c 'import json,sys; print(json.load(sys.stdin)["tag_name"].removeprefix("v"))')"
+          version="$(curl --retry 3 -fsSL https://api.github.com/repos/lilypond/lilypond/releases/latest | python3 -c 'import json,sys; print(json.load(sys.stdin)["tag_name"].removeprefix("v"))')" || version="2.26.0"
           [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Invalid LilyPond release version: $version"; exit 1; }
           url="https://gitlab.com/lilypond/lilypond/-/releases/v${version}/downloads/lilypond-${version}-linux-x86_64.tar.gz"
           curl --retry 3 -fLsS "$url" -o "$RUNNER_TEMP/lilypond.tar.gz"

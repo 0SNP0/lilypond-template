@@ -46,6 +46,7 @@ jobs:
           python3 scripts/build.py build --audio
           python3 scripts/build.py package
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: orchestra-${{ github.sha }}
           path: |
@@ -54,7 +55,10 @@ jobs:
             dist/audio/*.midi
             dist/audio/stems/*.mp3
             dist/packages/*.zip
-          if-no-files-found: error
+            dist/print-manifest.json
+            dist/viewer/**/*.svg
+            dist/viewer/*.json
+          if-no-files-found: warn
           retention-days: 14
   release:
     if: startsWith(github.ref, 'refs/tags/v')

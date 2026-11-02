@@ -56,7 +56,13 @@ jobs:
           GH_REPO: ${{ github.repository }}
           TAG: ${{ github.ref_name }}
         run: |
-          gh release create "$TAG" dist/pdf/*.pdf dist/packages/scores-pdf.zip dist/packages/audio.zip --verify-tag --generate-notes --title "$TAG"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; upload or replace assets"
+            gh release upload "$TAG" dist/pdf/*.pdf dist/packages/scores-pdf.zip dist/packages/audio.zip --clobber
+          else
+            echo "Create release $TAG with compiled assets"
+            gh release create "$TAG" dist/pdf/*.pdf dist/packages/scores-pdf.zip dist/packages/audio.zip --verify-tag --generate-notes --title "$TAG"
+          fi
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -65,6 +71,66 @@ jobs:
       - name: Update latest release link on README
         env:
           TAG: ${{ github.ref_name }}
+        run: |
+          python3 scripts/build.py readme-release "$TAG"
+          if ! git diff --quiet -- README.md; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add README.md
+            git commit -m "docs: link latest score release $TAG"
+            git push origin HEAD:main
+          fi
+
+  # An already-published release can precede its Git tag workflow.
+  # Backfill it using the artifact from the ORIGINAL TAGGED COMMIT, not main.
+  repair_existing_release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Restore missing assets on latest published release
+        id: recover
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          tag="$(gh release list --limit 1 --json tagName --jq '.[0].tagName // empty')"
+          if [ -z "$tag" ]; then
+            echo "No published releases yet."
+            exit 0
+          fi
+          if ! [[ "$tag" =~ ^v[0-9] ]]; then
+            echo "Latest release is not a version tag: $tag. Skipping."
+            exit 0
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          count="$(gh release view "$tag" --json assets --jq '.assets | length')"
+          if [ "$count" -gt 0 ]; then
+            echo "Release $tag already has $count assets."
+            exit 0
+          fi
+
+          tagged_sha="$(git rev-list -n 1 "$tag")"
+          run_id="$(gh run list --workflow build.yml --branch "$tag" --event push --limit 30 --json databaseId,headSha --jq ".[] | select(.headSha == \"$tagged_sha\") | .databaseId" | head -n 1)"
+          if [ -z "$run_id" ]; then
+            echo "No matching tag workflow run found for $tag ($tagged_sha)" >&2
+            exit 1
+          fi
+          echo "Recovering $tag using artifact from run $run_id at $tagged_sha"
+          gh run download "$run_id" --name "orchestra-$tagged_sha" --dir dist
+          test -f dist/packages/scores-pdf.zip
+          test -f dist/packages/audio.zip
+          gh release upload "$tag" dist/pdf/*.pdf dist/packages/scores-pdf.zip dist/packages/audio.zip --clobber
+      - name: Link published release in README
+        if: steps.recover.outputs.tag != ''
+        env:
+          TAG: ${{ steps.recover.outputs.tag }}
         run: |
           python3 scripts/build.py readme-release "$TAG"
           if ! git diff --quiet -- README.md; then

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -364,6 +365,27 @@ def package() -> None:
     PACKAGES.mkdir(parents=True, exist_ok=True)
     for old in PACKAGES.glob("*.zip"):
         old.unlink()
+    # Universal fingerprints; independent of the optional SVG player.
+    # PDF fingerprints are provisional: they can change when Git version changes.
+    documents = {}
+    for pdf in sorted(PDF.glob("*.pdf")):
+        stem = pdf.stem
+        if stem == naming["score"]:
+            midi = AUDIO / (naming["mix"] + ".midi")
+        elif stem == naming["concert"]:
+            midi = AUDIO / (naming["mix"] + ".midi")
+        else:
+            midi = BUILD / "midi" / (stem + ".midi")
+        musical = hashlib.sha256(midi.read_bytes()).hexdigest() if midi.is_file() else None
+        documents[stem] = {"pdf": pdf.name,
+                           "music_hash": musical,
+                           "print_hash": hashlib.sha256(pdf.read_bytes()).hexdigest()}
+    manifest_file = ROOT / "dist" / "print-manifest.json"
+    manifest_file.write_text(
+        json.dumps({"schema": "score-print-fingerprint-v1", "revision": naming["revision"],
+                    "documents": documents,
+                    "warning": "Provisional raw MIDI/PDF hashes; version and renderer metadata may change hashes without changing music."},
+                   indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     with zipfile.ZipFile(PACKAGES / naming["pdf_zip"], "w", zipfile.ZIP_DEFLATED) as archive:
         for item in sorted(PDF.glob("*.pdf")):
             paired_ids = {part_name(p, naming) for p in combined_parts()}
@@ -372,7 +394,9 @@ def package() -> None:
                    else "parts")
             archive.write(item, f"{sub}/{item.name}")
         archive.write(BUILD / "build-info.json", "build-info.json")
-        archive.write(ROOT / "dist" / "print-manifest.json", "print-manifest.json")
+        manifest_file = ROOT / "dist" / "print-manifest.json"
+        if manifest_file.is_file():
+            archive.write(manifest_file, "print-manifest.json")
     with zipfile.ZipFile(PACKAGES / naming["audio_zip"], "w", zipfile.ZIP_DEFLATED) as archive:
         for ext in (".mp3", ".midi"):
             item = AUDIO / (naming["mix"] + ext)

@@ -4,5 +4,5 @@
 \include "../music/global.ily"
 \include "../layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Trumpets in B-flat I–II" tagline = ##f }
-\score { \new Staff << { \global } { \trumpetsOneTwoMusic } >> \layout { } }
-\score { \new Staff << { \global } { \trumpetsOneTwoMusic } >> \midi { } }
+\score { \new Staff << { \global } { \rehearsalMarks } { \trumpetsOneTwoMusic } >> \layout { } }
+\score { \new Staff << { \global } { \rehearsalMarks } { \trumpetsOneTwoMusic } >> \midi { } }

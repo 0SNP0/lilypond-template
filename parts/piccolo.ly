@@ -4,5 +4,5 @@
 \include "../music/global.ily"
 \include "../layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Piccolo" tagline = ##f }
-\score { \new Staff << { \global } { \piccoloMusic } >> \layout { } }
-\score { \new Staff << { \global } { \piccoloMusic } >> \midi { } }
+\score { \new Staff << { \global } { \rehearsalMarks } { \piccoloMusic } >> \layout { } }
+\score { \new Staff << { \global } { \rehearsalMarks } { \piccoloMusic } >> \midi { } }

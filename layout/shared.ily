@@ -11,7 +11,7 @@ ensembleHeader = \markup {
     \fill-line {
       \null
       % The first page already has the work title in the title block.
-      \unless \on-first-page
+      \on-the-fly #not-first-page
         \abs-fontsize #10 \fromproperty #'header:title
       \null
     }

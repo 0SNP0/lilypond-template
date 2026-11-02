@@ -1,157 +1,75 @@
-# Ensemble Assemble — LilyPond orchestra template
+# Orchestral Sketch — Ensemble, Assemble
 
-A source-controlled orchestral arranging project: **LilyPond + Python build tool + GitHub Actions**. Native Windows builds work without WSL or Docker. CI runs on Linux.
+[![Build](https://github.com/0SNP0/lilypond-template/actions/workflows/build.yml/badge.svg)](https://github.com/0SNP0/lilypond-template/actions/workflows/build.yml)
+[![Releases](https://img.shields.io/github/v/release/0SNP0/lilypond-template?label=latest%20release)](https://github.com/0SNP0/lilypond-template/releases/latest)
 
-## Output
+## Партитура и партии
 
-Every successful build produces **23 A4 PDFs**:
-- `dist/pdf/full-score.pdf` — transposed conductor score;
-- `dist/pdf/concert-score.pdf` — concert-pitch score;
-- `dist/pdf/01-flute-1.pdf` through `dist/pdf/21-double-bass.pdf` — one print-ready PDF per player/desk.
+Короткий оркестровый этюд для **Ensemble, Assemble**. PDF отдельных партий, общая партитура в транспонированном и концертном строе, а также звуковые дорожки доступны в выпусках проекта.
 
-The example score is eight bars of original demonstration music, with all the requested instruments:
-two flutes, oboe, two B-flat clarinets, B-flat bass clarinet, B-flat soprano saxophone, E-flat alto saxophone, B-flat tenor saxophone, two B-flat trumpets, two trombones, drum kit, piano, accordion, first and second violins, viola, cello, and double bass. Piano and accordion use grand staves. All instrument labels are in English.
+<!-- LATEST-RELEASE:START -->
+**[Смотреть опубликованные версии и скачивать материалы](https://github.com/0SNP0/lilypond-template/releases/latest)**. Первый выпуск ещё не опубликован.
+<!-- LATEST-RELEASE:END -->
 
-All note data in `music/*.ily` is **concert pitch**. The printed parts are transposed automatically by `scripts/build.py`; MIDI uses concert pitch.
+В каждом релизе: **23 PDF-файла** по отдельности, архив `scores-pdf.zip` со всеми PDF и `audio.zip` со сводным MP3, 21 отдельной инструментальной MP3-дорожкой и MIDI. Дополнительно GitHub Actions хранит артефакты новых сборок на ограниченный срок.
 
-## Getting started on Windows
+## Сведения о произведении
 
-Install Python 3, Git for Windows, and a native Windows edition of LilyPond. Put `lilypond.exe` and `git.exe` on your PATH.
+| Поле | Значение |
+|---|---|
+<!-- SCORE-METADATA:START -->
+| Произведение | Orchestral Sketch |
+| Подзаголовок | An original eight-bar orchestral example |
+| Оркестр | Ensemble, Assemble |
+| Композитор | Original demonstration music |
+| Автор текста | — |
+| Перевод | — |
+| Транскрипция | — |
+| Аранжировка | Template contributor — replace for your arrangement |
+| Корректура | — |
+| Источник | Original demo, no external score used |
+| Авторские права | Original demonstration music; replace credits and rights for real arrangements |
+<!-- SCORE-METADATA:END -->
 
-Open PowerShell in this repository:
+## Для аранжировщика
+
+**[Открыть общую партитуру](score.ly)** — этот файл самодостаточен для предпросмотра в Frescobaldi, VS Code (LilyPond) и нативном LilyPond на Windows. Достаточно открыть `score.ly` и запустить компиляцию; предварительно запускать Python не требуется. **[Открыть концертную партитуру](concert-score.ly)**.
+
+Музыка находится в `music/*.ily`. **[Порядок инструментов](orchestra.ily)** задаётся ровно там: по секциям и в желаемой последовательности, а не номерами в именах файлов. Отдельные файлы `parts/*.ly` открываются точно так же. Все названия инструментов английские. При изменении состава добавь/удали соответствующий `parts/name.ly`, `music/name.ily` и нотоносец в `orchestra.ily`.
+
+Сведения о произведении меняются в **[metadata.ily](metadata.ily)**. Они используются самой партитурой и синхронизируются в README командой `python scripts/build.py readme`. Поле `ensembleName` — название оркестра, **не исполнитель и не аранжировщик**.
+
+### Сборка Windows (без WSL)
+
+Установить Python 3, Git for Windows и нативный LilyPond, доступные в PATH:
 
 ```powershell
-py -3 -m unittest discover -s tests -v
 py -3 scripts/build.py build
-py -3 scripts/build.py verify
 ```
 
-Or double-click / run `build.cmd` for PDF + MIDI generation.
-
-Optional PDF geometry and page-count inspection:
+Для MP3 дополнительно нужны FluidSynth, FFmpeg и SoundFont:
 
 ```powershell
-py -3 -m pip install pypdf
-py -3 scripts/build.py pages
-```
-
-For audio, additionally install FluidSynth and FFmpeg and obtain a licensed GM SoundFont. Place `MS_Basic.sf3` in `soundfonts/` or pass its full path:
-
-```powershell
-.\build-audio.cmd --soundfont "C:\SoundFonts\MS_Basic.sf3"
+py -3 scripts/build.py build --audio --soundfont "C:\SoundFonts\MS_Basic.sf3"
 py -3 scripts/build.py package
 ```
 
-## Linux CI / release workflow
+На Linux команды те же, только `python3`. Файлы результата находятся в игнорируемой папке `dist/`. `python scripts/build.py clean` удаляет сгенерированные файлы.
 
-Every push and pull request runs tests, compiles all PDFs, MIDI, MP3 stems and a mixed MP3, and uploads downloadable build artifacts retained for 14 days.
+### Оформление
 
-On a version tag matching `v*` (for example `v0.1.0`), a GitHub Release receives:
-- all **23 individual PDF** files;
-- `scores-pdf.zip` containing the score and all instrument parts;
-- `audio.zip` containing orchestra MIDI, MP3 stems and a mixed MP3.
+Все страницы — **A4**, поля 15 мм. Отдельные партии имеют увеличенный нотоносец, незаполненная часть страницы не растягивается. Название инструмента печатается в верхнем колонтитуле, но **не** слева от нотоносцев партии. При необходимости конкретную партию можно дополнить локальной директивой `\paper { page-count = #2 }`, следя за читаемостью.
 
-The archives also include `build-info.json` with version provenance. Generated `build/` and `dist/` are ignored by Git.
+Общая партитура автоматически выбирает масштаб исходя из числа реальных нотоносцев (включая пары станков у фортепиано и аккордеона), а сборка дополнительно уменьшает его, если LilyPond предупреждает о переполнении. Заголовок и версия центрируются относительно листа. Превью без Git-подстановки показывает метку `working-copy`.
 
-To release a tagged edition:
+### Версии
 
-```bash
-git tag -a v0.1.0 -m "First orchestral demo"
-git push origin v0.1.0
-```
+Версия печатается **как Git её сформировал**: например, `v1.2.0`, `v1.2.0-3-gabcdef12`, `abcdef12`, `abcdef12-dirty`. Никакая дополнительная `V` перед хешем не добавляется. При запуске из редактора вместо неизвестной версии показывается `working-copy`. Релизы собираются из чистых тегированных коммитов и содержат `build-info.json`.
 
-Release creation runs automatically only **after a successful build**. Do not tag until the current CI run is green.
+### Тесты и качество
 
-## Project layout
+Вместо искусственных unit-тестов структура проверяется во время настоящей сборки: LilyPond должен успешно скомпилировать **все** партии, MIDI и PDF, а PDF должны быть A4 (проверяется `pypdf`, если установлен). Сборка останавливается при переполнении партитуры. Workflow вызывается на push и Pull Request; Release создаётся по Git-тегу `v*`.
 
-```text
-music/                     Concert-pitch instrument source files
-project.json                Credits, instrument manifest and page-layout overrides
-layout/style.ily            Shared headers, footers and title
-scripts/build.py            Cross-platform build / verification / packaging
-tests/                      Unit tests
-docs/IMPORT_FROM_MUSESCORE.md
-soundfonts/                 Optional local soundfont (binary ignored)
-.github/workflows/build.yml CI and tagged Releases
-build/                      Generated source and Git metadata (ignored)
-dist/pdf/                   PDF score and 21 parts (ignored)
-dist/audio/                 Orchestra MIDI, MP3 mix and MP3 stems (ignored)
-dist/packages/              Release ZIPs (ignored)
-```
+### Перенос из MuseScore
 
-All music is stored once in `music/` and reused in the score, parts and MIDI edition. Importing a MuseScore score is a **one-off MusicXML conversion**, not a round-trip editing loop; see the import guide.
-
-## Layout policy and per-part pagination
-
-Every edition uses **A4 portrait**, 15 mm margins. Instrument parts start at a 1.750 mm staff space. The full conductor score uses an **automatic staff size** based on the actual number of printed staves (including both piano and accordion staves); short English instrument labels and compact grouping preserve A4. The score defaults to vertically justified pages to fill available page height, and the builder automatically reduces staff size in steps of 0.05 mm if LilyPond warns of compressed pages. Override the score by setting a numeric `staff_space_mm` under `layout.score_overrides.full-score` or `concert-score`. **Part** staff spacing defaults to 1.750 mm, adjustable down to 1.200 mm where page-count constraints require it; the conductor score may use 0.550–1.750 mm.
-
-Header: English part name at left, composition title centered, page number at right. Footer: `Ensemble_Assemble_V...` identifying the Git revision, plus copyright/attribution on page one. The first music page has a centered title/subtitle, composer/transcriber/arranger at right, lyricist/translator at left.
-
-**Sparse parts never fill the entire page with stretched systems by default.** Part editions use `parts_ragged_bottom: true` and `parts_ragged_last_bottom: true`, plus non-stretching system-to-system spacing. This keeps natural gaps even on a short last page. Vertical collision avoidance remains active, so there is no universal hard maximum in millimeters. The full score uses its own compact title and spacing rules. Use `project.json` → `layout` → `part_overrides` to tune each part independently:
-
-```json
-"part_overrides": {
-  "04-clarinet-1": {
-    "target_pages": 2,
-    "systems_per_page": 5,
-    "staff_space_mm": 1.75,
-    "ragged_last_bottom": true
-  }
-}
-```
-
-This example is **illustrative**: do not add another `layout` object; edit the existing one. The included eight-bar sample has no page targets.
-
-Supported per-edition options:
-- `target_pages`: request a page count; verification **fails** if actual PDF count differs;
-- `systems_per_page`: request a number of systems on each page;
-- `system_count`: request total systems;
-- `staff_space_mm`: 1.2–1.75 for parts; 0.55–1.75 for scores;
-- `ragged_bottom` and `ragged_last_bottom`: distribution of vertical whitespace;
-- `page_spacing_weight`: tune automatic page breaking.
-
-**Target page count takes precedence over filling the page vertically**: the builder requests `page-count` and validates the resulting PDF. If that is impossible at current spacing, lower `staff_space_mm`, set `system_count`, or change page breaks; do not stretch a 1–3-system page just to reach the footer. A page target cannot guarantee good engraving, and cannot justify illegible notes or impossible page turns. Review the PDF manually after changing overrides.
-
-`layout.score_overrides` similarly supports `full-score` and `concert-score` editions separately. A3 is **not allowed** anywhere. CI also rejects LilyPond's `compressing over-full page` warnings rather than silently uploading visibly crushed pages.
-
-## Version in page footers
-
-The build tool derives the printed version with `git describe --tags --always --abbrev=8` and checks all staged, unstaged and untracked source changes:
-
-| Git state | Example |
-| --- | --- |
-| Exact annotated or lightweight tag | `Ensemble_Assemble_V1.2.0` |
-| Three commits after tag | `Ensemble_Assemble_V1.2.0-3-g12345678` |
-| Uncommitted local changes | `Ensemble_Assemble_V1.2.0-3-g12345678-dirty` |
-| Never tagged | `Ensemble_Assemble_Vabc12345` |
-| Uninitialized source ZIP | `Ensemble_Assemble_Vunversioned` |
-
-CI checks that release tags point at HEAD and refuses dirty release builds.
-
-## Audio rendering
-
-LilyPond produces MIDI, which is rendered using FluidSynth + a General MIDI SoundFont at 48 kHz. The pipeline exports **MP3** and high-quality **MP3**, plus the original MIDI.
-
-On Linux CI the SoundFont is `FluidR3_GM.sf2` installed through Ubuntu's `fluid-soundfont-gm` package. For local Windows audio, `MS_Basic.sf3` from MuseScore Studio is a possible alternative if the FluidSynth build supports SF3. No SoundFont binaries are committed; check licenses and attribution for any distribution.
-
-**MuseSounds / MuseSampler are not a SoundFont**, and are not used by this FluidSynth workflow. For the most realistic orchestral audio, consider an additional DAW/MuseScore Studio mastering stage with articulation-aware sound libraries and manual mixing; this CI render is intended mainly for rehearsal.
-
-Standard MIDI has 15 melodic channels plus one percussion channel. This project uses LilyPond's `midiChannelMapping = #'instrument` so duplicated timbres share channels. When the orchestration uses more than 15 distinct melodic patches, generate separate stems and mix them instead.
-
-## Attribution and licensing
-
-The template and example sketch are MIT-licensed; this does not extend rights to arrangements of other works. Fill in `project.json` title, subtitle, composer, author, translator, transcriber, arranger and complete copyright/source/proofreader attribution before distributing real music.
-
-## CI portability
-
-The GitHub-specific file is only the runner/release adapter. Move to GitLab or Forgejo by invoking the same commands in their CI:
-
-```bash
-python3 -m unittest discover -s tests -v
-python3 scripts/build.py build --audio
-python3 scripts/build.py package
-```
-
-## Audio stems and mixing
-
-The build creates `dist/audio/stems/<instrument-id>.mp3` for each instrument plus `dist/audio/orchestra.mp3`, mixed from the **uncompressed PCM stem renders**, not from already compressed MP3s. `audio.zip` contains 21 individual MP3 stems, the orchestra MP3 mix and the original orchestra MIDI. FLAC is not generated. Each part uses concert-pitch MIDI; normal B-flat/E-flat written transpositions apply only to PDFs. The mix uses conservative normalization to avoid clipping; for professional sound, mix the same stems in a DAW.
+См. [импорт из MusicXML](docs/IMPORT_FROM_MUSESCORE.md). Не используйте циклическую конвертацию как источник истины: LilyPond остаётся редактируемым проектом.

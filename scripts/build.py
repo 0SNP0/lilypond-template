@@ -243,6 +243,10 @@ def build(*, audio: bool, font: str | None) -> None:
     if audio:
         render_audio(parts, font, naming)
     verify(audio=audio)
+    if audio:
+        # Both PDF and SVG are LilyPond-native; the SVG export also produces
+        # timing, per-view fingerprints and stable measure identifiers.
+        run([sys.executable, str(ROOT / "scripts" / "export.py")])
 
 
 def locate_soundfont(override: str | None) -> Path:
@@ -356,7 +360,16 @@ def package() -> None:
         for item in sorted((AUDIO / "stems").glob("*.mp3")):
             archive.write(item, f"audio/stems/{item.name}")
         archive.write(BUILD / "build-info.json", "build-info.json")
-    print("Ready:", naming["pdf_zip"], naming["audio_zip"])
+    viewer = ROOT / "dist" / "viewer"
+    if not (viewer / "manifest.json").is_file() or not (viewer / "timeline.json").is_file():
+        raise RuntimeError("Missing SVG synchronization/print hashes; run build --audio")
+    with zipfile.ZipFile(PACKAGES / (naming["slug"] + "-viewer-" + naming["revision"] + ".zip"),
+                         "w", zipfile.ZIP_DEFLATED) as archive:
+        for item in sorted(viewer.rglob("*")):
+            if item.is_file():
+                archive.write(item, str(item.relative_to(ROOT / "dist")))
+        archive.write(BUILD / "build-info.json", "build-info.json")
+    print("Ready:", naming["pdf_zip"], naming["audio_zip"], "and SVG viewer data")
 
 
 def main() -> None:

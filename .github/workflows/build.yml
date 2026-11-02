@@ -49,6 +49,8 @@ jobs:
             dist/audio/*.midi
             dist/audio/stems/*.mp3
             dist/packages/*.zip
+            dist/viewer/**/*.svg
+            dist/viewer/*.json
           if-no-files-found: error
           retention-days: 14
   release:

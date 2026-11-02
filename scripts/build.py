@@ -23,13 +23,13 @@ METADATA = ROOT / "metadata.ily"
 REPOSITORY = "0SNP0/lilypond-template"
 METADATA_START = "<!-- SCORE-METADATA:START -->"
 METADATA_END = "<!-- SCORE-METADATA:END -->"
-RELEASE_START = "<!-- LATEST-RELEASE:START -->"
-RELEASE_END = "<!-- LATEST-RELEASE:END -->"
 
 
-def run(args: list[str], *, capture: bool = False) -> str:
+def run(args: list[str], *, capture: bool = False,
+        environment: dict[str, str] | None = None) -> str:
     print("+", " ".join(args), flush=True)
     p = subprocess.run(args, cwd=ROOT, check=True,
+                       env={**os.environ, **(environment or {})},
                        stdout=subprocess.PIPE if capture else None,
                        stderr=subprocess.STDOUT if capture else None,
                        text=True, errors="replace")
@@ -120,17 +120,9 @@ def metadata_section() -> str:
     return "\n".join(f"| {title} | {value(key)} |" for title, key in fields)
 
 
-def sync_readme(*, check: bool = False, release_tag: str | None = None) -> None:
+def sync_readme(*, check: bool = False) -> None:
     text = README.read_text(encoding="utf-8")
     new = replace_section(text, METADATA_START, METADATA_END, metadata_section())
-    if release_tag:
-        if not re.fullmatch(r"v[0-9][0-9A-Za-z.+-]*", release_tag):
-            raise RuntimeError("Invalid release tag")
-        url = f"https://github.com/{REPOSITORY}/releases/tag/{release_tag}"
-        release_line = (f"**Последняя опубликованная версия: "
-                        f"[{release_tag}]({url}).** "
-                        f"[Скачать партии и аудио]({url}).")
-        new = replace_section(new, RELEASE_START, RELEASE_END, release_line)
     if check and new != text:
         raise RuntimeError(
             "README metadata disagrees with metadata.ily; "
@@ -147,15 +139,17 @@ def compile_lilypond(source: Path, output: Path, version: str,
     if not lilypond:
         raise RuntimeError("Install native LilyPond; lilypond executable not in PATH")
     output.parent.mkdir(parents=True, exist_ok=True)
-    extra: list[str] = []
+    score_size: float | None = None
     attempt = 0
     while True:
         args = [
             lilypond, "-dno-point-and-click",
-            "-e", f"(define-public ea-revision {json.dumps(version)})",
-            *extra, "-o", str(output), str(source),
+            "-o", str(output), str(source),
         ]
-        text = run(args, capture=True)
+        env = {"ENSEMBLE_SCORE_VERSION": version}
+        if score_size is not None:
+            env["ENSEMBLE_SCORE_STAFF_SPACE"] = str(score_size)
+        text = run(args, capture=True, environment=env)
         print(text, end="", flush=True)
         overfull = "compressing over-full page" in text
         if "error:" in text.lower() or not output.with_suffix(".pdf").is_file():
@@ -172,7 +166,7 @@ def compile_lilypond(source: Path, output: Path, version: str,
         if next_size < 0.55 or attempt >= 20:
             raise RuntimeError(f"Cannot fit score on A4 without compression: {source}")
         print(f"Retry score at staff-space {next_size:.3f} mm", flush=True)
-        extra = ["-e", f"(define-public ea-score-size-override {next_size})"]
+        score_size = next_size
         attempt += 1
 
 
@@ -328,8 +322,6 @@ def main() -> None:
     commands.add_parser("version")
     commands.add_parser("readme")
     commands.add_parser("readme-check")
-    release = commands.add_parser("readme-release")
-    release.add_argument("tag")
     commands.add_parser("clean")
     args = parser.parse_args()
     try:
@@ -345,8 +337,6 @@ def main() -> None:
             sync_readme()
         elif args.command == "readme-check":
             sync_readme(check=True)
-        elif args.command == "readme-release":
-            sync_readme(release_tag=args.tag)
         elif args.command == "clean":
             for path in (BUILD, ROOT / "dist"):
                 if path.exists():

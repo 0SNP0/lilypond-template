@@ -11,22 +11,26 @@
 
 #(define ea-staff-count (max 1 (ea-count-staves ensembleScore)))
 #(define ea-automatic-size
-  (min 1.75 (max 0.55 (/ 235.0 (* 9.0 ea-staff-count)))))
+  (min 1.75 (max 0.55 (/ 270.0 (* 9.0 ea-staff-count)))))
 % The build tool can reduce this via -e if a page still compresses.
 #(define ea-print-size
-  (if (defined? 'ea-score-size-override)
-      ea-score-size-override
-      ea-automatic-size))
+  (let ((value (getenv "ENSEMBLE_SCORE_STAFF_SPACE")))
+    (if (and value (string->number value))
+        (string->number value)
+        ea-automatic-size)))
+#(display "EA_STAFF_SIZE " (current-error-port))
+#(display ea-print-size (current-error-port))
+#(newline (current-error-port))
 #(set-global-staff-size (* 20.0 (/ ea-print-size 1.7573)))
 
 \paper {
   #(set-paper-size "a4")
-  top-margin = 15\mm
-  bottom-margin = 15\mm
-  left-margin = 15\mm
-  right-margin = 15\mm
-  indent = 18\mm
-  short-indent = 18\mm
+  top-margin = 4\mm
+  bottom-margin = 4\mm
+  left-margin = 3\mm
+  right-margin = 3\mm
+  indent = 14\mm
+  short-indent = 14\mm
   print-first-page-number = ##t
   print-page-number = ##t
   ragged-bottom = ##f

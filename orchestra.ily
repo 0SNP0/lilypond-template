@@ -27,44 +27,44 @@
 ensembleScore = <<
   % Woodwinds
   \new StaffGroup <<
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "Fl. I" shortInstrumentName = \markup \fontsize #-3 "Fl. I" midiInstrument = "flute" } { \global \introMark \fluteOneMusic }
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "Fl. II" shortInstrumentName = \markup \fontsize #-3 "Fl. II" midiInstrument = "flute" } { \global \fluteTwoMusic }
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "Ob." shortInstrumentName = \markup \fontsize #-3 "Ob." midiInstrument = "oboe" } { \global \oboeMusic }
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "Cl. I" shortInstrumentName = \markup \fontsize #-3 "Cl. I" midiInstrument = "clarinet" } { \tag #'written { \transpose c d { \global \clarinetOneMusic } } \tag #'concert { \global \clarinetOneMusic } }
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "Cl. II" shortInstrumentName = \markup \fontsize #-3 "Cl. II" midiInstrument = "clarinet" } { \tag #'written { \transpose c d { \global \clarinetTwoMusic } } \tag #'concert { \global \clarinetTwoMusic } }
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "B. Cl." shortInstrumentName = \markup \fontsize #-3 "B. Cl." midiInstrument = "clarinet" } { \tag #'written { \transpose c d' { \global \bassClarinetMusic } } \tag #'concert { \global \bassClarinetMusic } }
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "S. Sax." shortInstrumentName = \markup \fontsize #-3 "S. Sax." midiInstrument = "soprano sax" } { \tag #'written { \transpose c d { \global \sopranoSaxMusic } } \tag #'concert { \global \sopranoSaxMusic } }
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "A. Sax." shortInstrumentName = \markup \fontsize #-3 "A. Sax." midiInstrument = "alto sax" } { \tag #'written { \transpose c a { \global \altoSaxMusic } } \tag #'concert { \global \altoSaxMusic } }
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "T. Sax." shortInstrumentName = \markup \fontsize #-3 "T. Sax." midiInstrument = "tenor sax" } { \tag #'written { \transpose c d' { \global \tenorSaxMusic } } \tag #'concert { \global \tenorSaxMusic } }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Fl. I" shortInstrumentName = \markup \abs-fontsize #9.5 "Fl. I" midiInstrument = "flute" } { \global \introMark \fluteOneMusic }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Fl. II" shortInstrumentName = \markup \abs-fontsize #9.5 "Fl. II" midiInstrument = "flute" } { \global \fluteTwoMusic }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Ob." shortInstrumentName = \markup \abs-fontsize #9.5 "Ob." midiInstrument = "oboe" } { \global \oboeMusic }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Cl. I" shortInstrumentName = \markup \abs-fontsize #9.5 "Cl. I" midiInstrument = "clarinet" } { \tag #'written { \transpose c d { \global \clarinetOneMusic } } \tag #'concert { \global \clarinetOneMusic } }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Cl. II" shortInstrumentName = \markup \abs-fontsize #9.5 "Cl. II" midiInstrument = "clarinet" } { \tag #'written { \transpose c d { \global \clarinetTwoMusic } } \tag #'concert { \global \clarinetTwoMusic } }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "B. Cl." shortInstrumentName = \markup \abs-fontsize #9.5 "B. Cl." midiInstrument = "clarinet" } { \tag #'written { \transpose c d' { \global \bassClarinetMusic } } \tag #'concert { \global \bassClarinetMusic } }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "S. Sax." shortInstrumentName = \markup \abs-fontsize #9.5 "S. Sax." midiInstrument = "soprano sax" } { \tag #'written { \transpose c d { \global \sopranoSaxMusic } } \tag #'concert { \global \sopranoSaxMusic } }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "A. Sax." shortInstrumentName = \markup \abs-fontsize #9.5 "A. Sax." midiInstrument = "alto sax" } { \tag #'written { \transpose c a { \global \altoSaxMusic } } \tag #'concert { \global \altoSaxMusic } }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "T. Sax." shortInstrumentName = \markup \abs-fontsize #9.5 "T. Sax." midiInstrument = "tenor sax" } { \tag #'written { \transpose c d' { \global \tenorSaxMusic } } \tag #'concert { \global \tenorSaxMusic } }
   >>
   % Brass
   \new StaffGroup <<
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "Tpt. I" shortInstrumentName = \markup \fontsize #-3 "Tpt. I" midiInstrument = "trumpet" } { \tag #'written { \transpose c d { \global \trumpetOneMusic } } \tag #'concert { \global \trumpetOneMusic } }
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "Tpt. II" shortInstrumentName = \markup \fontsize #-3 "Tpt. II" midiInstrument = "trumpet" } { \tag #'written { \transpose c d { \global \trumpetTwoMusic } } \tag #'concert { \global \trumpetTwoMusic } }
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "Tbn. I" shortInstrumentName = \markup \fontsize #-3 "Tbn. I" midiInstrument = "trombone" } { \clef bass \global \tromboneOneMusic }
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "Tbn. II" shortInstrumentName = \markup \fontsize #-3 "Tbn. II" midiInstrument = "trombone" } { \clef bass \global \tromboneTwoMusic }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Tpt. I" shortInstrumentName = \markup \abs-fontsize #9.5 "Tpt. I" midiInstrument = "trumpet" } { \tag #'written { \transpose c d { \global \trumpetOneMusic } } \tag #'concert { \global \trumpetOneMusic } }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Tpt. II" shortInstrumentName = \markup \abs-fontsize #9.5 "Tpt. II" midiInstrument = "trumpet" } { \tag #'written { \transpose c d { \global \trumpetTwoMusic } } \tag #'concert { \global \trumpetTwoMusic } }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Tbn. I" shortInstrumentName = \markup \abs-fontsize #9.5 "Tbn. I" midiInstrument = "trombone" } { \clef bass \global \tromboneOneMusic }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Tbn. II" shortInstrumentName = \markup \abs-fontsize #9.5 "Tbn. II" midiInstrument = "trombone" } { \clef bass \global \tromboneTwoMusic }
   >>
   % Percussion
   \new StaffGroup <<
-    \new DrumStaff \with { instrumentName = \markup \fontsize #-3 "D. Kit" shortInstrumentName = \markup \fontsize #-3 "D. Kit" } { \drumsGlobal \drumKitMusic }
+    \new DrumStaff \with { instrumentName = \markup \abs-fontsize #9.5 "D. Kit" shortInstrumentName = \markup \abs-fontsize #9.5 "D. Kit" } { \drumsGlobal \drumKitMusic }
   >>
   % Keyboards and Accordion
   \new StaffGroup <<
-    \new PianoStaff \with { instrumentName = \markup \fontsize #-3 "Pno." shortInstrumentName = \markup \fontsize #-3 "Pno." } <<
+    \new PianoStaff \with { instrumentName = \markup \abs-fontsize #9.5 "Pno." shortInstrumentName = \markup \abs-fontsize #9.5 "Pno." } <<
     \new Staff \with { midiInstrument = "acoustic grand" } { \clef treble \global \pianoRightMusic }
     \new Staff \with { midiInstrument = "acoustic grand" } { \clef bass \global \pianoLeftMusic }
   >>
-    \new PianoStaff \with { instrumentName = \markup \fontsize #-3 "Acc." shortInstrumentName = \markup \fontsize #-3 "Acc." } <<
+    \new PianoStaff \with { instrumentName = \markup \abs-fontsize #9.5 "Acc." shortInstrumentName = \markup \abs-fontsize #9.5 "Acc." } <<
     \new Staff \with { midiInstrument = "accordion" } { \clef treble \global \accordionRightMusic }
     \new Staff \with { midiInstrument = "accordion" } { \clef bass \global \accordionLeftMusic }
   >>
   >>
   % Strings
   \new StaffGroup <<
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "Vln. I" shortInstrumentName = \markup \fontsize #-3 "Vln. I" midiInstrument = "violin" } { \global \violinOneMusic }
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "Vln. II" shortInstrumentName = \markup \fontsize #-3 "Vln. II" midiInstrument = "violin" } { \global \violinTwoMusic }
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "Vla." shortInstrumentName = \markup \fontsize #-3 "Vla." midiInstrument = "viola" } { \clef alto \global \violaMusic }
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "Vc." shortInstrumentName = \markup \fontsize #-3 "Vc." midiInstrument = "cello" } { \clef bass \global \celloMusic }
-    \new Staff \with { instrumentName = \markup \fontsize #-3 "Cb." shortInstrumentName = \markup \fontsize #-3 "Cb." midiInstrument = "contrabass" } { \clef bass \tag #'written { \transpose c c' { \global \doubleBassMusic } } \tag #'concert { \global \doubleBassMusic } }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Vln. I" shortInstrumentName = \markup \abs-fontsize #9.5 "Vln. I" midiInstrument = "violin" } { \global \violinOneMusic }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Vln. II" shortInstrumentName = \markup \abs-fontsize #9.5 "Vln. II" midiInstrument = "violin" } { \global \violinTwoMusic }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Vla." shortInstrumentName = \markup \abs-fontsize #9.5 "Vla." midiInstrument = "viola" } { \clef alto \global \violaMusic }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Vc." shortInstrumentName = \markup \abs-fontsize #9.5 "Vc." midiInstrument = "cello" } { \clef bass \global \celloMusic }
+    \new Staff \with { instrumentName = \markup \abs-fontsize #9.5 "Cb." shortInstrumentName = \markup \abs-fontsize #9.5 "Cb." midiInstrument = "contrabass" } { \clef bass \tag #'written { \transpose c c' { \global \doubleBassMusic } } \tag #'concert { \global \doubleBassMusic } }
   >>
 >>

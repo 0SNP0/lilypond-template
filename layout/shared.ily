@@ -2,16 +2,16 @@
 ensembleHeader = \markup {
   \overlay {
     \fill-line {
-      \fontsize #-2 \fromproperty #'header:instrument
+      \abs-fontsize #10 \fromproperty #'header:instrument
       \null
-      \fontsize #-2 \fromproperty #'page:page-number-string
+      \abs-fontsize #10 \fromproperty #'page:page-number-string
     }
-    \fill-line { \null \fontsize #-2 \fromproperty #'header:title \null }
+    \fill-line { \null \abs-fontsize #10 \fromproperty #'header:title \null }
   }
 }
 
 ensembleFooter = \markup {
-  \fill-line { \null \fontsize #-2 \footerLabel \null }
+  \fill-line { \null \abs-fontsize #10 \footerLabel \null }
 }
 
 ensemblePartTitle = \markup {
@@ -20,8 +20,8 @@ ensemblePartTitle = \markup {
     \fill-line {
       \null
       \center-column {
-        \fontsize #6 \bold \fromproperty #'header:title
-        \fontsize #2 \fromproperty #'header:subtitle
+        \abs-fontsize #25 \bold \fromproperty #'header:title
+        \abs-fontsize #14 \fromproperty #'header:subtitle
       }
       \null
     }
@@ -46,8 +46,8 @@ ensembleScoreTitle = \markup {
     \fill-line {
       \null
       \center-column {
-        \fontsize #3 \bold \fromproperty #'header:title
-        \fontsize #-1 \fromproperty #'header:subtitle
+        \abs-fontsize #21 \bold \fromproperty #'header:title
+        \abs-fontsize #12 \fromproperty #'header:subtitle
       }
       \null
     }
@@ -55,8 +55,8 @@ ensembleScoreTitle = \markup {
     \fill-line {
       \null
       \right-column {
-        \fontsize #-2 \fromproperty #'header:composer
-        \fontsize #-2 \fromproperty #'header:arranger
+        \abs-fontsize #10 \fromproperty #'header:composer
+        \abs-fontsize #10 \fromproperty #'header:arranger
       }
     }
   }

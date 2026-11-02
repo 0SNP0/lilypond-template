@@ -203,7 +203,7 @@ def compile_lilypond(source: Path, output: Path, version: str,
             raise RuntimeError(f"Cannot determine current score scale: {source}")
         current = float(sizes[-1])
         next_size = round(current - 0.05, 3)
-        if next_size < 0.55 or attempt >= 20:
+        if next_size < 0.40 or attempt >= 24:
             raise RuntimeError(f"Cannot fit score on A4 without compression: {source}")
         print(f"Retry score at staff-space {next_size:.3f} mm", flush=True)
         score_size = next_size

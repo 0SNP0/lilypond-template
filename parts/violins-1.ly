@@ -5,4 +5,4 @@
 \include "../layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Violins I" tagline = ##f }
 \score { \new Staff << { \global } { \violinsOneMusic } >> \layout { } }
-\score { \new Staff { \violinsOneMusic } \midi { } }
+\score { \new Staff << { \global } { \violinsOneMusic } >> \midi { } }

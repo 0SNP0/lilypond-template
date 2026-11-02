@@ -172,7 +172,7 @@ def compile_lilypond(source: Path, output: Path, version: str,
         text = run(args, capture=True, environment=env)
         print(text, end="", flush=True)
         overfull = "compressing over-full page" in text
-        if "error:" in text.lower() or not output.with_suffix(".pdf").is_file():
+        if "error:" in text.lower() or not Path(str(output) + ".pdf").is_file():
             raise RuntimeError(f"LilyPond failed or produced no PDF: {source}")
         if not overfull:
             return

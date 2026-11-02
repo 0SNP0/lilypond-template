@@ -14,11 +14,14 @@
     "score_paper": "a4",
     "margin_mm": 15,
     "part_staff_space_mm": 1.75,
-    "score_staff_space_mm": 1.5,
-    "ragged_bottom": false,
-    "ragged_last_bottom": false,
+    "score_staff_space_mm": 1.05,
     "part_overrides": {},
-    "score_overrides": {}
+    "score_overrides": {},
+    "score_indent_mm": 18,
+    "parts_ragged_bottom": true,
+    "parts_ragged_last_bottom": true,
+    "score_ragged_bottom": true,
+    "score_ragged_last_bottom": true
   },
   "instruments": [
     {

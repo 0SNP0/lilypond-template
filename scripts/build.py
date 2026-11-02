@@ -148,8 +148,14 @@ def edition_layout(p: dict, instrument: dict | None = None, *, concert: bool = F
         raise RuntimeError(f"Unknown page layout options: {sorted(unknown)}")
     result = {
         "staff_space_mm": default_staff_space,
-        "ragged_last_bottom": layout.get("ragged_last_bottom", False),
-        "ragged_bottom": layout.get("ragged_bottom", False),
+        "ragged_last_bottom": layout.get(
+            "parts_ragged_last_bottom" if instrument else "score_ragged_last_bottom",
+            True,
+        ),
+        "ragged_bottom": layout.get(
+            "parts_ragged_bottom" if instrument else "score_ragged_bottom",
+            True,
+        ),
     }
     result.update(overrides)
     for field in ("target_pages", "systems_per_page", "system_count"):
@@ -157,8 +163,11 @@ def edition_layout(p: dict, instrument: dict | None = None, *, concert: bool = F
         if value is not None and (type(value) is not int or value < 1):
             raise RuntimeError(f"{field} must be a positive integer")
     value = result["staff_space_mm"]
-    if isinstance(value, bool) or not isinstance(value, (int, float)) or not 1.5 <= value <= 1.75:
-        raise RuntimeError("staff_space_mm must be between 1.50 and 1.75 mm")
+    minimum = 1.2 if instrument else 0.8
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not minimum <= value <= 1.75:
+        raise RuntimeError(
+            f"staff_space_mm must be between {minimum:.2f} and 1.75 mm for this edition"
+        )
     for field in ("ragged_bottom", "ragged_last_bottom"):
         if type(result[field]) is not bool:
             raise RuntimeError(f"{field} must be a boolean")
@@ -177,6 +186,9 @@ def paper_and_header(p: dict, edition: str, instrument: dict | None = None,
     options = edition_layout(p, instrument, concert=concert)
     points = options["staff_space_mm"] * 20 / 1.7573
     margin = layout["margin_mm"]
+    indent = 0 if instrument else layout.get("score_indent_mm", 18)
+    if not isinstance(indent, (int, float)) or isinstance(indent, bool) or not 0 <= indent <= 35:
+        raise RuntimeError("score_indent_mm must be between 0 and 35")
     composer = "Composer: " + p.get("composer", "") if p.get("composer") else ""
     lyricist = "Lyrics: " + p.get("lyricist", "") if p.get("lyricist") else ""
     translator = "Translation: " + p.get("translator", "") if p.get("translator") else ""
@@ -189,12 +201,27 @@ def paper_and_header(p: dict, edition: str, instrument: dict | None = None,
         f'  bottom-margin = {margin}\\mm',
         f'  left-margin = {margin}\\mm',
         f'  right-margin = {margin}\\mm',
+        f'  indent = {indent}\\mm',
+        f'  short-indent = {indent}\\mm',
         '  print-page-number = ##t',
         '  print-first-page-number = ##t',
         '  ragged-bottom = ' + ('##t' if options['ragged_bottom'] else '##f'),
         '  ragged-last-bottom = ' + ('##t' if options['ragged_last_bottom'] else '##f'),
         '  page-breaking = #ly:optimal-breaking',
     ]
+    if instrument:
+        # A natural, bounded-looking gap: do not stretch sparse systems
+        # across the entire A4 page. Collision avoidance remains active.
+        paper_lines.append(
+            "  system-system-spacing = "
+            "#'((basic-distance . 12) (minimum-distance . 9) "
+            "(padding . 1) (stretchability . 0))"
+        )
+        paper_lines.append(
+            "  markup-system-spacing = "
+            "#'((basic-distance . 9) (minimum-distance . 6) "
+            "(padding . 1) (stretchability . 0))"
+        )
     if options.get('target_pages') is not None:
         paper_lines.append(f'  page-count = #{options["target_pages"]}')
     if options.get('systems_per_page') is not None:
@@ -206,7 +233,8 @@ def paper_and_header(p: dict, edition: str, instrument: dict | None = None,
         r'  evenHeaderMarkup = \ensemblePageHeader',
         r'  oddFooterMarkup = \ensemblePageFooter',
         r'  evenFooterMarkup = \ensemblePageFooter',
-        r'  bookTitleMarkup = \ensembleBookTitle',
+        r'  bookTitleMarkup = \ensembleBookTitle' if instrument
+        else r'  bookTitleMarkup = \ensembleCompactBookTitle',
     ])
     return ('\\version "2.24.3"\n'
             '\\include "build/version.ily"\n'
@@ -231,28 +259,49 @@ def paper_and_header(p: dict, edition: str, instrument: dict | None = None,
 def edition_score_layout(p: dict, instrument: dict | None = None,
                          *, concert: bool = False) -> str:
     opts = edition_layout(p, instrument, concert=concert)
+    statements = []
     if opts.get('system_count') is not None:
-        return f'\\layout {{ system-count = #{opts["system_count"]} }}'
-    return r'\layout { }'
+        statements.append(f'system-count = #{opts["system_count"]}')
+    if instrument is None:
+        # Only the conductor's score uses these compact within-system gaps.
+        # LilyPond's skyline-based collision avoidance still takes precedence.
+        statements.append(
+            "\\context { \\Score "
+            "\\override StaffGrouper.staff-staff-spacing.basic-distance = #7 "
+            "\\override StaffGrouper.staff-staff-spacing.minimum-distance = #6 "
+            "\\override StaffGrouper.staff-staff-spacing.padding = #0.5 "
+            "\\override StaffGrouper.staffgroup-staff-spacing.basic-distance = #9 "
+            "\\override StaffGrouper.staffgroup-staff-spacing.minimum-distance = #7 "
+            "\\override StaffGrouper.staffgroup-staff-spacing.padding = #0.8 "
+            "}"
+        )
+    return "\\layout { " + " ".join(statements) + " }"
 
 
 def simple_staff(i: dict, *, concert: bool, for_midi: bool, first: bool, part: bool = False) -> str:
-    name = lily_string(i["name"])
-    short = lily_string(i["short"])
     inst = lily_string(i["midi"])
-    settings = f'instrumentName = {name} shortInstrumentName = {short} midiInstrument = {inst}'
+    if part or for_midi:
+        # The part's identity is already shown in the page header/title.
+        # No labels are printed in the left gutter of individual systems.
+        labels = ""
+    else:
+        # Short names even on the first system prevent overflow on A4.
+        short = lily_string(i["short"])
+        small = f"\\markup \\fontsize #-3 {short}"
+        labels = f"instrumentName = {small} shortInstrumentName = {small} "
+    settings = f'{labels}midiInstrument = {inst}'
     intro = "\\introMark " if first else ""
     transpose = i["transpose_to"] if not concert else "c"
     if i["group"] == "percussion":
         inner = f"\\drumsGlobal {intro}\\{i['music']}"
-        return f"\\new DrumStaff \\with {{ instrumentName = {name} shortInstrumentName = {short} }} {{ {inner} }}"
+        return f"\\new DrumStaff \\with {{ {labels} }} {{ {inner} }}"
     if i.get("staves"):
         staves = []
         for k, var in enumerate(i["staves"]):
             clef = "treble" if k == 0 else "bass"
             inner = f"\\clef {clef} \\global {intro if k == 0 else ''}\\{var}"
             staves.append(f"\\new Staff \\with {{ midiInstrument = {inst} }} {{ {inner} }}")
-        return f"\\new PianoStaff \\with {{ instrumentName = {name} shortInstrumentName = {short} }} << {' '.join(staves)} >>"
+        return f"\\new PianoStaff \\with {{ {labels} }} << {' '.join(staves)} >>"
     clef = f"\\clef {i['clef']} " if i.get("clef") else ""
     music = f"\\global {intro}\\{i['music']}"
     if transpose != "c":
@@ -314,8 +363,23 @@ def build(p: dict, *, audio: bool, soundfont: str | None) -> None:
         src = generated / (name + ".ly")
         src.write_text(source, encoding="utf-8")
         output.parent.mkdir(parents=True, exist_ok=True)
-        execute([lilypond, "-dno-point-and-click", "-I", str(ROOT),
-                 "-o", str(output), str(src)])
+        cmd = [lilypond, "-dno-point-and-click", "-I", str(ROOT),
+               "-o", str(output), str(src)]
+        print("+", " ".join(cmd), flush=True)
+        result = subprocess.run(
+            cmd, cwd=ROOT, stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT, text=True, errors="replace",
+        )
+        print(result.stdout, end="", flush=True)
+        if result.returncode != 0:
+            raise RuntimeError(f"LilyPond failed for {name}: exit {result.returncode}")
+        if "compressing over-full page" in result.stdout or re.search(
+            r"warning: page \d+ has been compressed", result.stdout
+        ):
+            raise RuntimeError(
+                f"{name}: page is overfull/compressed; reduce score size "
+                "or adjust page layout, do not release an unreadable page"
+            )
         if not output.with_suffix(expected).is_file():
             raise RuntimeError(f"Missing expected {expected}: {output}")
 

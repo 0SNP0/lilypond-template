@@ -31,8 +31,12 @@ class ProjectTests(unittest.TestCase):
         self.assertIn("\\transpose c d'", normal)
         self.assertNotIn("\\transpose c d'", concert)
         self.assertIn('set-paper-size "a4"', normal)
-        self.assertIn('ragged-last-bottom = ##f', normal)
+        self.assertIn('ragged-last-bottom = ##t', normal)
         self.assertNotIn('set-paper-size "a3"', normal)
+        self.assertIn("instrumentName = \\markup \\fontsize #-3", normal)
+        self.assertNotIn("Clarinet in B-flat I", normal)
+        self.assertIn("indent = 18\\\\mm", normal)
+        self.assertIn("ensembleCompactBookTitle", normal)
         self.assertIn("\\new DrumStaff", normal)
         self.assertEqual(normal.count("\\include \"music/"), 22)
 
@@ -48,6 +52,10 @@ class ProjectTests(unittest.TestCase):
         part = builder.make_document(self.p, clarinet)
         self.assertIn('set-paper-size "a4"', part)
         self.assertIn("\\compressMMRests", part)
+        self.assertNotIn("instrumentName =", part)
+        self.assertNotIn("shortInstrumentName =", part)
+        self.assertIn("indent = 0\\\\mm", part)
+        self.assertIn("stretchability . 0", part)
         self.assertIn("\\transpose c d", part)
 
     def test_all_instrument_labels_english(self):
@@ -77,6 +85,12 @@ class ProjectTests(unittest.TestCase):
         self.assertIn("system-count = #8", part)
         self.assertNotIn("page-count = #2", other)
         self.assertIn('set-paper-size "a4"', part)
+
+    def test_compact_score_does_not_shrink_parts(self):
+        self.assertEqual(builder.edition_layout(self.p)["staff_space_mm"], 1.05)
+        self.assertEqual(builder.edition_layout(self.p, self.p["instruments"][0])["staff_space_mm"], 1.75)
+        self.assertTrue(builder.edition_layout(self.p, self.p["instruments"][0])["ragged_bottom"])
+        self.assertTrue(builder.edition_layout(self.p, self.p["instruments"][0])["ragged_last_bottom"])
 
     def test_score_overrides_and_invalid_paper(self):
         import copy

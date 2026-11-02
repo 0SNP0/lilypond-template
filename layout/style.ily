@@ -45,3 +45,27 @@ ensembleBookTitle = \markup {
     \vspace #1
   }
 }
+
+% Compact title for the full 23-staff score on A4 (parts retain full title).
+ensembleCompactBookTitle = \markup {
+  \column {
+    \fill-line {
+      \null
+      \center-column {
+        \fontsize #3 \bold \fromproperty #'header:title
+        \fontsize #0 \fromproperty #'header:subtitle
+      }
+      \null
+    }
+    \vspace #0.3
+    \fill-line {
+      \null
+      \right-column {
+        \fontsize #-2 \fromproperty #'header:composer
+        \fontsize #-2 \fromproperty #'header:transcriber
+        \fontsize #-2 \fromproperty #'header:arrangedBy
+      }
+    }
+    \vspace #0.3
+  }
+}

@@ -83,11 +83,11 @@ All music is stored once in `music/` and reused in the score, parts and MIDI edi
 
 ## Layout policy and per-part pagination
 
-Every edition uses **A4 portrait**, 15 mm margins. Instrument parts start at a 1.750 mm staff space. The full score uses 1.500 mm to fit the 23 staves onto A4 (review readability carefully). Staff space must remain between 1.500 and 1.750 mm.
+Every edition uses **A4 portrait**, 15 mm margins. Instrument parts start at a 1.750 mm staff space. The full conductor score deliberately uses a **much smaller 1.050 mm staff space**, abbreviated left labels (even on the first system), and tighter staff-group spacing to fit A4 without overfull-page compression. **Part** staff spacing defaults to 1.750 mm, adjustable down to 1.200 mm where page-count constraints require it; the conductor score may use 0.800–1.750 mm.
 
 Header: English part name at left, composition title centered, page number at right. Footer: `Ensemble_Assemble_V...` identifying the Git revision, plus copyright/attribution on page one. The first music page has a centered title/subtitle, composer/transcriber/arranger at right, lyricist/translator at left.
 
-Vertical layout on the last page is justified by default (`ragged_last_bottom: false`), but individual part spacing may be changed. Use `project.json` → `layout` → `part_overrides` to tune each part independently:
+**Sparse parts never fill the entire page with stretched systems by default.** Part editions use `parts_ragged_bottom: true` and `parts_ragged_last_bottom: true`, plus non-stretching system-to-system spacing. This keeps natural gaps even on a short last page. Vertical collision avoidance remains active, so there is no universal hard maximum in millimeters. The full score uses its own compact title and spacing rules. Use `project.json` → `layout` → `part_overrides` to tune each part independently:
 
 ```json
 "part_overrides": {
@@ -95,7 +95,7 @@ Vertical layout on the last page is justified by default (`ragged_last_bottom: f
     "target_pages": 2,
     "systems_per_page": 5,
     "staff_space_mm": 1.75,
-    "ragged_last_bottom": false
+    "ragged_last_bottom": true
   }
 }
 ```
@@ -106,13 +106,13 @@ Supported per-edition options:
 - `target_pages`: request a page count; verification **fails** if actual PDF count differs;
 - `systems_per_page`: request a number of systems on each page;
 - `system_count`: request total systems;
-- `staff_space_mm`: 1.5–1.75;
+- `staff_space_mm`: 1.2–1.75 for parts; 0.8–1.75 for scores;
 - `ragged_bottom` and `ragged_last_bottom`: distribution of vertical whitespace;
 - `page_spacing_weight`: tune automatic page breaking.
 
-A page target cannot guarantee good engraving, and cannot justify illegible notes or impossible page turns. Review the PDF manually after changing overrides.
+**Target page count takes precedence over filling the page vertically**: the builder requests `page-count` and validates the resulting PDF. If that is impossible at current spacing, lower `staff_space_mm`, set `system_count`, or change page breaks; do not stretch a 1–3-system page just to reach the footer. A page target cannot guarantee good engraving, and cannot justify illegible notes or impossible page turns. Review the PDF manually after changing overrides.
 
-`layout.score_overrides` similarly supports `full-score` and `concert-score` editions separately. A3 is **not allowed** anywhere.
+`layout.score_overrides` similarly supports `full-score` and `concert-score` editions separately. A3 is **not allowed** anywhere. CI also rejects LilyPond's `compressing over-full page` warnings rather than silently uploading visibly crushed pages.
 
 ## Version in page footers
 

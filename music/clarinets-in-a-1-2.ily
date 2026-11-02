@@ -1,6 +1,6 @@
 % Clarinets in A I–II: source MusicXML P5, 268 measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-clarinetsInA12Music = {
+clarinetsInAOneTwoMusic = {
   \clef treble
   \key g \major
   \time 3/4

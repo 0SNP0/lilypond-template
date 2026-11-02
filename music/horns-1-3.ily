@@ -1,6 +1,6 @@
 % Horns in F I & III: source MusicXML P8, 268 measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-horns13Music = {
+hornsOneThreeMusic = {
   \clef treble
   \key c \major
   \time 3/4

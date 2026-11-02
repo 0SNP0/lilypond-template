@@ -1,6 +1,6 @@
 % Horns in F II & IV: source MusicXML P9, 268 measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-horns24Music = {
+hornsTwoFourMusic = {
   \clef treble
   \key c \major
   \time 3/4

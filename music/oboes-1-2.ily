@@ -1,6 +1,6 @@
 % Oboes I–II: source MusicXML P3, 268 measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-oboes12Music = {
+oboesOneTwoMusic = {
   \clef treble
   \key e \major
   \time 3/4

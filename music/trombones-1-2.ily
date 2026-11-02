@@ -1,6 +1,6 @@
 % Trombones I–II: source MusicXML P12, 268 measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-trombones12Music = {
+trombonesOneTwoMusic = {
   \clef bass
   \key e \major
   \time 3/4

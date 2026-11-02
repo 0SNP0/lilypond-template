@@ -1,6 +1,6 @@
 % Trumpet in B-flat III: source MusicXML P11, 268 measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-trumpet3Music = {
+trumpetThreeMusic = {
   \clef treble
   \key c \major
   \time 3/4

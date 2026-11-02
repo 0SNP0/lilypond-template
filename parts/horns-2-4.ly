@@ -3,4 +3,4 @@
 \include "../music/horns-2-4.ily"
 \paper { #(set-paper-size "a4") top-margin=15\mm bottom-margin=15\mm left-margin=15\mm right-margin=15\mm ragged-last-bottom=##t }
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Horns in F II & IV" tagline = ##f }
-\score { \new Staff { \horns24Music } \layout { } }
+\score { \new Staff { \hornsTwoFourMusic } \layout { } }

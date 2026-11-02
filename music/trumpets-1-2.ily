@@ -1,6 +1,6 @@
 % Trumpets in B-flat I–II: source MusicXML P10, 268 measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-trumpets12Music = {
+trumpetsOneTwoMusic = {
   \clef treble
   \key c \major
   \time 3/4

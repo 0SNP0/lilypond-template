@@ -1,6 +1,6 @@
 % Trombone III / Tuba: source MusicXML P13, 268 measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-trombone3AndTubaMusic = {
+tromboneThreeAndTubaMusic = {
   \clef bass
   \key e \major
   \time 3/4

@@ -1,6 +1,6 @@
 % Bassoons I–II: source MusicXML P6, 268 measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-bassoons12Music = {
+bassoonsOneTwoMusic = {
   \clef bass
   \key e \major
   \time 3/4

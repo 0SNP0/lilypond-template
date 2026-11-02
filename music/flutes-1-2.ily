@@ -1,6 +1,6 @@
 % Flutes I–II: source MusicXML P2, 268 measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-flutes12Music = {
+flutesOneTwoMusic = {
   \clef treble
   \key e \major
   \time 3/4

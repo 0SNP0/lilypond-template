@@ -1,0 +1,18 @@
+# Generated scores, renders and build metadata
+/build/
+/dist/
+
+# Optional local sound libraries
+/soundfonts/*.sf2
+/soundfonts/*.sf3
+/soundfonts/*.sfz
+
+# Editor and Python scratch files
+__pycache__/
+*.py[cod]
+.venv/
+.vscode/*.log
+*.ly~
+*.bak
+.DS_Store
+Thumbs.db

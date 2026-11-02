@@ -216,7 +216,7 @@ def build(*, audio: bool, font: str | None) -> None:
     score_midi = PDF / (naming["score"] + ".midi")
     if not score_midi.is_file():
         raise RuntimeError("Score did not emit orchestra MIDI")
-    shutil.move(str(score_midi), str(AUDIO / (naming["mix"] + ".midi"))
+    shutil.move(str(score_midi), str(AUDIO / (naming["mix"] + ".midi")))
     compile_lilypond(ROOT / "concert-score.ly", PDF / naming["concert"], rev, score=True)
     for source in parts:
         stem = part_name(source, naming)

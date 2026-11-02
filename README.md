@@ -44,12 +44,12 @@ py -3 scripts/build.py package
 
 ## Linux CI / release workflow
 
-Every push and pull request runs tests, compiles all PDFs, MIDI, FLAC and MP3, and uploads downloadable build artifacts retained for 14 days.
+Every push and pull request runs tests, compiles all PDFs, MIDI, MP3 stems and a mixed MP3, and uploads downloadable build artifacts retained for 14 days.
 
 On a version tag matching `v*` (for example `v0.1.0`), a GitHub Release receives:
 - all **23 individual PDF** files;
 - `scores-pdf.zip` containing the score and all instrument parts;
-- `audio.zip` containing orchestra MIDI, FLAC and MP3.
+- `audio.zip` containing orchestra MIDI, MP3 stems and a mixed MP3.
 
 The archives also include `build-info.json` with version provenance. Generated `build/` and `dist/` are ignored by Git.
 
@@ -75,7 +75,7 @@ soundfonts/                 Optional local soundfont (binary ignored)
 .github/workflows/build.yml CI and tagged Releases
 build/                      Generated source and Git metadata (ignored)
 dist/pdf/                   PDF score and 21 parts (ignored)
-dist/audio/                 MIDI, FLAC, MP3 (ignored)
+dist/audio/                 Orchestra MIDI, MP3 mix and MP3 stems (ignored)
 dist/packages/              Release ZIPs (ignored)
 ```
 
@@ -83,7 +83,7 @@ All music is stored once in `music/` and reused in the score, parts and MIDI edi
 
 ## Layout policy and per-part pagination
 
-Every edition uses **A4 portrait**, 15 mm margins. Instrument parts start at a 1.750 mm staff space. The full conductor score deliberately uses a **much smaller 1.050 mm staff space**, abbreviated left labels (even on the first system), and tighter staff-group spacing to fit A4 without overfull-page compression. **Part** staff spacing defaults to 1.750 mm, adjustable down to 1.200 mm where page-count constraints require it; the conductor score may use 0.800–1.750 mm.
+Every edition uses **A4 portrait**, 15 mm margins. Instrument parts start at a 1.750 mm staff space. The full conductor score uses an **automatic staff size** based on the actual number of printed staves (including both piano and accordion staves); short English instrument labels and compact grouping preserve A4. The score defaults to vertically justified pages to fill available page height, and the builder automatically reduces staff size in steps of 0.05 mm if LilyPond warns of compressed pages. Override the score by setting a numeric `staff_space_mm` under `layout.score_overrides.full-score` or `concert-score`. **Part** staff spacing defaults to 1.750 mm, adjustable down to 1.200 mm where page-count constraints require it; the conductor score may use 0.550–1.750 mm.
 
 Header: English part name at left, composition title centered, page number at right. Footer: `Ensemble_Assemble_V...` identifying the Git revision, plus copyright/attribution on page one. The first music page has a centered title/subtitle, composer/transcriber/arranger at right, lyricist/translator at left.
 
@@ -106,7 +106,7 @@ Supported per-edition options:
 - `target_pages`: request a page count; verification **fails** if actual PDF count differs;
 - `systems_per_page`: request a number of systems on each page;
 - `system_count`: request total systems;
-- `staff_space_mm`: 1.2–1.75 for parts; 0.8–1.75 for scores;
+- `staff_space_mm`: 1.2–1.75 for parts; 0.55–1.75 for scores;
 - `ragged_bottom` and `ragged_last_bottom`: distribution of vertical whitespace;
 - `page_spacing_weight`: tune automatic page breaking.
 
@@ -130,7 +130,7 @@ CI checks that release tags point at HEAD and refuses dirty release builds.
 
 ## Audio rendering
 
-LilyPond produces MIDI, which is rendered using FluidSynth + a General MIDI SoundFont at 48 kHz. The pipeline exports **FLAC** and high-quality **MP3**, plus the original MIDI.
+LilyPond produces MIDI, which is rendered using FluidSynth + a General MIDI SoundFont at 48 kHz. The pipeline exports **MP3** and high-quality **MP3**, plus the original MIDI.
 
 On Linux CI the SoundFont is `FluidR3_GM.sf2` installed through Ubuntu's `fluid-soundfont-gm` package. For local Windows audio, `MS_Basic.sf3` from MuseScore Studio is a possible alternative if the FluidSynth build supports SF3. No SoundFont binaries are committed; check licenses and attribution for any distribution.
 
@@ -151,3 +151,7 @@ python3 -m unittest discover -s tests -v
 python3 scripts/build.py build --audio
 python3 scripts/build.py package
 ```
+
+## Audio stems and mixing
+
+The build creates `dist/audio/stems/<instrument-id>.mp3` for each instrument plus `dist/audio/orchestra.mp3`, mixed from the **uncompressed PCM stem renders**, not from already compressed MP3s. `audio.zip` contains 21 individual MP3 stems, the orchestra MP3 mix and the original orchestra MIDI. FLAC is not generated. Each part uses concert-pitch MIDI; normal B-flat/E-flat written transpositions apply only to PDFs. The mix uses conservative normalization to avoid clipping; for professional sound, mix the same stems in a DAW.

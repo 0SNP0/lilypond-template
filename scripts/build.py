@@ -139,6 +139,17 @@ def edition_layout(p: dict, instrument: dict | None = None, *, concert: bool = F
         score_id = "concert-score" if concert else "full-score"
         overrides = layout.get("score_overrides", {}).get(score_id, {})
         default_staff_space = layout["score_staff_space_mm"]
+        if default_staff_space == "auto":
+            # Count actual five-line staves; piano and accordion each have two.
+            stave_count = sum(
+                len(item["staves"]) if item.get("staves") else 1
+                for item in p["instruments"]
+            )
+            # Nominal vertical capacity of A4 music area; compensated for
+            # rehearsal marks, ledger lines, braces and section separators.
+            default_staff_space = round(
+                min(1.75, max(0.55, 235.0 / (9.0 * stave_count))), 3
+            )
     if not isinstance(overrides, dict):
         raise RuntimeError("Page layout overrides must be JSON objects")
     allowed = {"target_pages", "systems_per_page", "system_count", "staff_space_mm",
@@ -163,7 +174,7 @@ def edition_layout(p: dict, instrument: dict | None = None, *, concert: bool = F
         if value is not None and (type(value) is not int or value < 1):
             raise RuntimeError(f"{field} must be a positive integer")
     value = result["staff_space_mm"]
-    minimum = 1.2 if instrument else 0.8
+    minimum = 1.2 if instrument else 0.55
     if isinstance(value, bool) or not isinstance(value, (int, float)) or not minimum <= value <= 1.75:
         raise RuntimeError(
             f"staff_space_mm must be between {minimum:.2f} and 1.75 mm for this edition"
@@ -181,10 +192,11 @@ def edition_layout(p: dict, instrument: dict | None = None, *, concert: bool = F
 
 
 def paper_and_header(p: dict, edition: str, instrument: dict | None = None,
-                     *, concert: bool = False) -> str:
+                     *, concert: bool = False,
+                     staff_space_override: float | None = None) -> str:
     layout = p["layout"]
     options = edition_layout(p, instrument, concert=concert)
-    points = options["staff_space_mm"] * 20 / 1.7573
+    points = (staff_space_override or options["staff_space_mm"]) * 20 / 1.7573
     margin = layout["margin_mm"]
     indent = 0 if instrument else layout.get("score_indent_mm", 18)
     if not isinstance(indent, (int, float)) or isinstance(indent, bool) or not 0 <= indent <= 35:
@@ -312,20 +324,23 @@ def simple_staff(i: dict, *, concert: bool, for_midi: bool, first: bool, part: b
 
 
 def make_document(p: dict, instrument: dict | None = None, *, concert: bool = False,
-                  midi: bool = False) -> str:
+                  midi: bool = False, staff_space_override: float | None = None) -> str:
     if midi:
         base = '''\\version "2.24.3"
 \\include "music/global.ily"
 '''
     else:
         title = instrument["name"] if instrument else ("Concert Score" if concert else "Full Score")
-        base = paper_and_header(p, title, instrument, concert=concert)
+        base = paper_and_header(p, title, instrument, concert=concert,
+                                staff_space_override=staff_space_override)
     items = [instrument] if instrument else p["instruments"]
     for item in items:
         base += f'\\include "{item["source"]}"\n'
     if instrument:
-        expression = simple_staff(instrument, concert=False, for_midi=False,
-                                  first=True, part=True)
+        expression = simple_staff(
+            instrument, concert=midi, for_midi=midi,
+            first=True, part=not midi,
+        )
     else:
         categories = []
         for group in ("soloists", "woodwinds", "brass", "percussion", "keys", "choir", "strings"):
@@ -383,13 +398,44 @@ def build(p: dict, *, audio: bool, soundfont: str | None) -> None:
         if not output.with_suffix(expected).is_file():
             raise RuntimeError(f"Missing expected {expected}: {output}")
 
-    compile_ly("full-score", make_document(p), PDF / "full-score", ".pdf")
-    compile_ly("concert-score", make_document(p, concert=True), PDF / "concert-score", ".pdf")
+    def build_score(name: str, concert: bool) -> None:
+        overrides = p["layout"].get("score_overrides", {}).get(name, {})
+        automatic = (p["layout"]["score_staff_space_mm"] == "auto"
+                     and "staff_space_mm" not in overrides)
+        size = edition_layout(p, concert=concert)["staff_space_mm"]
+        while True:
+            try:
+                compile_ly(
+                    name,
+                    make_document(p, concert=concert, staff_space_override=size),
+                    PDF / name, ".pdf",
+                )
+                print(f"{name}: {size:.3f} mm staff space")
+                break
+            except RuntimeError as exc:
+                if not automatic or "overfull/compressed" not in str(exc) or size <= 0.551:
+                    raise
+                # Treat a page-compression warning as a fit constraint.
+                size = round(max(0.55, size - 0.05), 3)
+                print(f"{name}: retrying at {size:.3f} mm (A4 overfull)")
+
+    build_score("full-score", concert=False)
+    build_score("concert-score", concert=True)
     for item in p["instruments"]:
         compile_ly(item["id"], make_document(p, item), PDF / item["id"], ".pdf")
+
     compile_ly("orchestra", make_document(p, midi=True), AUDIO / "orchestra", ".midi")
+
     if audio:
-        render_audio(soundfont)
+        midi_stems = BUILD / "midi-stems"
+        midi_stems.mkdir(parents=True, exist_ok=True)
+        for item in p["instruments"]:
+            compile_ly(
+                "midi-" + item["id"],
+                make_document(p, item, midi=True),
+                midi_stems / item["id"], ".midi",
+            )
+        render_audio(p, soundfont, midi_stems)
     verify(p, expect_audio=audio)
 
 
@@ -404,20 +450,51 @@ def locate_soundfont(override: str | None) -> Path:
     raise RuntimeError("No SoundFont. Pass --soundfont PATH or set SOUNDFONT")
 
 
-def render_audio(override: str | None) -> None:
+def render_audio(p: dict, override: str | None, midi_stems: Path) -> None:
+    """Render each concert-pitch part separately, then sum PCM stems to MP3."""
     soundfont = locate_soundfont(override)
     fluidsynth = shutil.which("fluidsynth")
     ffmpeg = shutil.which("ffmpeg")
     if not fluidsynth or not ffmpeg:
         raise RuntimeError("Audio needs fluidsynth and ffmpeg in PATH")
-    wav = AUDIO / "orchestra.wav"
-    execute([fluidsynth, "-ni", "-g", "0.25", "-r", "48000",
-             "-F", str(wav), str(soundfont), str(AUDIO / "orchestra.midi")])
-    execute([ffmpeg, "-hide_banner", "-loglevel", "error", "-y", "-i", str(wav),
-             "-c:a", "flac", str(AUDIO / "orchestra.flac")])
-    execute([ffmpeg, "-hide_banner", "-loglevel", "error", "-y", "-i", str(wav),
-             "-c:a", "libmp3lame", "-q:a", "0", str(AUDIO / "orchestra.mp3")])
-    wav.unlink()
+
+    wav_dir = BUILD / "wav-stems"
+    if wav_dir.exists():
+        shutil.rmtree(wav_dir)
+    wav_dir.mkdir(parents=True)
+    mp3_dir = AUDIO / "stems"
+    mp3_dir.mkdir(parents=True, exist_ok=True)
+    wavs: list[Path] = []
+    for item in p["instruments"]:
+        identifier = item["id"]
+        wav = wav_dir / (identifier + ".wav")
+        wavs.append(wav)
+        execute([
+            fluidsynth, "-ni", "-g", "0.25", "-r", "48000",
+            "-F", str(wav), str(soundfont),
+            str(midi_stems / (identifier + ".midi")),
+        ])
+        execute([
+            ffmpeg, "-hide_banner", "-loglevel", "error", "-y",
+            "-i", str(wav), "-c:a", "libmp3lame", "-q:a", "1",
+            str(mp3_dir / (identifier + ".mp3")),
+        ])
+
+    # Mixing the uncompressed WAVs prevents generational MP3 losses.
+    # Equal weights preserve the relative rehearsal balance; normalizing
+    # by the 21 active stems keeps the sum below clipping.
+    inputs = [arg for wav in wavs for arg in ("-i", str(wav))]
+    mix_filter = (
+        f"amix=inputs={len(wavs)}:duration=longest:"
+        "dropout_transition=0:normalize=1,alimiter=limit=0.95"
+    )
+    execute([
+        ffmpeg, "-hide_banner", "-loglevel", "error", "-y",
+        *inputs, "-filter_complex", mix_filter,
+        "-c:a", "libmp3lame", "-q:a", "0",
+        str(AUDIO / "orchestra.mp3"),
+    ])
+    shutil.rmtree(wav_dir)
 
 
 def verify(p: dict, *, expect_audio: bool = False) -> None:
@@ -434,16 +511,23 @@ def verify(p: dict, *, expect_audio: bool = False) -> None:
     if not midi.is_file() or midi.open("rb").read(4) != b"MThd":
         raise RuntimeError("Missing/invalid orchestra MIDI")
     if expect_audio:
-        for name in ("orchestra.mp3", "orchestra.flac"):
-            path = AUDIO / name
+        expected_stems = {item["id"] + ".mp3" for item in p["instruments"]}
+        observed_stems = {f.name for f in (AUDIO / "stems").glob("*.mp3")}
+        if observed_stems != expected_stems:
+            raise RuntimeError(
+                f"Stem MP3 mismatch: missing={sorted(expected_stems - observed_stems)} "
+                f"extra={sorted(observed_stems - expected_stems)}"
+            )
+        for path in [AUDIO / "orchestra.mp3",
+                     *((AUDIO / "stems" / name) for name in expected_stems)]:
             if not path.is_file() or not path.stat().st_size:
-                raise RuntimeError(f"Missing audio: {name}")
+                raise RuntimeError(f"Missing audio: {path}")
     has_targets = (any(edition_layout(p, item).get("target_pages") is not None
                        for item in p["instruments"])
                    or edition_layout(p).get("target_pages") is not None
                    or edition_layout(p, concert=True).get("target_pages") is not None)
     pdf_page_report(p, strict=has_targets)
-    print(f"Verified {len(expected)} PDFs + MIDI" + (" + FLAC/MP3" if expect_audio else ""))
+    print(f"Verified {len(expected)} PDFs + MIDI" + (f" + mix and {len(p['instruments'])} MP3 stems" if expect_audio else ""))
 
 
 def pdf_page_report(p: dict, *, strict: bool = False) -> dict[str, int]:
@@ -497,9 +581,12 @@ def package(p: dict) -> None:
             z.write(file, f"{folder}/{file.name}")
         z.write(BUILD / "build-info.json", "build-info.json")
     with zipfile.ZipFile(PACKAGES / "audio.zip", "w", compression=zipfile.ZIP_DEFLATED) as z:
-        for suffix in ("mp3", "flac", "midi"):
+        for suffix in ("mp3", "midi"):
             file = AUDIO / f"orchestra.{suffix}"
             z.write(file, f"audio/{file.name}")
+        for item in p["instruments"]:
+            file = AUDIO / "stems" / (item["id"] + ".mp3")
+            z.write(file, f"audio/stems/{file.name}")
         z.write(BUILD / "build-info.json", "build-info.json")
     print("Release archives are ready in dist/packages/")
 
@@ -508,7 +595,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="action", required=True)
     cmd = sub.add_parser("build", help="Build full score, all parts, MIDI, optionally audio")
-    cmd.add_argument("--audio", action="store_true", help="Render FLAC and MP3 via FluidSynth")
+    cmd.add_argument("--audio", action="store_true", help="Render 21 MP3 stems and a mixed MP3 via FluidSynth + FFmpeg")
     cmd.add_argument("--soundfont", help="Path to .sf2 or FluidSynth-compatible .sf3")
     sub.add_parser("verify", help="Verify all PDFs and MIDI")
     sub.add_parser("package", help="Make PDF and audio release archives (audio required)")

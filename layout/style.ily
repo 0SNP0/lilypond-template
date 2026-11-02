@@ -1,18 +1,30 @@
 % Shared edition style. Paper size, margins and staff size are supplied by build.py.
 % Page header: edition/part (left), work (middle), page number (right).
+% Full-line markups keep the centered title and revision at page center.
+% Overlay the side labels so their unequal widths do not shift the title.
 ensemblePageHeader = \markup {
-  \fill-line {
-    \fontsize #-2 \fromproperty #'header:instrument
-    \fontsize #-2 \fromproperty #'header:title
-    \fontsize #-2 \fromproperty #'page:page-number-string
+  \overlay {
+    \fill-line {
+      \fontsize #-2 \fromproperty #'header:instrument
+      \null
+      \fontsize #-2 \fromproperty #'page:page-number-string
+    }
+    \fill-line {
+      \null
+      \fontsize #-2 \fromproperty #'header:title
+      \null
+    }
   }
 }
 
-% Every page identifies its Git revision; detailed copyright appears on first page.
 ensemblePageFooter = \markup {
-  \center-column {
-    \fontsize #-2 \buildLabel
-    \fontsize #-3 \fromproperty #'header:copyright
+  \fill-line {
+    \null
+    \center-column {
+      \fontsize #-2 \buildLabel
+      \fontsize #-3 \fromproperty #'header:copyright
+    }
+    \null
   }
 }
 

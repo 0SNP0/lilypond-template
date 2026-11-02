@@ -87,9 +87,11 @@ class ProjectTests(unittest.TestCase):
         self.assertIn('set-paper-size "a4"', part)
 
     def test_compact_score_does_not_shrink_parts(self):
-        self.assertEqual(builder.edition_layout(self.p)["staff_space_mm"], 1.05)
+        expected = round(min(1.75, max(0.55, 235.0 / (9.0 * 23))), 3)
+        self.assertEqual(builder.edition_layout(self.p)["staff_space_mm"], expected)
         self.assertEqual(builder.edition_layout(self.p, self.p["instruments"][0])["staff_space_mm"], 1.75)
         self.assertTrue(builder.edition_layout(self.p, self.p["instruments"][0])["ragged_bottom"])
+        self.assertFalse(builder.edition_layout(self.p)["ragged_bottom"])
         self.assertTrue(builder.edition_layout(self.p, self.p["instruments"][0])["ragged_last_bottom"])
 
     def test_score_overrides_and_invalid_paper(self):
@@ -132,6 +134,28 @@ class ProjectTests(unittest.TestCase):
                     builder.pdf_page_report(p, strict=True)
             finally:
                 builder.PDF = original
+
+    def test_instrument_midi_is_concert_pitch_and_separate(self):
+        part = self.p["instruments"][3]
+        score = builder.make_document(self.p, part, midi=True)
+        self.assertNotIn("\\transpose", score)
+        self.assertIn("\\midi", score)
+        self.assertNotIn("\\compressMMRests", score)
+
+    def test_score_autoscaling_tracks_staff_count(self):
+        import copy
+        p = copy.deepcopy(self.p)
+        full_size = builder.edition_layout(p)["staff_space_mm"]
+        p["instruments"] = p["instruments"][:4]
+        self.assertGreater(builder.edition_layout(p)["staff_space_mm"], full_size)
+        p["layout"]["score_overrides"] = {"full-score": {"staff_space_mm": 1.1}}
+        self.assertEqual(builder.edition_layout(p)["staff_space_mm"], 1.1)
+
+    def test_centered_footer_and_overlay_header(self):
+        style = (ROOT / "layout" / "style.ily").read_text(encoding="utf-8")
+        self.assertIn("\\overlay", style)
+        self.assertIn("\\fill-line", style)
+        self.assertIn("\\center-column", style)
 
     def test_names_safe_in_ly(self):
         self.assertEqual(builder.lily_string('A "title"'), '"A \\"title\\""')

@@ -31,7 +31,7 @@ jobs:
       - name: Run source tests
         run: python3 -m unittest discover -s tests -v
 
-      - name: Build PDF / MIDI / FLAC / MP3
+      - name: Build PDF, 21 MP3 stems and orchestra mix
         env:
           SOURCE_TAG: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
           SOUNDFONT: /usr/share/sounds/sf2/FluidR3_GM.sf2
@@ -46,8 +46,8 @@ jobs:
           path: |
             dist/pdf/*.pdf
             dist/audio/*.mp3
-            dist/audio/*.flac
             dist/audio/*.midi
+            dist/audio/stems/*.mp3
             dist/packages/*.zip
           if-no-files-found: error
           retention-days: 14

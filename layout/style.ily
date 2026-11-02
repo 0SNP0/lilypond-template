@@ -12,7 +12,7 @@ ensemblePageHeader = \markup {
 ensemblePageFooter = \markup {
   \center-column {
     \fontsize #-2 \buildLabel
-    \fontsize #-3 \if \on-first-page \fromproperty #'header:copyright
+    \fontsize #-3 \fromproperty #'header:copyright
   }
 }
 

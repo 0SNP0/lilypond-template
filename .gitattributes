@@ -1,0 +1,20 @@
+* text=auto
+*.ly text eol=lf
+*.ily text eol=lf
+*.py text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.sh text eol=lf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+*.pdf binary
+*.mid binary
+*.midi binary
+*.sf2 binary
+*.sf3 binary
+*.mp3 binary
+*.flac binary
+*.zip binary
+*.mscz binary

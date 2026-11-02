@@ -1,0 +1,247 @@
+{
+  "title": "Orchestral Sketch",
+  "subtitle": "An original eight-bar ensemble example",
+  "composer": "Original demonstration melody",
+  "lyricist": "",
+  "translator": "",
+  "transcriber": "",
+  "arranged_by": "Template contributor (replace me)",
+  "proofreader": "",
+  "copyright": "Original demonstration music for this template; replace all credits and rights statements for real arrangements.",
+  "ensemble": "Ensemble_Assemble",
+  "layout": {
+    "parts_paper": "a4",
+    "score_paper": "a4",
+    "margin_mm": 15,
+    "part_staff_space_mm": 1.75,
+    "score_staff_space_mm": 1.5,
+    "ragged_bottom": false,
+    "ragged_last_bottom": false,
+    "part_overrides": {},
+    "score_overrides": {}
+  },
+  "instruments": [
+    {
+      "id": "01-flute-1",
+      "name": "Flute I",
+      "short": "Fl. I",
+      "group": "woodwinds",
+      "midi": "flute",
+      "source": "music/01-flute-1.ily",
+      "transpose_to": "c",
+      "music": "fluteOneMusic"
+    },
+    {
+      "id": "02-flute-2",
+      "name": "Flute II",
+      "short": "Fl. II",
+      "group": "woodwinds",
+      "midi": "flute",
+      "source": "music/02-flute-2.ily",
+      "transpose_to": "c",
+      "music": "fluteTwoMusic"
+    },
+    {
+      "id": "03-oboe",
+      "name": "Oboe",
+      "short": "Ob.",
+      "group": "woodwinds",
+      "midi": "oboe",
+      "source": "music/03-oboe.ily",
+      "transpose_to": "c",
+      "music": "oboeMusic"
+    },
+    {
+      "id": "04-clarinet-1",
+      "name": "Clarinet in B-flat I",
+      "short": "Cl. I",
+      "group": "woodwinds",
+      "midi": "clarinet",
+      "source": "music/04-clarinet-1.ily",
+      "transpose_to": "d",
+      "music": "clarinetOneMusic"
+    },
+    {
+      "id": "05-clarinet-2",
+      "name": "Clarinet in B-flat II",
+      "short": "Cl. II",
+      "group": "woodwinds",
+      "midi": "clarinet",
+      "source": "music/05-clarinet-2.ily",
+      "transpose_to": "d",
+      "music": "clarinetTwoMusic"
+    },
+    {
+      "id": "06-bass-clarinet",
+      "name": "Bass Clarinet in B-flat",
+      "short": "B. Cl.",
+      "group": "woodwinds",
+      "midi": "clarinet",
+      "source": "music/06-bass-clarinet.ily",
+      "transpose_to": "d'",
+      "music": "bassClarinetMusic"
+    },
+    {
+      "id": "07-soprano-sax",
+      "name": "Soprano Saxophone in B-flat",
+      "short": "S. Sax.",
+      "group": "woodwinds",
+      "midi": "soprano sax",
+      "source": "music/07-soprano-sax.ily",
+      "transpose_to": "d",
+      "music": "sopranoSaxMusic"
+    },
+    {
+      "id": "08-alto-sax",
+      "name": "Alto Saxophone in E-flat",
+      "short": "A. Sax.",
+      "group": "woodwinds",
+      "midi": "alto sax",
+      "source": "music/08-alto-sax.ily",
+      "transpose_to": "a",
+      "music": "altoSaxMusic"
+    },
+    {
+      "id": "09-tenor-sax",
+      "name": "Tenor Saxophone in B-flat",
+      "short": "T. Sax.",
+      "group": "woodwinds",
+      "midi": "tenor sax",
+      "source": "music/09-tenor-sax.ily",
+      "transpose_to": "d'",
+      "music": "tenorSaxMusic"
+    },
+    {
+      "id": "10-trumpet-1",
+      "name": "Trumpet in B-flat I",
+      "short": "Tpt. I",
+      "group": "brass",
+      "midi": "trumpet",
+      "source": "music/10-trumpet-1.ily",
+      "transpose_to": "d",
+      "music": "trumpetOneMusic"
+    },
+    {
+      "id": "11-trumpet-2",
+      "name": "Trumpet in B-flat II",
+      "short": "Tpt. II",
+      "group": "brass",
+      "midi": "trumpet",
+      "source": "music/11-trumpet-2.ily",
+      "transpose_to": "d",
+      "music": "trumpetTwoMusic"
+    },
+    {
+      "id": "12-trombone-1",
+      "name": "Trombone I",
+      "short": "Tbn. I",
+      "group": "brass",
+      "midi": "trombone",
+      "source": "music/12-trombone-1.ily",
+      "transpose_to": "c",
+      "music": "tromboneOneMusic",
+      "clef": "bass"
+    },
+    {
+      "id": "13-trombone-2",
+      "name": "Trombone II",
+      "short": "Tbn. II",
+      "group": "brass",
+      "midi": "trombone",
+      "source": "music/13-trombone-2.ily",
+      "transpose_to": "c",
+      "music": "tromboneTwoMusic",
+      "clef": "bass"
+    },
+    {
+      "id": "14-drum-kit",
+      "name": "Drum Kit",
+      "short": "D. Kit",
+      "group": "percussion",
+      "midi": "drums",
+      "source": "music/14-drum-kit.ily",
+      "transpose_to": "c",
+      "music": "drumKitMusic",
+      "clef": "percussion"
+    },
+    {
+      "id": "15-piano",
+      "name": "Piano",
+      "short": "Pno.",
+      "group": "keys",
+      "midi": "acoustic grand",
+      "source": "music/15-piano.ily",
+      "transpose_to": "c",
+      "staves": [
+        "pianoRightMusic",
+        "pianoLeftMusic"
+      ]
+    },
+    {
+      "id": "16-accordion",
+      "name": "Accordion",
+      "short": "Acc.",
+      "group": "keys",
+      "midi": "accordion",
+      "source": "music/16-accordion.ily",
+      "transpose_to": "c",
+      "staves": [
+        "accordionRightMusic",
+        "accordionLeftMusic"
+      ]
+    },
+    {
+      "id": "17-violin-1",
+      "name": "Violin I",
+      "short": "Vln. I",
+      "group": "strings",
+      "midi": "violin",
+      "source": "music/17-violin-1.ily",
+      "transpose_to": "c",
+      "music": "violinOneMusic"
+    },
+    {
+      "id": "18-violin-2",
+      "name": "Violin II",
+      "short": "Vln. II",
+      "group": "strings",
+      "midi": "violin",
+      "source": "music/18-violin-2.ily",
+      "transpose_to": "c",
+      "music": "violinTwoMusic"
+    },
+    {
+      "id": "19-viola",
+      "name": "Viola",
+      "short": "Vla.",
+      "group": "strings",
+      "midi": "viola",
+      "source": "music/19-viola.ily",
+      "transpose_to": "c",
+      "music": "violaMusic",
+      "clef": "alto"
+    },
+    {
+      "id": "20-cello",
+      "name": "Cello",
+      "short": "Vc.",
+      "group": "strings",
+      "midi": "cello",
+      "source": "music/20-cello.ily",
+      "transpose_to": "c",
+      "music": "celloMusic",
+      "clef": "bass"
+    },
+    {
+      "id": "21-double-bass",
+      "name": "Double Bass",
+      "short": "Cb.",
+      "group": "strings",
+      "midi": "contrabass",
+      "source": "music/21-double-bass.ily",
+      "transpose_to": "c'",
+      "music": "doubleBassMusic",
+      "clef": "bass"
+    }
+  ]
+}

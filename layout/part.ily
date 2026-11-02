@@ -1,5 +1,11 @@
 \include "shared.ily"
-#(set-global-staff-size 20)
+% The engraving engine may retry dense parts with smaller staves, but
+% default direct Frescobaldi previews keep the full 20 pt staff.
+#(set-global-staff-size
+  (let ((n (getenv "ENSEMBLE_PART_STAFF_SIZE")))
+    (if (and n (string->number n))
+        (string->number n)
+        20)))
 \paper {
   #(set-paper-size "a4")
   top-margin = 15\mm

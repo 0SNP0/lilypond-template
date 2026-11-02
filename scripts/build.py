@@ -170,6 +170,7 @@ def compile_lilypond(source: Path, output: Path, version: str,
         raise RuntimeError("Install native LilyPond; lilypond executable not in PATH")
     output.parent.mkdir(parents=True, exist_ok=True)
     score_size: float | None = None
+    part_staff_size: float | None = None
     attempt = 0
     while True:
         args = [
@@ -179,6 +180,8 @@ def compile_lilypond(source: Path, output: Path, version: str,
         env = {"ENSEMBLE_SCORE_VERSION": version}
         if score_size is not None:
             env["ENSEMBLE_SCORE_STAFF_SPACE"] = str(score_size)
+        if part_staff_size is not None:
+            env["ENSEMBLE_PART_STAFF_SIZE"] = str(part_staff_size)
         text = run(args, capture=True, environment=env)
         print(text, end="", flush=True)
         overfull = "compressing over-full page" in text
@@ -187,7 +190,17 @@ def compile_lilypond(source: Path, output: Path, version: str,
         if not overfull:
             return
         if not score:
-            raise RuntimeError(f"Overfull A4 part: {source}")
+            # Long, dense individual parts should first try a modestly
+            # smaller staff before falling back to their engraver warning.
+            current = float(env.get("ENSEMBLE_PART_STAFF_SIZE", "20"))
+            reduced = round(current - 0.5, 2)
+            if reduced < 15 or attempt >= 10:
+                print(f"WARNING: overfull part at {current} pt: {source}", flush=True)
+                return
+            print(f"Retry part at {reduced:.1f} pt: {source}", flush=True)
+            part_staff_size = reduced
+            attempt += 1
+            continue
         sizes = re.findall(r"EA_STAFF_SIZE\s+([0-9]+(?:\.[0-9]+)?)", text)
         if not sizes:
             raise RuntimeError(f"Cannot determine current score scale: {source}")

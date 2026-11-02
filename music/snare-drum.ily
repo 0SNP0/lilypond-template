@@ -1,6 +1,6 @@
 % Snare Drum: source MusicXML P14, 268 measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-snareDrumMusic = {
+snareDrumMusic = \drummode {
   \clef percussion
   \time 3/4
   % Bars 1–4

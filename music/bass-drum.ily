@@ -1,6 +1,6 @@
 % Bass Drum: source MusicXML P16, 268 measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-bassDrumMusic = {
+bassDrumMusic = \drummode {
   \clef percussion
   \time 3/4
   % Bars 1–4

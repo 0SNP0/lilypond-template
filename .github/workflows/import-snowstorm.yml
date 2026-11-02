@@ -65,6 +65,8 @@ jobs:
               'trumpet3Music': 'trumpetThreeMusic',
               'trombones12Music': 'trombonesOneTwoMusic',
               'trombone3AndTubaMusic': 'tromboneThreeAndTubaMusic',
+              'violins1Music': 'violinsOneMusic',
+              'violins2Music': 'violinsTwoMusic',
           }
           for directory in (Path('music'), Path('parts')):
               for file in directory.glob('*.ily' if directory.name == 'music' else '*.ly'):

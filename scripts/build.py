@@ -86,7 +86,7 @@ def instruments() -> list[Path]:
     if missing:
         raise RuntimeError(f"Missing concert-pitch music sources: {sorted(missing)}")
     orchestration = (ROOT / "orchestra.ily").read_text(encoding="utf-8")
-    included = set(re.findall(r'\\include\s+"music/([^/"]+)\.ily"', orchestration)) - {"global"}
+    included = set(re.findall(r'\\include\s+"music/([^/"]+)\.ily"', orchestration)) - {"global", "paired"}
     if names != included:
         raise RuntimeError(
             "The orchestra and playable parts must agree: "

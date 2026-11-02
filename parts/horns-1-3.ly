@@ -4,5 +4,5 @@
 \include "../music/global.ily"
 \include "../layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Horns in F I & III" tagline = ##f }
-\score { \new Staff << { \global } { \hornsOneThreeMusic } >> \layout { } }
-\score { \new Staff << { \global } { \hornsOneThreeMusic } >> \midi { } }
+\score { \new Staff << { \global } { \rehearsalMarks } { \hornsOneThreeMusic } >> \layout { } }
+\score { \new Staff << { \global } { \rehearsalMarks } { \hornsOneThreeMusic } >> \midi { } }

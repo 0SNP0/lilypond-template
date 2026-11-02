@@ -1,5 +1,6 @@
 \version "2.26.0"
 \include "metadata.ily"
+\include "music/global.ily"
 \include "music/piccolo.ily"
 \include "music/flutes-1-2.ily"
 \include "music/oboes-1-2.ily"

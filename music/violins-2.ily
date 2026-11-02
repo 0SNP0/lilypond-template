@@ -1,6 +1,6 @@
 % Violins II: source MusicXML P18, 268 measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-violins2Music = {
+violinsTwoMusic = {
   \clef treble
   \key e \major
   \time 3/4

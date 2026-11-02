@@ -46,8 +46,8 @@ sviridovScore = <<
     \new DrumStaff \with { instrumentName = "Bass Drum" shortInstrumentName = "B. Dr." } { \bassDrumMusic }
   >>
   \new StaffGroup <<
-    \new Staff \with { instrumentName = "Violins I" shortInstrumentName = "Vlns. I" midiInstrument = "violin" } { \tag #'written { \violins1Music } \tag #'concert { \transpose c c \violins1Music } }
-    \new Staff \with { instrumentName = "Violins II" shortInstrumentName = "Vlns. II" midiInstrument = "violin" } { \tag #'written { \violins2Music } \tag #'concert { \transpose c c \violins2Music } }
+    \new Staff \with { instrumentName = "Violins I" shortInstrumentName = "Vlns. I" midiInstrument = "violin" } { \tag #'written { \violinsOneMusic } \tag #'concert { \transpose c c \violinsOneMusic } }
+    \new Staff \with { instrumentName = "Violins II" shortInstrumentName = "Vlns. II" midiInstrument = "violin" } { \tag #'written { \violinsTwoMusic } \tag #'concert { \transpose c c \violinsTwoMusic } }
     \new Staff \with { instrumentName = "Violas" shortInstrumentName = "Vlas." midiInstrument = "viola" } { \tag #'written { \violasMusic } \tag #'concert { \transpose c c \violasMusic } }
     \new Staff \with { instrumentName = "Violoncellos" shortInstrumentName = "Vcs." midiInstrument = "cello" } { \tag #'written { \violoncellosMusic } \tag #'concert { \transpose c c \violoncellosMusic } }
     \new Staff \with { instrumentName = "Contrabasses" shortInstrumentName = "Cbs." midiInstrument = "contrabass" } { \tag #'written { \contrabassesMusic } \tag #'concert { \transpose c c, \contrabassesMusic } }

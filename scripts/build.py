@@ -166,7 +166,6 @@ def compile_lilypond(source: Path, output: Path, version: str,
     if not lilypond:
         raise RuntimeError("Install native LilyPond; lilypond executable not in PATH")
     output.parent.mkdir(parents=True, exist_ok=True)
-    score_size: float | None = None
     part_staff_size: float | None = None
     attempt = 0
     while True:
@@ -175,8 +174,8 @@ def compile_lilypond(source: Path, output: Path, version: str,
             "-o", str(output), str(source),
         ]
         env = {"ENSEMBLE_SCORE_VERSION": version}
-        if score_size is not None:
-            env["ENSEMBLE_SCORE_STAFF_SPACE"] = str(score_size)
+        # A4 score size is fixed in layout/score.ily; retrying at smaller
+        # scales made the full score unusable for a conductor.
         if part_staff_size is not None:
             env["ENSEMBLE_PART_STAFF_SIZE"] = str(part_staff_size)
         text = run(args, capture=True, environment=env)
@@ -186,9 +185,14 @@ def compile_lilypond(source: Path, output: Path, version: str,
             raise RuntimeError(f"LilyPond failed or produced no PDF: {source}")
         if not overfull:
             return
+        if score:
+            raise RuntimeError(
+                f"A4 score does not fit with readable staves: {source}. "
+                "Adjust score layout, instrument groups or page breaks, "
+                "not the global staff size.")
         if not score:
-            # Long, dense individual parts should first try a modestly
-            # smaller staff before falling back to their engraver warning.
+            # Dense individual parts have a limited, separate adjustment.
+
             current = float(env.get("ENSEMBLE_PART_STAFF_SIZE", "20"))
             reduced = round(current - 0.5, 2)
             if reduced < 15 or attempt >= 10:
@@ -198,16 +202,6 @@ def compile_lilypond(source: Path, output: Path, version: str,
             part_staff_size = reduced
             attempt += 1
             continue
-        sizes = re.findall(r"EA_STAFF_SIZE\s+([0-9]+(?:\.[0-9]+)?)", text)
-        if not sizes:
-            raise RuntimeError(f"Cannot determine current score scale: {source}")
-        current = float(sizes[-1])
-        next_size = round(current - 0.05, 3)
-        if next_size < 0.40 or attempt >= 24:
-            raise RuntimeError(f"Cannot fit score on A4 without compression: {source}")
-        print(f"Retry score at staff-space {next_size:.3f} mm", flush=True)
-        score_size = next_size
-        attempt += 1
 
 
 def build(*, audio: bool, font: str | None) -> None:
@@ -253,6 +247,8 @@ def build(*, audio: bool, font: str | None) -> None:
     if audio:
         render_audio(parts, font, naming)
     verify(audio=audio)
+    if audio:
+        run([sys.executable, str(ROOT / "scripts" / "timeline_csv.py")])
     if audio and os.environ.get("LILYPOND_EXPORT_VIEWER") == "1":
         run([sys.executable, str(ROOT / "scripts" / "export.py")])
 
@@ -260,6 +256,7 @@ def build(*, audio: bool, font: str | None) -> None:
 def locate_soundfont(override: str | None) -> Path:
     candidates = [
         override, os.environ.get("SOUNDFONT"),
+        str(ROOT / "soundfonts" / "GeneralUser-GS.sf2"),
         str(ROOT / "soundfonts" / "MS_Basic.sf3"),
         str(ROOT / "soundfonts" / "FluidR3_GM.sf2"),
         "/usr/share/sounds/sf2/FluidR3_GM.sf2",
@@ -287,7 +284,7 @@ def render_audio(parts: list[Path], soundfont_path: str | None,
         wav = wav_dir / f"{stem}.wav"
         wavs.append(wav)
         run([
-            fluidsynth, "-ni", "-g", "0.25", "-r", "48000",
+            fluidsynth, "-ni", "-R", "1", "-C", "1", "-g", "0.30", "-r", "48000",
             "-F", str(wav), str(soundfont), str(BUILD / "midi" / f"{stem}.midi"),
         ])
         run([
@@ -361,8 +358,9 @@ def package() -> None:
     PACKAGES.mkdir(parents=True, exist_ok=True)
     for old in PACKAGES.glob("*.zip"):
         old.unlink()
-    # Universal fingerprints; independent of the optional SVG player.
-    # PDF fingerprints are provisional: they can change when Git version changes.
+    # Music-print fingerprints: only the LilyPond staff music is hashed.
+    # PDF bytes are kept as a separate audit hash, never as print_hash.
+    from notation_hash import staff_fingerprint
     documents = {}
     for pdf in sorted(PDF.glob("*.pdf")):
         stem = pdf.stem
@@ -372,15 +370,23 @@ def package() -> None:
             midi = AUDIO / (naming["mix"] + ".midi")
         else:
             midi = BUILD / "midi" / (stem + ".midi")
-        musical = hashlib.sha256(midi.read_bytes()).hexdigest() if midi.is_file() else None
+        if stem == naming["score"] or stem == naming["concert"]:
+            source = ROOT / ("score.ly" if stem == naming["score"] else "concert-score.ly")
+        else:
+            source = next((p for p in [*instruments(), *combined_parts()]
+                           if stem == part_name(p, naming)), None)
+        if source is None:
+            raise RuntimeError("Unknown print source for " + stem)
+        staff_hash = staff_fingerprint(source)
         documents[stem] = {"pdf": pdf.name,
-                           "music_hash": musical,
-                           "print_hash": hashlib.sha256(pdf.read_bytes()).hexdigest()}
+                           "print_hash": staff_hash,
+                           "music_hash": staff_hash,
+                           "pdf_sha256": hashlib.sha256(pdf.read_bytes()).hexdigest()}
     manifest_file = ROOT / "dist" / "print-manifest.json"
     manifest_file.write_text(
         json.dumps({"schema": "score-print-fingerprint-v1", "revision": naming["revision"],
                     "documents": documents,
-                    "warning": "Provisional raw MIDI/PDF hashes; version and renderer metadata may change hashes without changing music."},
+                    "warning": "print_hash tracks staff source content, not Git revision, title, paper layout or the LilyPond renderer. A layout/engine change can still require reprinting."},
                    indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     with zipfile.ZipFile(PACKAGES / naming["pdf_zip"], "w", zipfile.ZIP_DEFLATED) as archive:
         for item in sorted(PDF.glob("*.pdf")):
@@ -390,6 +396,9 @@ def package() -> None:
                    else "parts")
             archive.write(item, f"{sub}/{item.name}")
         archive.write(BUILD / "build-info.json", "build-info.json")
+        timeline_file = ROOT / "dist" / "timeline.csv"
+        if timeline_file.exists():
+            archive.write(timeline_file, "timeline.csv")
         manifest_file = ROOT / "dist" / "print-manifest.json"
         if manifest_file.is_file():
             archive.write(manifest_file, "print-manifest.json")
@@ -400,6 +409,9 @@ def package() -> None:
         for item in sorted((AUDIO / "stems").glob("*.mp3")):
             archive.write(item, f"audio/stems/{item.name}")
         archive.write(BUILD / "build-info.json", "build-info.json")
+        timeline_file = ROOT / "dist" / "timeline.csv"
+        if timeline_file.exists():
+            archive.write(timeline_file, "timeline.csv")
     viewer = ROOT / "dist" / "viewer"
     if (viewer / "manifest.json").is_file() and (viewer / "timeline.json").is_file():
         archive_name = naming["slug"] + "-viewer-" + naming["revision"] + ".zip"

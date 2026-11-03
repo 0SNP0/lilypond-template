@@ -1,18 +1,14 @@
-# Soundfonts
+# Audio samples
 
-Put your legally usable SoundFont here (optional):
+CI fetches **GeneralUser GS** (revision `97049183643d5fc5a9322a69c5b09efb667c6c3a`)
+and uses FluidSynth with reverb, chorus, and MIDI articulation from LilyPond
+(`articulate.ly`). The library itself is intentionally not checked in.
 
-- `MS_Basic.sf3` — MS Basic, the MuseScore Studio General MIDI SoundFont (MIT; retain required attribution when redistributing).
-- `FluidR3_GM.sf2` — FluidR3, a fallback General MIDI SoundFont.
+For local builds, place `GeneralUser-GS.sf2` in this folder or set
+`SOUNDFONT` to another compatible GM/GS SoundFont.
 
-The file is ignored by Git; do not commit large sound libraries into a template.
-
-The CI runner installs Ubuntu's `fluid-soundfont-gm` package and uses its
-`/usr/share/sounds/sf2/FluidR3_GM.sf2`. To change the CI bank, explicitly
-install a pinned bank with a checksum, ensure its license permits CI usage,
-and set `SOUNDFONT` in the workflow.
-
-MuseSounds (MuseSampler libraries) are NOT SoundFonts; they cannot be loaded by
-FluidSynth or used as a conventional DAW plugin. MuseScore Studio can render
-them from its own notation environment. This project does not claim support
-for MuseSounds in headless CI.
+This is an expressive, freely distributable GM synthesizer workflow rather than
+the MuseSounds sampler engine. It does not claim a lifelike MuseSounds orchestral
+render. Refer to the GeneralUser GS licensing and attribution conditions before
+redistributing the sample bank itself:
+https://www.schristiancollins.com/generaluser

@@ -25,7 +25,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          version="$(curl --retry 3 -fsSL https://api.github.com/repos/lilypond/lilypond/releases/latest | python3 -c 'import json,sys; print(json.load(sys.stdin)["tag_name"].removeprefix("v"))')" || version="2.26.0"
+          version="$(curl --retry 3 -fsSL https://api.github.com/repos/lilypond/lilypond/releases/latest | python3 -c 'import json,sys; print(json.load(sys.stdin)["tag_name"].removeprefix("v"))')"
           [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Invalid LilyPond release version: $version"; exit 1; }
           url="https://gitlab.com/lilypond/lilypond/-/releases/v${version}/downloads/lilypond-${version}-linux-x86_64.tar.gz"
           curl --retry 3 -fLsS "$url" -o "$RUNNER_TEMP/lilypond.tar.gz"
@@ -36,11 +36,20 @@ jobs:
       - name: Install audio and validation dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends fluidsynth fluid-soundfont-gm ffmpeg python3-pypdf fonts-texgyre
+          sudo apt-get install -y --no-install-recommends fluidsynth ffmpeg python3-pypdf fonts-texgyre
+      - name: Download GeneralUser GS orchestra SoundFont
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p soundfonts
+          curl --retry 3 -fLsS --output soundfonts/GeneralUser-GS.sf2 \
+            https://raw.githubusercontent.com/mrbumpy409/GeneralUser-GS/97049183643d5fc5a9322a69c5b09efb667c6c3a/GeneralUser-GS.sf2
+          test "$(stat -c %s soundfonts/GeneralUser-GS.sf2)" -gt 30000000
+          echo "GeneralUser GS SoundFont downloaded (revision 9704918)"
       - name: Build all PDF parts and MP3 tracks
         env:
           SOURCE_TAG: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
-          SOUNDFONT: /usr/share/sounds/sf2/FluidR3_GM.sf2
+          SOUNDFONT: soundfonts/GeneralUser-GS.sf2
           LILYPOND_EXPORT_VIEWER: ${{ inputs.viewer && '1' || '0' }}
         run: |
           python3 scripts/build.py build --audio
@@ -56,6 +65,7 @@ jobs:
             dist/audio/stems/*.mp3
             dist/packages/*.zip
             dist/print-manifest.json
+            dist/timeline.csv
             dist/viewer/**/*.svg
             dist/viewer/*.json
           if-no-files-found: warn
@@ -79,8 +89,8 @@ jobs:
         run: |
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "Release $TAG already exists; upload or replace assets"
-            gh release upload "$TAG" dist/pdf/*.pdf dist/packages/*.zip --clobber
+            gh release upload "$TAG" dist/pdf/*.pdf dist/packages/*.zip dist/timeline.csv --clobber
           else
             echo "Create release $TAG with compiled assets"
-            gh release create "$TAG" dist/pdf/*.pdf dist/packages/*.zip --verify-tag --generate-notes --title "$TAG"
+            gh release create "$TAG" dist/pdf/*.pdf dist/packages/*.zip dist/timeline.csv --verify-tag --generate-notes --title "$TAG"
           fi

@@ -3,6 +3,7 @@
 \include "orchestra.ily"
 \include "music/global.ily"
 \include "layout/score.ily"
+\include "articulate.ly"
 
 \header {
   title = \workTitle
@@ -24,6 +25,6 @@
 
 % Concert pitch MIDI; written transpositions are only for printed score.
 \score {
-  \keepWithTag #'concert \ensembleScore
+  \articulate \keepWithTag #'concert \ensembleScore
   \midi { \context { \Score midiChannelMapping = #'instrument } }
 }

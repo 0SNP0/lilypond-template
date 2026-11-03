@@ -3,8 +3,6 @@ bassoonOneMusic = {
   \clef bass
   \key e \major
   \time 3/4
-  \clef tenor <e' gis'>2.~( \pp |
-  \clef bass <a cis'>4-. <a cis'>4-. <a cis'>4-. |
   % Bars 1-4
   R2. |
   R2. |

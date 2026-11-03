@@ -61,7 +61,7 @@ scoreCompactLayout = \layout {
     barNumberVisibility = #all-bar-numbers-visible
     \override CenteredBarNumber.stencil =
       #(make-stencil-boxer 0.08 0.20 ly:text-interface::print)
-    \override CenteredBarNumber.font-size = #-3
+    \override CenteredBarNumber.font-size = #0
     \override CenteredBarNumberLineSpanner.direction = #DOWN
     \override CenteredBarNumberLineSpanner.padding = #0.4
     \override StaffGrouper.staff-staff-spacing.basic-distance = #5.5

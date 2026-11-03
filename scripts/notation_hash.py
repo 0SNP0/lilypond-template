@@ -53,7 +53,16 @@ def staff_fingerprint(source: Path) -> str:
     if not paths:
         raise ValueError(f"No staff music found for {source}")
     fingerprint = hashlib.sha256()
-    fingerprint.update(b"ensemble-staff-content-v1\\0")
+    fingerprint.update(b"ensemble-staff-content-v2\\0")
+    # The displayed notes also depend on the score's written/concert view
+    # and on instrument transpositions in its wrapper. Ignore headers and
+    # MIDI-only articulation settings.
+    wrapper = (ROOT / "orchestra.ily") if source.name in ("score.ly", "concert-score.ly") else source
+    transformations = re.findall(r'\\transpose\s+[^\s{}]+\s+[^\s{}]+', wrapper.read_text(encoding="utf-8"))
+    fingerprint.update(source.name.encode("utf-8"))
+    fingerprint.update(b"\\0")
+    fingerprint.update(" ".join(transformations).encode("utf-8"))
+    fingerprint.update(b"\\0")
     for path in paths:
         if not path.is_file():
             raise FileNotFoundError(path)

@@ -16,7 +16,7 @@
 #(define ea-print-staff-size
    (cond ((<= ea-staff-count 8) 20)
          ((<= ea-staff-count 14) 17)
-         (else 14)))
+         (else 12)))
 #(set-global-staff-size ea-print-staff-size)
 
 \paper {
@@ -42,6 +42,10 @@
 }
 
 scoreCompactLayout = \layout {
+  % French-style orchestral score: keep all instruments on the first system,
+  % hide completely resting desks only on later systems.
+  \context { \Staff \RemoveEmptyStaves }
+  \context { \DrumStaff \RemoveEmptyStaves }
   \context {
     \Score
     \override StaffGrouper.staff-staff-spacing.basic-distance = #5.5

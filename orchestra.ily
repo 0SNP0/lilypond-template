@@ -51,7 +51,7 @@ ensembleScore = <<
     \new Staff \with { instrumentName = \markup \fontsize #-1 "English Horn" shortInstrumentName = "Eng. Hn." midiInstrument = "english horn" } { << { \global } { \tag #'written { \englishHornMusic } \tag #'concert { \transpose c f, \englishHornMusic } } >> }
     \new Staff \with { \consists Merge_rests_engraver instrumentName = \markup \fontsize #-1 "Clarinets in A I–II" shortInstrumentName = "Cl. A I–II" midiInstrument = "clarinet" } { << { \global } { \tag #'written { \clarinetsInATogether } \tag #'concert { \transpose c a, \clarinetsInATogether } } >> }
     \new Staff \with { \consists Merge_rests_engraver instrumentName = \markup \fontsize #-1 "Bassoons I–II" shortInstrumentName = "Bsn. I–II" midiInstrument = "bassoon" } { << { \global } { \tag #'written { \bassoonsTogether } \tag #'concert { \transpose c c \bassoonsTogether } } >> }
-    \new Staff \with { instrumentName = \markup \fontsize #-1 "Contrabassoon" shortInstrumentName = "Cbsn." midiInstrument = "contrabassoon" } { << { \global } { \tag #'written { \contrabassoonMusic } \tag #'concert { \clef "bass_8" \transpose c c, \contrabassoonMusic } } >> }
+    \new Staff \with { instrumentName = \markup \fontsize #-1 "Contrabassoon" shortInstrumentName = "Cbsn." midiInstrument = "bassoon" } { << { \global } { \tag #'written { \contrabassoonMusic } \tag #'concert { \clef "bass_8" \transpose c c, \contrabassoonMusic } } >> }
   >>
   \new StaffGroup <<
     \new Staff \with { \consists Merge_rests_engraver instrumentName = \markup \fontsize #-1 "Horns in F I/III" shortInstrumentName = "Hn. I/III" midiInstrument = "french horn" } { << { \global } { \tag #'written { \hornsOneThreeTogether } \tag #'concert { \transpose c f, \hornsOneThreeTogether } } >> }

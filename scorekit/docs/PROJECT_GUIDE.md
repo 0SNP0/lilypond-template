@@ -29,7 +29,13 @@ python3 scorekit/scripts/build.py package --full
 
 В корне проекта остаётся только `.github/workflows/build.yml`: события `push`, `pull_request`, ручной запуск и теги определяются там, так как GitHub не ищет workflow в подмодуле. Сами шаги сборки и релиза расположены в `scorekit/actions/build/action.yml` и `scorekit/actions/release/action.yml`.
 
-При push/PR собираются PDF и манифест. `workflow_dispatch` с `full_export=true` и тег `v*` собирают также аудио и синхронизированный просмотрщик. Тег создаёт GitHub Release.
+При каждом push/PR, ручном запуске и теге `v*` последовательно выполняются **ровно две задачи**:
+1. `PDF score and parts` — печатает партитуры и партии A4, делает PDF-архив и `print-manifest.json`, сразу публикует Actions artifact `score-pdf-<SHA>`.
+2. `MIDI, audio, viewer and packages` — скачивает готовые PDF, заново **не печатает** их, генерирует MIDI без PDF, рендерит MP3, SVG/JSON-просмотрщик и дополнительные пакеты; отдельный artifact `score-media-<SHA>`.
+
+Для тега `v*` в конце второй задачи выпускается GitHub Release только с индивидуальными PDF файлов партий/партитур и с одним PDF-архивом для музыкантов. Звуковые дорожки, архивы просмотрщика и промежуточные данные в Release не публикуются. Никаких отдельных однофайловых GitHub Actions artifacts нет: Actions в любом случае скачивает их ZIP-архивом.
+
+Для локальной сборки полностью по-прежнему работают `python3 scorekit/scripts/build.py build --audio` и `package --full`. Разделённый режим CI: `build` + `package` для PDF, затем `build --audio --reuse-pdf` + `package --full`; второй режим требует готовых PDF первой стадии.
 
 ## Редактирование и повторное использование
 

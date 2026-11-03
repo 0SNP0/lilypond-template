@@ -6,7 +6,7 @@
 % Start at this size and enlarge until exactly two A4 pages fit.
 #(define partStaffSize 22)
 #(define partTargetPages 2)
-\include "../layout/part.ily"
+\include "../scorekit/lilypond/layout/part.ily"
 \paper { ragged-bottom = ##f ragged-last-bottom = ##f }
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Violins II" tagline = ##f }
 \score { \new Staff \with { midiInstrument = "violin" } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \violinsTwoMusic } >> \partPrintLayout }

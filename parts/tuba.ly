@@ -3,7 +3,7 @@
 \include "../metadata.ily"
 \include "../music/global.ily"
 \include "../music/tuba.ily"
-\include "../layout/part.ily"
+\include "../scorekit/lilypond/layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Tuba" tagline = ##f }
 \score { \new Staff \with { midiInstrument = "tuba" } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \tubaMusic } >> \partPrintLayout }
 \score { \articulate \new Staff \with { midiInstrument = "tuba" } << { \globalPlayback } { \rehearsalMarksPlayback } { \tubaMusicPlayback } >> \midi { } }

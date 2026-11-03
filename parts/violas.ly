@@ -3,7 +3,7 @@
 \include "../metadata.ily"
 \include "../music/violas.ily"
 \include "../music/global.ily"
-\include "../layout/part.ily"
+\include "../scorekit/lilypond/layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Violas" tagline = ##f }
 \score { \new Staff \with { midiInstrument = "viola" } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \violasMusic } >> \partPrintLayout }
 \score { \articulate \new Staff \with { midiInstrument = "viola" } << { \globalPlayback } { \rehearsalMarksPlayback } { \violasMusicPlayback } >> \midi { } }

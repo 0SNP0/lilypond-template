@@ -5,19 +5,14 @@ on:
     tags: ['v*']
   pull_request:
   workflow_dispatch:
-    inputs:
-      full_export:
-        description: "Build MP3, MIDI and synchronized SVG/JSON viewer too"
-        type: boolean
-        required: false
-        default: false
 concurrency:
   group: orchestra-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/v') }}
 permissions:
   contents: read
 jobs:
-  build:
+  pdf:
+    name: PDF score and parts
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
@@ -25,14 +20,27 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0
-      - name: ScoreKit build
+      - name: ScoreKit print
         uses: ./scorekit/actions/build
         with:
-          full_export: ${{ (startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.full_export)) && 'true' || 'false' }}
+          source_tag: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
+  media:
+    name: MIDI, audio, viewer and packages
+    needs: pdf
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - name: ScoreKit media
+        uses: ./scorekit/actions/media
+        with:
           source_tag: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
   release:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: build
+    needs: media
     runs-on: ubuntu-24.04
     permissions:
       contents: write

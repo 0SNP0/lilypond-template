@@ -9,8 +9,8 @@ runs:
   steps:
       - uses: actions/download-artifact@v4
         with:
-          name: orchestra-${{ github.sha }}
-          path: dist/
+          name: score-pdf-${{ github.sha }}
+          path: .
       - name: Publish PDF files and archives
         shell: bash
         env:
@@ -20,8 +20,8 @@ runs:
         run: |
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "Release $TAG already exists; upload or replace assets"
-            gh release upload "$TAG" dist/pdf/*.pdf dist/packages/*.zip --clobber
+            gh release upload "$TAG" dist/pdf/*.pdf dist/packages/*-pdf-*.zip --clobber
           else
             echo "Create release $TAG with compiled assets"
-            gh release create "$TAG" dist/pdf/*.pdf dist/packages/*.zip --verify-tag --generate-notes --title "$TAG"
+            gh release create "$TAG" dist/pdf/*.pdf dist/packages/*-pdf-*.zip --verify-tag --generate-notes --title "$TAG"
           fi

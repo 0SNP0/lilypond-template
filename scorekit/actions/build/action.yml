@@ -1,12 +1,8 @@
-name: ScoreKit build and export
-description: Reusable LilyPond PDF/MIDI/MP3/SVG build steps
+name: ScoreKit PDF print stage
+description: Build printable parts first and publish PDF archive immediately
 inputs:
-  full_export:
-    description: Whether to build audio and the interactive viewer
-    required: false
-    default: 'false'
   source_tag:
-    description: Release tag to verify when publishing
+    description: Git release tag when building a release
     required: false
     default: ''
 runs:
@@ -32,81 +28,25 @@ runs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends python3-pypdf fonts-texgyre
-      - name: Install audio dependencies
-        if: ${{ inputs.full_export == 'true' }}
-        shell: bash
-        run: sudo apt-get install -y --no-install-recommends fluidsynth ffmpeg
-      - name: Download MuseScore MS Basic SoundFont
-        if: ${{ inputs.full_export == 'true' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p soundfonts
-          curl --retry 3 -fLsS --output soundfonts/MS_Basic.sf3 \
-            "https://raw.githubusercontent.com/musescore/MuseScore/0e44d8e1dd7e0cad1fac85915330c5225bd7882e/share/sound/MS%20Basic.sf3"
-          test "$(stat -c %s soundfonts/MS_Basic.sf3)" -gt 50000000
       - name: Validate printed/playback repeat structure
         shell: bash
         run: python3 scorekit/scripts/check_music_structure.py
-      - name: Build PDF and package (full export only on request or tag)
+      - name: Build and package printable PDFs
+        shell: bash
         env:
           SOURCE_TAG: ${{ inputs.source_tag }}
-          SOUNDFONT: soundfonts/MS_Basic.sf3
-          FULL_EXPORT: ${{ inputs.full_export == 'true' && '1' || '0' }}
-        shell: bash
         run: |
           set -euo pipefail
-          if [[ "$FULL_EXPORT" == "1" ]]; then
-            python3 scorekit/scripts/build.py build --audio
-            python3 scorekit/scripts/build.py package --full
-          else
-            python3 scorekit/scripts/build.py build
-            python3 scorekit/scripts/build.py package
-          fi
-      # Keep the complete bundle and a separately named one-PDF artifact.
-      - name: Prepare standalone conductor score
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import shutil
-          import sys
-          from pathlib import Path
-
-          sys.path.insert(0, str(Path("scorekit/scripts").resolve()))
-          from build import PDF, ROOT, current_names
-
-          name = current_names()["score"] + ".pdf"
-          source = PDF / name
-          target = ROOT / "dist" / "standalone" / name
-          if not source.is_file():
-              raise SystemExit(f"Conductor score missing: {source}")
-          target.parent.mkdir(parents=True, exist_ok=True)
-          shutil.copy2(source, target)
-          print(f"Prepared standalone conductor PDF: {target}")
-          PY
-      - name: Upload conductor score separately
+          python3 scorekit/scripts/build.py build
+          python3 scorekit/scripts/build.py package
+      - name: Upload early PDF bundle
         uses: actions/upload-artifact@v4
         with:
-          name: conductor-score-${{ github.sha }}
-          path: dist/standalone/*.pdf
-          if-no-files-found: error
-          retention-days: 14
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: orchestra-${{ github.sha }}
+          name: score-pdf-${{ github.sha }}
           path: |
             dist/pdf/*.pdf
-            dist/audio/*.mp3
-            dist/audio/*.midi
-            dist/audio/stems/*.mp3
-            dist/packages/*.zip
+            dist/packages/*-pdf-*.zip
             dist/print-manifest.json
-            dist/viewer/index.html
-            dist/viewer/manifest.json
-            dist/viewer/timeline.json
-            dist/viewer/**/*.svg
-            dist/viewer/*.json
-          if-no-files-found: warn
+            build/build-info.json
+          if-no-files-found: error
           retention-days: 14

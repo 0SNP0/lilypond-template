@@ -70,7 +70,7 @@ violinsTwoOpening = {
  <e' gis'>4-_ r4 <fis' gis'>4-_ |
  <e' gis'>4 r4 r4 |
   % Bars 53–56
- << { \voiceOne cis''2. \f } \\ { \voiceTwo a'2. } >> |
+ << { \voiceOne cis''2. _\markup \italic { "espr." } \f } \\ { \voiceTwo a'2. } >> |
  << { \voiceOne e''2. \f } \\ { \voiceTwo cis''2. } >> |
  << { \voiceOne a'2. \f } \\ { \voiceTwo fis'2. } >> |
  << { \voiceOne cis''2. } \\ { \voiceTwo gis'2. } >> |
@@ -126,7 +126,7 @@ violinsTwoOpening = {
  a''4 fis''4 gis''4 |
   % Bars 97–100
  a''4( gis''4 fis''4) |
- e''4( dis''4 cis''4) |
+ e''4 _\markup \italic { "cresc." }( dis''4 cis''4) |
  b'4( a'4 gis'4) |
  fis'4( e'4. dis'8) |
   % Bars 101–104

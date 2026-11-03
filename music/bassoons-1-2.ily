@@ -51,7 +51,7 @@ bassoonsOneTwoOpening = {
  R2. |
   % Bars 37–40
  R2. |
- gis2.( \f ^\markup \italic { "I" } |
+ gis2. _\markup \italic { "espr." }( \f ^\markup \italic { "I" } |
  gis2.~) \f |
  gis2.~ |
   % Bars 41–44
@@ -70,7 +70,7 @@ bassoonsOneTwoOpening = {
  R2. |
  R2. |
   % Bars 53–56
- << { \voiceOne cis'2.( \f } \\ { \voiceTwo a2. } >> |
+ << { \voiceOne cis'2. _\markup \italic { "espr." }( \f } \\ { \voiceTwo a2. } >> |
  << { \voiceOne e'2.) } \\ { \voiceTwo gis2. } >> |
  << { \voiceOne a2.( } \\ { \voiceTwo fis2. } >> |
  << { \voiceOne cis'2.) } \\ { \voiceTwo e2. } >> |

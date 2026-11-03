@@ -30,7 +30,7 @@ violinsOneOpening = {
  cis'''2.~ |
  cis'''4 r4 r4 |
   % Bars 21–24
- gis'2.~ \mf |
+ gis'2. _\markup \italic { "espr." }~ \mf |
  gis'4 \acciaccatura { b'16 } a'4.)( gis'8) |
  gis'4 cis''4.( gis'8) |
  gis'4 cis''4.( gis'8) |
@@ -90,7 +90,7 @@ violinsOneOpening = {
  R2. |
  R2. |
   % Bars 69–72
- <cis'' cis'''>2. ^\markup \italic { "div." } \f |
+ <cis'' cis'''>2. _\markup \italic { "espr." } ^\markup \italic { "div." } \f |
  <e'' e'''>2. |
  <a'' a'''>2. |
  <gis'' gis'''>2. |
@@ -126,7 +126,7 @@ violinsOneOpening = {
  a'''4 fis'''4 gis'''4 |
   % Bars 97–100
  a'''4( gis'''4 fis'''4) |
- e'''4( dis'''4 cis'''4) |
+ e'''4 _\markup \italic { "cresc." }( dis'''4 cis'''4) |
  b''4( a''4 gis''4) |
  \acciaccatura { fis''16 gis''16 } fis''4) e''4. dis''8) |
   % Bars 101–104

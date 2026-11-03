@@ -5,7 +5,7 @@ trumpetThreeOpening = {
   \key c \major
   \time 3/4
   % Bars 1–4
- f'8-_ \f f'8-_ f'4 r4 |
+ f'8 _\markup \italic { "marc." }-_ \f f'8-_ f'4 r4 |
  ges'8-_ ges'8-_ ges'4 r4 |
  f'8-_ f'8-_ f'4-^ r4 |
   R2. |

@@ -5,7 +5,7 @@ hornsTwoFourOpening = {
   \key c \major
   \time 3/4
   % Bars 1–4
- <dis' dis''>8-_ \f <dis' dis''>8-_ <dis' dis''>4-_ r4 |
+ <dis' dis''>8 _\markup \italic { "marc." }-_ \f <dis' dis''>8-_ <dis' dis''>4-_ r4 |
  <dis' dis''>8-_ <dis' dis''>8-_ <dis' dis''>4-_ r4 |
  <dis' dis''>8-_ <dis' dis''>8-_ <dis' dis''>4-_ r4 |
   R2. |

@@ -84,6 +84,20 @@ def main() -> None:
                     f"Solo-only split regression: {stem}, measure {number}: "
                     f"{per_file[file][number - 1]}")
 
+    # MusicXML other-dynamics is not a GM dynamic level.  Keep its
+    # expressive words as visible italic markup in the printed source.
+    for stem, expected in spec.get("import_text_marks", {}).items():
+        source = stem + ".ily"
+        if source not in per_file:
+            raise ValueError(f"Unknown import text source {source}")
+        for measure_string, word in expected.items():
+            number = int(measure_string)
+            if not 1 <= number <= printed:
+                raise ValueError(f"Invalid text marking position: {source}:{number}")
+            if f'"{word}"' not in per_file[source][number - 1]:
+                raise ValueError(
+                    f"Missing MusicXML other-dynamics: {source}:{number}:{word}")
+
     printed_global = (MUSIC / "global.ily").read_text(encoding="utf-8")
     if '\\bar "||"' not in printed_global:
         raise ValueError("Missing double barline at the end of the printed score")

@@ -70,7 +70,7 @@ contrabassoonOpening = {
  R2. |
  R2. |
   % Bars 53–56
- a2. \f |
+ a2. _\markup \italic { "espr." } \f |
  gis2. |
  fis2. |
  e2. |

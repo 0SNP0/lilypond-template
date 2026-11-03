@@ -5,7 +5,7 @@ trumpetsOneTwoOpening = {
   \key c \major
   \time 3/4
   % Bars 1–4
- bes'8-^ \f ^\markup \italic { "a2" } bes'8-^ bes'4-^ r4 |
+ bes'8 _\markup \italic { "marc." }-^ \f ^\markup \italic { "a2" } bes'8-^ bes'4-^ r4 |
  <bes' c''>8-^ \f <bes' c''>8-^ <bes' c''>4-^ r4 |
  <aes' d''>8-^ \f <aes' d''>8-^ <aes' d''>4-^ r4 |
   R2. |

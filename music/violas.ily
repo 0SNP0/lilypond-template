@@ -70,7 +70,7 @@ violasOpening = {
  <gis cis'>4-_ r4 <gis bis>4-_ |
  <gis cis'>4 r4 r4 |
   % Bars 53–56
- << { \voiceOne e'2. \f } \\ { \voiceTwo cis'2. } >> |
+ << { \voiceOne e'2. _\markup \italic { "espr." } \f } \\ { \voiceTwo cis'2. } >> |
  << { \voiceOne gis'2. } \\ { \voiceTwo e'2. } >> |
  << { \voiceOne cis'2. } \\ { \voiceTwo a2. } >> |
  << { \voiceOne e'2. } \\ { \voiceTwo cis'2. } >> |
@@ -130,7 +130,7 @@ violasOpening = {
  R2. |
  R2. |
   % Bars 101–104
- gis'2.~ \f |
+ gis'2. _\markup \italic { "espr." }~ \f |
  gis'4-_ a'4.( gis'8-_) |
  gis'4( cis''4. gis'8-_) |
  gis'4( cis''4. gis'8) |

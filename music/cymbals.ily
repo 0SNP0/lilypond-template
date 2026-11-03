@@ -99,7 +99,7 @@ cymbalsOpening = \drummode {
  R2. ^\markup \italic { "with stick for snare drum" } |
  R2. |
   % Bars 77–80
- cymc4-! \f r4 cymc4-! |
+ cymc4 _\markup \italic { "secco" }-! \f r4 cymc4-! |
  cymc4-! r4 cymc4-! |
  cymc4-! r4 cymc4-! |
  cymc4-! r4 cymc4-! |

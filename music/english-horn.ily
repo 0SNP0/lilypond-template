@@ -70,7 +70,7 @@ englishHornOpening = {
  R2. |
  R2. |
   % Bars 53–56
- b'2.( \f |
+ b'2. _\markup \italic { "espr." }( \f |
  dis''2.) |
  gis'2.( |
  b'2.) |

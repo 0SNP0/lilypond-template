@@ -70,7 +70,7 @@ oboesOneTwoOpening = {
  R2. |
  R2. |
   % Bars 53–56
- << { \voiceOne cis''2.( \f } \\ { \voiceTwo a'2.( } >> |
+ << { \voiceOne cis''2. _\markup \italic { "espr." }( \f } \\ { \voiceTwo a'2.( } >> |
  << { \voiceOne e''2.) } \\ { \voiceTwo cis''2.) } >> |
  << { \voiceOne a'2.( } \\ { \voiceTwo fis'2.( } >> |
  << { \voiceOne cis''2.) } \\ { \voiceTwo gis'2.) } >> |
@@ -153,7 +153,7 @@ oboesOneTwoOpening = {
 
 oboesOneTwoBridge = {
   % Bars 117–120
- b'4.( \p ^\markup \italic { "I" } cis''8 gis'8 cis''8 |
+ b'4. _\markup \italic { "espr." }( \p ^\markup \italic { "I" } cis''8 gis'8 cis''8 |
  b'4) gis''4. gis''8 |
  gis''2.( |
  cis''2.) |
@@ -178,7 +178,7 @@ oboesOneTwoBridge = {
  << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo gis'2.~ } >> |
  << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. \> } \\ { \voiceTwo gis'2.~ } >> |
   % Bars 137–140
- << { \voiceOne b'4.( \mp \pp cis''8 \mp \pp gis'8 cis''8 } \\ { \voiceTwo gis'4 \mp \pp r4 \mp \pp r4 } >> |
+ << { \voiceOne b'4. _\markup \italic { "espr." }( \mp \pp cis''8 \mp \pp gis'8 cis''8 } \\ { \voiceTwo gis'4 \mp \pp r4 \mp \pp r4 } >> |
  << { \voiceOne b'4) gis''4. gis''8 } \\ { \voiceTwo \once \override MultiMeasureRest.staff-position = #-10 R2. } >> |
  gis''2.( ^\markup \italic { "I" } |
  cis''2.) |

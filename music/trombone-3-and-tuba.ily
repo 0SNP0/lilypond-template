@@ -5,7 +5,7 @@ tromboneThreeAndTubaOpening = {
   \key e \major
   \time 3/4
   % Bars 1–4
- gis,8-_ \f ^\markup \italic { "III" } gis,8-_ gis,4 r4 |
+ gis,8 _\markup \italic { "marc." }-_ \f ^\markup \italic { "III" } gis,8-_ gis,4 r4 |
  gis,8-_ gis,8-_ gis,4 r4 |
  gis,8-_ gis,8-_ gis,4 r4 |
  fis,4-. ^\markup \italic { "Tuba sola" } \mf e,4-. dis,4-. |

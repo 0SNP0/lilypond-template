@@ -47,3 +47,21 @@ py -3 scripts/build.py package --full
 ## Контроль качества
 
 `python3 scripts/check_music_structure.py` проверяет границы репризы, единственность нотных источников, четвёртый такт, сольные паузы и ожидаемые ремарки. [Сверка с MusicXML](MXL_AUDIT.md) фиксирует найденные неоднозначности; зелёная сборка не заменяет музыкальную корректуру. [Соглашения об исходниках](CODE_STYLE.md) · [Перенос из MuseScore](IMPORT_FROM_MUSESCORE.md).
+
+
+## Music/print hashes and printed part scaling
+
+In dist/print-manifest.json (and viewer/manifest.json when exporting fully),
+music_hash changes when musical content changes, not when engraving-only
+instructions change. print_hash also tracks print wrappers, layout and credits.
+Both are independent of the Git revision shown in every PDF footer.
+pdf_sha256 fingerprints actual PDF bytes and therefore includes that revision.
+
+Individual/combined printed parts use partPrintLayout to compress multi-measure
+rests (with a measure count), automatically interrupted by rehearsal marks.
+Neither conductor scores nor MIDI are compressed.
+
+In parts/violins-2.ly, "#(define partStaffSize 22)" means preferred staff size
+22 pt (edit the number to 21, 23, etc.); "\paper { page-count = #2 }"
+requests two A4 pages. The default for other parts is 20 pt. If a page
+overflows, the builder can reduce the chosen part size in 0.5 pt steps.

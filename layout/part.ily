@@ -28,9 +28,10 @@ partBookTitle = \markup {
 % default direct Frescobaldi previews keep the full 20 pt staff.
 #(set-global-staff-size
   (let ((n (getenv "PART_STAFF_SIZE")))
-    (if (and n (string->number n))
-        (string->number n)
-        20)))
+    (cond
+      ((and n (string->number n)) (string->number n))
+      ((and (defined? 'partStaffSize) (number? partStaffSize)) partStaffSize)
+      (else 20))))
 \paper {
   #(set-paper-size "a4")
   top-margin = 11\mm
@@ -57,3 +58,8 @@ partBookTitle = \markup {
   bookTitleMarkup = \partBookTitle
 }
 % Set page-count inside a specific part .ly if it must occupy N pages.
+
+% Compress consecutive whole-bar rests in printed parts, but never in MIDI.
+partPrintLayout = \layout {
+  \context { \Score skipBars = ##t }
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stable staff-content fingerprints, independent of PDF bytes and Git headers."""
+"""Separate Git-independent music and printed-notation fingerprints."""
 from __future__ import annotations
 import hashlib
 import re
@@ -7,67 +7,79 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 INCLUDE = re.compile(r'\\include\s+"([^"]+)"')
+# Formatting-only commands: changing them must not invalidate music_hash.
+PRINT_ONLY = re.compile(
+    r'\\(?:once\s+\\)?override\s+[\w.-]+\s*=\s*(?:##[tf]|#[^\s{}]+|[^\s{}]+)'
+    r'|\\tweak\s+[\w.-]+\s+(?:##[tf]|#[^\s{}]+)'
+    r'|\\(?:omit|hide|revert)\s+[\w.-]+'
+    r'|\\(?:voiceOne|voiceTwo|voiceThree|voiceFour|oneVoice|stemUp|stemDown|stemNeutral|break|pageBreak|noBreak)\b')
 
 def sources(source: Path) -> list[Path]:
-    """Only music includes contribute; book titles, revision and layout do not."""
     source = source.resolve()
     if source.name in ("score.ly", "concert-score.ly"):
-        root = ROOT / "orchestra.ily"
-        included = INCLUDE.findall(root.read_text(encoding="utf-8"))
+        included = INCLUDE.findall((ROOT / "orchestra.ily").read_text(encoding="utf-8"))
         included += ["music/global.ily", "music/paired.ily"]
-        paths = [ROOT / x for x in included if x.startswith("music/")]
+        paths = [ROOT / rel for rel in included if rel.startswith("music/")]
     else:
-        content = source.read_text(encoding="utf-8")
-        paths = [(source.parent / rel).resolve()
-                 for rel in INCLUDE.findall(content)
+        included = INCLUDE.findall(source.read_text(encoding="utf-8"))
+        paths = [(source.parent / rel).resolve() for rel in included
                  if "/music/" in rel or rel.startswith("music/")]
-        # All individual parts include the canonical clock.
         paths.append(ROOT / "music/global.ily")
     return sorted(set(p.resolve() for p in paths))
 
-def normalize(text: str) -> str:
-    # LilyPond comments are not music. Preserve all note, rest, dynamics,
-    # articulation, markup and transposition tokens, regardless of line breaks.
-    tokens = []
+def normalize(text: str, *, music_only: bool = False) -> str:
+    lines = []
     for line in text.splitlines():
-        # Ignore percent-comment markers occurring inside quoted markup.
-        inside = False
-        escaped = False
-        cut = len(line)
+        quoted, escaped, cut = False, False, len(line)
         for i, char in enumerate(line):
             if char == '"' and not escaped:
-                inside = not inside
-            if char == '%' and not inside:
+                quoted = not quoted
+            if char == "%" and not quoted:
                 cut = i
                 break
-            escaped = (char == '\\' and not escaped)
-            if char != '\\':
+            escaped = char == "\\" and not escaped
+            if char != "\\":
                 escaped = False
-        cleaned = line[:cut].strip()
-        if cleaned:
-            tokens.append(cleaned)
-    return ' '.join(' '.join(tokens).split())
+        cleaned = line[:cut]
+        if music_only:
+            cleaned = PRINT_ONLY.sub("", cleaned)
+        if cleaned.strip():
+            lines.append(cleaned.strip())
+    return " ".join(" ".join(lines).split())
 
-def staff_fingerprint(source: Path) -> str:
-    paths = sources(source)
-    if not paths:
-        raise ValueError(f"No staff music found for {source}")
-    fingerprint = hashlib.sha256()
-    fingerprint.update(b"score-staff-content-v3\\0")
-    # The displayed notes also depend on the score's written/concert view
-    # and on instrument transpositions in its wrapper. Ignore headers and
-    # MIDI-only articulation settings.
-    wrapper = (ROOT / "orchestra.ily") if source.name in ("score.ly", "concert-score.ly") else source
-    transformations = re.findall(r'\\transpose\s+[^\s{}]+\s+[^\s{}]+', wrapper.read_text(encoding="utf-8"))
-    fingerprint.update(source.name.encode("utf-8"))
-    fingerprint.update(b"\\0")
-    fingerprint.update(" ".join(transformations).encode("utf-8"))
-    fingerprint.update(b"\\0")
-    for path in paths:
+def _digest(version: str, fields: list[tuple[str, str]]) -> str:
+    h = hashlib.sha256()
+    h.update(version.encode() + b"\0")
+    for key, value in fields:
+        h.update(key.encode() + b"\0" + value.encode() + b"\0")
+    return h.hexdigest()
+
+def music_fingerprint(source: Path) -> str:
+    """Sounding/expressive source events; ignores purely visual overrides."""
+    fields = [("edition", source.name)]
+    for path in sources(source):
         if not path.is_file():
             raise FileNotFoundError(path)
-        fingerprint.update(path.relative_to(ROOT).as_posix().encode("utf-8"))
-        fingerprint.update(b"\\0")
-        fingerprint.update(normalize(path.read_text(encoding="utf-8")).encode("utf-8"))
-        fingerprint.update(b"\\0")
-    return fingerprint.hexdigest()
+        fields.append((path.relative_to(ROOT).as_posix(),
+                       normalize(path.read_text(encoding="utf-8"), music_only=True)))
+    return _digest("score-music-v1", fields)
+
+def print_fingerprint(source: Path) -> str:
+    """Music, print wrappers, layout, and credits, but no actual Git SHA."""
+    source = source.resolve()
+    fields = [("music_hash", music_fingerprint(source))]
+    fields.extend((p.relative_to(ROOT).as_posix(),
+                   normalize(p.read_text(encoding="utf-8"))) for p in sources(source))
+    original = source.read_text(encoding="utf-8")
+    before, sep, after = original.partition(r"\score")
+    fields.append((source.relative_to(ROOT).as_posix(),
+                   normalize(before + sep + after.split(r"\score", 1)[0])))
+    layouts = (["orchestra.ily", "layout/score.ily", "layout/shared.ily", "metadata.ily"]
+               if source.name in ("score.ly", "concert-score.ly")
+               else ["layout/part.ily", "layout/shared.ily", "metadata.ily"])
+    fields.extend((rel, normalize((ROOT / rel).read_text(encoding="utf-8")))
+                  for rel in layouts)
+    return _digest("score-print-v2", fields)
+
+def staff_fingerprint(source: Path) -> str:
+    return print_fingerprint(source)

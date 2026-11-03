@@ -189,6 +189,9 @@ def compile_lilypond(source: Path, output: Path, version: str,
         raise RuntimeError("Install native LilyPond; lilypond executable not in PATH")
     output.parent.mkdir(parents=True, exist_ok=True)
     part_staff_size: float | None = None
+    size_match = (re.search(r'#\(define\s+partStaffSize\s+(\d+(?:\.\d+)?)\)',
+                            source.read_text(encoding="utf-8")) if not score else None)
+    preferred_part_staff_size = float(size_match.group(1)) if size_match else 20.0
     score_staff_size = natural_score_staff_size(score_staff_count()) if score else None
     attempt = 0
     while True:
@@ -224,7 +227,7 @@ def compile_lilypond(source: Path, output: Path, version: str,
         if not score:
             # Dense individual parts have a limited, separate adjustment.
 
-            current = float(env.get("PART_STAFF_SIZE", "20"))
+            current = float(env.get("PART_STAFF_SIZE", preferred_part_staff_size))
             reduced = round(current - 0.5, 2)
             if reduced < 15 or attempt >= 10:
                 print(f"WARNING: overfull part at {current} pt: {source}", flush=True)
@@ -419,7 +422,7 @@ def package(*, full: bool = False) -> None:
         old.unlink()
     # Music-print fingerprints: only the LilyPond staff music is hashed.
     # PDF bytes are kept as a separate audit hash, never as print_hash.
-    from notation_hash import staff_fingerprint
+    from notation_hash import music_fingerprint, print_fingerprint
     documents = {}
     for pdf in sorted(PDF.glob("*.pdf")):
         stem = pdf.stem
@@ -436,16 +439,17 @@ def package(*, full: bool = False) -> None:
                            if stem == part_name(p, naming)), None)
         if source is None:
             raise RuntimeError("Unknown print source for " + stem)
-        staff_hash = staff_fingerprint(source)
+        music_hash = music_fingerprint(source)
+        print_hash = print_fingerprint(source)
         documents[stem] = {"pdf": pdf.name,
-                           "print_hash": staff_hash,
-                           "music_hash": staff_hash,
+                           "print_hash": print_hash,
+                           "music_hash": music_hash,
                            "pdf_sha256": hashlib.sha256(pdf.read_bytes()).hexdigest()}
     manifest_file = ROOT / "dist" / "print-manifest.json"
     manifest_file.write_text(
-        json.dumps({"schema": "score-print-fingerprint-v1", "revision": naming["revision"],
+        json.dumps({"schema": "score-print-fingerprint-v2", "revision": naming["revision"],
                     "documents": documents,
-                    "warning": "print_hash tracks staff source content, not Git revision, title, paper layout or the LilyPond renderer. A layout/engine change can still require reprinting."},
+                    "warning": "music_hash ignores engraving-only changes; print_hash also tracks print layout, wrappers and credits, but both ignore Git revision. pdf_sha256 tracks exact PDF bytes."},
                    indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     with zipfile.ZipFile(PACKAGES / naming["pdf_zip"], "w", zipfile.ZIP_DEFLATED) as archive:
         for item in sorted(PDF.glob("*.pdf")):

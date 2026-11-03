@@ -342,35 +342,14 @@ def main() -> None:
     ] + [
         ("combined-" + part.stem, part, "combined", part) for part in combined
     ]
+    from notation_hash import music_fingerprint, print_fingerprint
     views = {}
     notation = {}
     for view_id, source, kind, part in sources:
         pages = render_svg(source, view_id, naming)
         anchors = tag_svg(pages, timeline)
-        if kind == "individual":
-            music_file = ROOT / "build" / "midi" / (b.part_name(part, naming) + ".midi")
-            music_hash = music_digest(music_file)
-        elif kind == "combined":
-            # Resolve musical dependencies from the part's own LilyPond
-            # include statements, not a hardcoded list of instrument names.
-            # Resolve includes against the actual combined part directory.
-            # Previous regex over-escaped "../.." and never found music files.
-            includes = re.findall(r'\\include\s+"([^"]+)"',
-                                  part.read_text(encoding="utf-8"))
-            music_sources = [(part.parent / relative).resolve()
-                             for relative in includes
-                             if (part.parent / relative).resolve().parent == ROOT / "music"
-                             and Path(relative).name not in ("global.ily", "paired.ily")]
-            if not music_sources or any(not path.is_file() for path in music_sources):
-                raise RuntimeError("Combined part music sources missing: " + str(part))
-
-            music_hash = digest(json.dumps(
-                [digest(path.read_bytes()) for path in music_sources],
-                separators=(",", ":"),
-            ).encode())
-        else:
-            music_hash = music_digest(b.AUDIO / (naming["mix"] + ".midi"))
-        print_hash = print_digest(pages, naming["revision"])
+        music_hash = music_fingerprint(source)
+        print_hash = print_fingerprint(source)
         views[view_id] = {
             "kind": kind,
             "source": str(source.relative_to(ROOT)),

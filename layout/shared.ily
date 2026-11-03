@@ -9,7 +9,7 @@
 % One title design for both conductor scores and individual parts.
 % Text sizes are absolute, so shrinking a full score's staff does not
 % shrink its title, credits, headers or footers.
-ensembleHeader = \markup {
+scorePageHeader = \markup {
   \overlay {
     \fill-line {
       \abs-fontsize #10 \fromproperty #'header:instrument
@@ -26,14 +26,14 @@ ensembleHeader = \markup {
   }
 }
 
-ensembleFooter = \markup {
+scorePageFooter = \markup {
   \fill-line { \null \abs-fontsize #10 \footerLabel \null }
 }
 
 % Elegant book-serif typography. Crucially, title/subtitle and credits
 % occupy SEPARATE vertical rows: right-aligned credits never sit over
 % the center-aligned work title. Use the same markup for score and parts.
-ensembleBookTitle = \markup {
+scoreBookTitle = \markup {
   \override #'(fonts . ((serif . "TeX Gyre Pagella"))) {
     \column {
       \vspace #0.8

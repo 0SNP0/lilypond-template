@@ -53,7 +53,7 @@ def staff_fingerprint(source: Path) -> str:
     if not paths:
         raise ValueError(f"No staff music found for {source}")
     fingerprint = hashlib.sha256()
-    fingerprint.update(b"ensemble-staff-content-v2\\0")
+    fingerprint.update(b"score-staff-content-v3\\0")
     # The displayed notes also depend on the score's written/concert view
     # and on instrument transpositions in its wrapper. Ignore headers and
     # MIDI-only articulation settings.

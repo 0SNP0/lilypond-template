@@ -18,6 +18,6 @@
 }
 
 \score {
-  \keepWithTag #'concert \ensembleScore
+  \keepWithTag #'concert \orchestraScore
   \scoreCompactLayout
 }

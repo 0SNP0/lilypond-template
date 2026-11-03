@@ -89,7 +89,7 @@ fluteOneOpening = {
  R2. |
  R2. |
   % Bars 69-72
- cis'''2.( ^\markup \italic { "I" } \f |
+ cis'''2. _\markup \italic { "espr." }( ^\markup \italic { "I" } \f |
  e'''2.) |
  a'''2.( |
  gis'''2.) |

@@ -89,7 +89,7 @@ clarinetInAOneOpening = {
  R2. |
  R2. |
   % Bars 69-72
- e''2.( ^\markup \italic { "I" } \f |
+ e''2. _\markup \italic { "espr." }( ^\markup \italic { "I" } \f |
  g''2.) |
  c'''2.( |
  b''2.) |

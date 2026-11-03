@@ -50,7 +50,7 @@ bassoonOneOpening = {
  R2. |
   % Bars 37-40
  R2. |
- gis2.( \f ^\markup \italic { "I" } |
+ gis2. _\markup \italic { "espr." }( \f ^\markup \italic { "I" } |
  gis2.~) \f |
  gis2.~ |
   % Bars 41-44
@@ -69,7 +69,7 @@ bassoonOneOpening = {
  R2. |
  R2. |
   % Bars 53-56
- cis'2.( \f |
+ cis'2. _\markup \italic { "espr." }( \f |
  e'2.) |
  a2.( |
  cis'2.) |

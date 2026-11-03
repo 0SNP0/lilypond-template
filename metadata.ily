@@ -12,9 +12,9 @@ arrangerCredit = ""
 proofreaderCredit = ""
 sourceCredit = "Imported from user-provided MusicXML; proofread before performance"
 rightsCredit = "Copyright belongs to the respective rightsholders"
-ensembleName = "Ensemble, Assemble"
+orchestraName = "Ensemble, Assemble"
 % A Git revision is visible even in direct Frescobaldi/VS Code previews.
-% The batch builder passes the version via ENSEMBLE_SCORE_VERSION, avoiding
+% The batch builder passes the version via SCORE_BUILD_REVISION, avoiding
 % brittle -e Scheme variable scopes across LilyPond versions.
 #(use-modules (ice-9 popen) (ice-9 rdelim))
 #(define (ea-git-revision)
@@ -29,8 +29,8 @@ ensembleName = "Ensemble, Assemble"
              value
              "unversioned")))
      (lambda args "unversioned")))
-buildRevision = #(let ((from-build (getenv "ENSEMBLE_SCORE_VERSION")))
+buildRevision = #(let ((from-build (getenv "SCORE_BUILD_REVISION")))
                    (if (and from-build (> (string-length from-build) 0))
                        from-build
                        (ea-git-revision)))
-footerLabel = #(string-append ensembleName " · " buildRevision)
+footerLabel = #(string-append orchestraName " · " buildRevision)

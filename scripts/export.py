@@ -22,7 +22,7 @@ import build as b
 
 ROOT = b.ROOT
 VIEWER = ROOT / "dist" / "viewer"
-SCHEMA = "ensemble-assemble-viewer-v1"
+SCHEMA = "score-viewer-v2"
 SVG_NS = "http://www.w3.org/2000/svg"
 ET.register_namespace("", SVG_NS)
 
@@ -257,7 +257,7 @@ def render_svg(source: Path, view_id: str, naming: dict) -> list[Path]:
         lily, "-dbackend=svg", "-dno-point-and-click",
         "-I", str(ROOT), "-o", str(view_dir / base), str(wrapper),
     ]
-    env = {**os.environ, "ENSEMBLE_SCORE_VERSION": naming["revision"]}
+    env = {**os.environ, "SCORE_BUILD_REVISION": naming["revision"]}
     completed = subprocess.run(cmd, cwd=ROOT, env=env, text=True,
                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     if completed.returncode:

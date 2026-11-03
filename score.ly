@@ -19,12 +19,12 @@
 }
 
 \score {
-  \keepWithTag #'written \ensembleScore
+  \keepWithTag #'written \orchestraScore
   \scoreCompactLayout
 }
 
 % Concert pitch MIDI; written transpositions are only for printed score.
 \score {
-  \articulate \keepWithTag #'playback \ensembleScore
+  \articulate \keepWithTag #'playback \orchestraScore
   \midi { \context { \Score midiChannelMapping = #'instrument } }
 }

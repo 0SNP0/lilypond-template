@@ -69,7 +69,7 @@ oboeOneOpening = {
  R2. |
  R2. |
   % Bars 53-56
- cis''2.( \f |
+ cis''2. _\markup \italic { "espr." }( \f |
  e''2.) |
  a'2.( |
  cis''2.) |
@@ -152,7 +152,7 @@ oboeOneOpening = {
 
 oboeOneBridge = {
   % Bars 117-120
- b'4.( \p ^\markup \italic { "I" } cis''8 gis'8 cis''8 |
+ b'4. _\markup \italic { "espr." }( \p ^\markup \italic { "I" } cis''8 gis'8 cis''8 |
  b'4) gis''4. gis''8 |
  gis''2.( |
  cis''2.) |
@@ -177,7 +177,7 @@ oboeOneBridge = {
  R2. |
  R2. \> |
   % Bars 137-140
- b'4.( \mp \pp cis''8 \mp \pp gis'8 cis''8 |
+ b'4. _\markup \italic { "espr." }( \mp \pp cis''8 \mp \pp gis'8 cis''8 |
  b'4) gis''4. gis''8 |
  gis''2.( ^\markup \italic { "I" } |
  cis''2.) |

@@ -2,34 +2,25 @@
 \include "metadata.ily"
 \include "music/global.ily"
 \include "music/piccolo.ily"
-\include "music/flutes-1-2.ily"
 \include "music/flute-1.ily"
 \include "music/flute-2.ily"
-\include "music/oboes-1-2.ily"
 \include "music/oboe-1.ily"
 \include "music/oboe-2.ily"
 \include "music/english-horn.ily"
-\include "music/clarinets-in-a-1-2.ily"
 \include "music/clarinet-in-a-1.ily"
 \include "music/clarinet-in-a-2.ily"
-\include "music/bassoons-1-2.ily"
 \include "music/bassoon-1.ily"
 \include "music/bassoon-2.ily"
 \include "music/contrabassoon.ily"
-\include "music/horns-1-3.ily"
 \include "music/horn-1.ily"
 \include "music/horn-3.ily"
-\include "music/horns-2-4.ily"
 \include "music/horn-2.ily"
 \include "music/horn-4.ily"
-\include "music/trumpets-1-2.ily"
 \include "music/trumpet-1.ily"
 \include "music/trumpet-2.ily"
 \include "music/trumpet-3.ily"
-\include "music/trombones-1-2.ily"
 \include "music/trombone-1.ily"
 \include "music/trombone-2.ily"
-\include "music/trombone-3-and-tuba.ily"
 \include "music/trombone-3.ily"
 \include "music/tuba.ily"
 \include "music/snare-drum.ily"
@@ -42,16 +33,17 @@
 \include "music/contrabasses.ily"
 
 \include "music/paired.ily"
+\include "music/percussion.ily"
 
-ensembleScore = <<
+orchestraScore = <<
   \new StaffGroup <<
-    \new Staff \with { instrumentName = \markup \fontsize #-1 "Piccolo" shortInstrumentName = "Picc." midiInstrument = "piccolo" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \rehearsalMarks } \tag #'concert { \rehearsalMarks } \tag #'playback { \rehearsalMarksPlayback } } { \tag #'written { \piccoloMusic } \tag #'concert { \transpose c c' \piccoloMusic } \tag #'playback { \transpose c c' \piccoloMusicPlayback } } >> }
+    \new Staff \with { instrumentName = \markup \fontsize #-1 "Piccolo" shortInstrumentName = "Picc." midiInstrument = "piccolo" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \rehearsalMarks } \tag #'concert { \rehearsalMarks } \tag #'playback { \rehearsalMarksPlayback } } { \tag #'written { \clef treble \piccoloMusic } \tag #'concert { \clef "treble^8" \transpose c c' \piccoloMusic } \tag #'playback { \clef "treble^8" \transpose c c' \piccoloMusicPlayback } } >> }
     \new Staff \with { \consists Merge_rests_engraver instrumentName = \markup \fontsize #-1 "Flutes I–II" shortInstrumentName = "Fl. I–II" midiInstrument = "flute" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \flutesTogether } \tag #'concert { \transpose c c \flutesTogether } \tag #'playback { \transpose c c \flutesTogetherPlayback } } >> }
     \new Staff \with { \consists Merge_rests_engraver instrumentName = \markup \fontsize #-1 "Oboes I–II" shortInstrumentName = "Ob. I–II" midiInstrument = "oboe" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \oboesTogether } \tag #'concert { \transpose c c \oboesTogether } \tag #'playback { \transpose c c \oboesTogetherPlayback } } >> }
     \new Staff \with { instrumentName = \markup \fontsize #-1 "English Horn" shortInstrumentName = "Eng. Hn." midiInstrument = "english horn" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \englishHornMusic } \tag #'concert { \transpose c f, \englishHornMusic } \tag #'playback { \transpose c f, \englishHornMusicPlayback } } >> }
     \new Staff \with { \consists Merge_rests_engraver instrumentName = \markup \fontsize #-1 "Clarinets in A I–II" shortInstrumentName = "Cl. A I–II" midiInstrument = "clarinet" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \clarinetsInATogether } \tag #'concert { \transpose c a, \clarinetsInATogether } \tag #'playback { \transpose c a, \clarinetsInATogetherPlayback } } >> }
     \new Staff \with { \consists Merge_rests_engraver instrumentName = \markup \fontsize #-1 "Bassoons I–II" shortInstrumentName = "Bsn. I–II" midiInstrument = "bassoon" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \bassoonsTogether } \tag #'concert { \transpose c c \bassoonsTogether } \tag #'playback { \transpose c c \bassoonsTogetherPlayback } } >> }
-    \new Staff \with { instrumentName = \markup \fontsize #-1 "Contrabassoon" shortInstrumentName = "Cbsn." midiInstrument = "bassoon" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \contrabassoonMusic } \tag #'concert { \clef "bass_8" \transpose c c, \contrabassoonMusic } \tag #'playback { \clef "bass_8" \transpose c c, \contrabassoonMusicPlayback } } >> }
+    \new Staff \with { instrumentName = \markup \fontsize #-1 "Contrabassoon" shortInstrumentName = "Cbsn." midiInstrument = "bassoon" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \clef bass \contrabassoonMusic } \tag #'concert { \clef "bass_8" \transpose c c, \contrabassoonMusic } \tag #'playback { \clef "bass_8" \transpose c c, \contrabassoonMusicPlayback } } >> }
   >>
   \new StaffGroup <<
     \new Staff \with { \consists Merge_rests_engraver instrumentName = \markup \fontsize #-1 "Horns in F I/III" shortInstrumentName = "Hn. I/III" midiInstrument = "french horn" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \hornsOneThreeTogether } \tag #'concert { \transpose c f, \hornsOneThreeTogether } \tag #'playback { \transpose c f, \hornsOneThreeTogetherPlayback } } >> }
@@ -62,15 +54,19 @@ ensembleScore = <<
     \new Staff \with { \consists Merge_rests_engraver instrumentName = \markup \fontsize #-1 "Trombone III / Tuba" shortInstrumentName = "Tbn. III/Tba." midiInstrument = "tuba" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \tromboneThreeTubaTogether } \tag #'concert { \transpose c c \tromboneThreeTubaTogether } \tag #'playback { \transpose c c \tromboneThreeTubaTogetherPlayback } } >> }
   >>
   \new StaffGroup <<
-    \new DrumStaff \with { instrumentName = \markup \fontsize #-1 "Snare Drum" shortInstrumentName = "Sn. Dr." } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \snareDrumMusic } \tag #'concert { \snareDrumMusic } \tag #'playback { \snareDrumMusicPlayback } } >> }
-    \new DrumStaff \with { instrumentName = \markup \fontsize #-1 "Cymbals" shortInstrumentName = "Cym." } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \cymbalsMusic } \tag #'concert { \cymbalsMusic } \tag #'playback { \cymbalsMusicPlayback } } >> }
-    \new DrumStaff \with { instrumentName = \markup \fontsize #-1 "Bass Drum" shortInstrumentName = "B. Dr." } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \bassDrumMusic } \tag #'concert { \bassDrumMusic } \tag #'playback { \bassDrumMusicPlayback } } >> }
+    \new DrumStaff \with {
+      instrumentName = \markup \fontsize #-1 "Percussion (Sn. Dr., Cym., B. Dr.)"
+      shortInstrumentName = "Perc."
+    } <<
+      { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } }
+      { \tag #'written { \percussionKitMusic } \tag #'concert { \percussionKitMusic } \tag #'playback { \percussionKitPlayback } }
+    >>
   >>
   \new StaffGroup <<
     \new Staff \with { instrumentName = \markup \fontsize #-1 "Violins I" shortInstrumentName = "Vlns. I" midiInstrument = "violin" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \violinsOneMusic } \tag #'concert { \transpose c c \violinsOneMusic } \tag #'playback { \transpose c c \violinsOneMusicPlayback } } >> }
     \new Staff \with { instrumentName = \markup \fontsize #-1 "Violins II" shortInstrumentName = "Vlns. II" midiInstrument = "violin" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \violinsTwoMusic } \tag #'concert { \transpose c c \violinsTwoMusic } \tag #'playback { \transpose c c \violinsTwoMusicPlayback } } >> }
     \new Staff \with { instrumentName = \markup \fontsize #-1 "Violas" shortInstrumentName = "Vlas." midiInstrument = "viola" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \violasMusic } \tag #'concert { \transpose c c \violasMusic } \tag #'playback { \transpose c c \violasMusicPlayback } } >> }
     \new Staff \with { instrumentName = \markup \fontsize #-1 "Violoncellos" shortInstrumentName = "Vcs." midiInstrument = "cello" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \violoncellosMusic } \tag #'concert { \transpose c c \violoncellosMusic } \tag #'playback { \transpose c c \violoncellosMusicPlayback } } >> }
-    \new Staff \with { instrumentName = \markup \fontsize #-1 "Contrabasses" shortInstrumentName = "Cbs." midiInstrument = "contrabass" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \contrabassesMusic } \tag #'concert { \clef "bass_8" \transpose c c, \contrabassesMusic } \tag #'playback { \clef "bass_8" \transpose c c, \contrabassesMusicPlayback } } >> }
+    \new Staff \with { instrumentName = \markup \fontsize #-1 "Contrabasses" shortInstrumentName = "Cbs." midiInstrument = "contrabass" } { << { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } } { \tag #'written { \clef bass \contrabassesMusic } \tag #'concert { \clef "bass_8" \transpose c c, \contrabassesMusic } \tag #'playback { \clef "bass_8" \transpose c c, \contrabassesMusicPlayback } } >> }
   >>
 >>

@@ -44,9 +44,21 @@ def main() -> None:
        [s["end"] for s in sections] != [break_bar, printed, break_bar]:
         raise ValueError("Unexpected playback order for D.C. al Fine")
     music_files = [p for p in sorted(MUSIC.glob("*.ily"))
-                   if p.name not in ("global.ily", "paired.ily")]
+                   if p.name not in ("global.ily", "paired.ily", "percussion.ily")]
     if not music_files:
         raise ValueError("No music sources")
+    # A combined staff must reference the individual voices, never duplicate
+    # a second 152-measure notation file (shared source of truth).
+    forbidden = ("flutes-1-2", "oboes-1-2", "clarinets-in-a-1-2",
+                 "bassoons-1-2", "horns-1-3", "horns-2-4",
+                 "trumpets-1-2", "trombones-1-2", "trombone-3-and-tuba")
+    for stem in forbidden:
+        if (MUSIC / (stem + ".ily")).exists():
+            raise ValueError(f"Duplicate paired notes: music/{stem}.ily")
+    pairs = (MUSIC / "paired.ily").read_text(encoding="utf-8")
+    if r"\partCombine" not in pairs:
+        raise ValueError("Paired desks must combine the solo source parts")
+
     per_file: dict[str, list[str]] = {}
     for file in music_files:
         text = file.read_text(encoding="utf-8")

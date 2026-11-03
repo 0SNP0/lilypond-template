@@ -31,8 +31,7 @@
     {
       "measure": 4,
       "allowed_music_files": [
-        "tuba.ily",
-        "trombone-3-and-tuba.ily"
+        "tuba.ily"
       ]
     }
   ],
@@ -168,40 +167,13 @@
     ]
   },
   "import_text_marks": {
-    "flutes-1-2": {
-      "69": "espr."
-    },
-    "oboes-1-2": {
-      "53": "espr.",
-      "117": "espr.",
-      "137": "espr."
-    },
     "english-horn": {
-      "53": "espr."
-    },
-    "clarinets-in-a-1-2": {
-      "69": "espr."
-    },
-    "bassoons-1-2": {
-      "38": "espr.",
       "53": "espr."
     },
     "contrabassoon": {
       "53": "espr."
     },
-    "horns-1-3": {
-      "1": "marc."
-    },
-    "horns-2-4": {
-      "1": "marc."
-    },
-    "trumpets-1-2": {
-      "1": "marc."
-    },
     "trumpet-3": {
-      "1": "marc."
-    },
-    "trombone-3-and-tuba": {
       "1": "marc."
     },
     "cymbals": {
@@ -225,6 +197,33 @@
     },
     "contrabasses": {
       "53": "espr."
+    },
+    "flute-1": {
+      "69": "espr."
+    },
+    "oboe-1": {
+      "53": "espr.",
+      "117": "espr.",
+      "137": "espr."
+    },
+    "clarinet-in-a-1": {
+      "69": "espr."
+    },
+    "bassoon-1": {
+      "38": "espr.",
+      "53": "espr."
+    },
+    "horn-1": {
+      "1": "marc."
+    },
+    "horn-2": {
+      "1": "marc."
+    },
+    "trumpet-1": {
+      "1": "marc."
+    },
+    "trombone-3": {
+      "1": "marc."
     }
   }
 }

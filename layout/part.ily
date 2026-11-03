@@ -1,7 +1,7 @@
 \include "shared.ily"
 % Compact, vertically safe title for individual parts only.
 % Title, subtitle and credits occupy separate rows, with no overlays.
-ensemblePartBookTitle = \markup {
+partBookTitle = \markup {
   \override #'(fonts . ((serif . "TeX Gyre Pagella"))) {
     \column {
       \fill-line {
@@ -27,7 +27,7 @@ ensemblePartBookTitle = \markup {
 % The engraving engine may retry dense parts with smaller staves, but
 % default direct Frescobaldi previews keep the full 20 pt staff.
 #(set-global-staff-size
-  (let ((n (getenv "ENSEMBLE_PART_STAFF_SIZE")))
+  (let ((n (getenv "PART_STAFF_SIZE")))
     (if (and n (string->number n))
         (string->number n)
         20)))
@@ -50,10 +50,10 @@ ensemblePartBookTitle = \markup {
   markup-system-spacing =
     #'((basic-distance . 7) (minimum-distance . 5)
        (padding . 1) (stretchability . 0))
-  oddHeaderMarkup = \ensembleHeader
-  evenHeaderMarkup = \ensembleHeader
-  oddFooterMarkup = \ensembleFooter
-  evenFooterMarkup = \ensembleFooter
-  bookTitleMarkup = \ensemblePartBookTitle
+  oddHeaderMarkup = \scorePageHeader
+  evenHeaderMarkup = \scorePageHeader
+  oddFooterMarkup = \scorePageFooter
+  evenFooterMarkup = \scorePageFooter
+  bookTitleMarkup = \partBookTitle
 }
 % Set page-count inside a specific part .ly if it must occupy N pages.

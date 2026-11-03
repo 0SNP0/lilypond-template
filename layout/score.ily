@@ -10,8 +10,8 @@
          (ea-count-staves (ly:music-property m 'element #f))
          (apply + (map ea-count-staves
                        (filter ly:music? (ly:music-property m 'elements '())))))))
-#(define ea-staff-count (max 1 (ea-count-staves ensembleScore)))
-% Smaller ensembles can use bigger notes. Dense A4 orchestral scores
+#(define ea-staff-count (max 1 (ea-count-staves orchestraScore)))
+% Smaller orchestras can use bigger notes. Dense A4 orchestral scores
 % must not get progressively smaller just to save paper.
 % Fit the size to the actual number of orchestral staves.  The builder
 % starts with this size and only retries a smaller one if A4 is overfull.
@@ -22,7 +22,7 @@
          ((<= ea-staff-count 18) 15)
          ((<= ea-staff-count 22) 14)
          (else 12.5)))
-#(define ea-staff-size-override (getenv "ENSEMBLE_SCORE_STAFF_SIZE"))
+#(define ea-staff-size-override (getenv "SCORE_STAFF_SIZE"))
 #(define ea-print-staff-size
    (if (and ea-staff-size-override
             (string->number ea-staff-size-override))
@@ -45,17 +45,17 @@
   ragged-bottom = ##f
   ragged-last-bottom = ##f
   page-breaking = #ly:optimal-breaking
-  oddHeaderMarkup = \ensembleHeader
-  evenHeaderMarkup = \ensembleHeader
-  oddFooterMarkup = \ensembleFooter
-  evenFooterMarkup = \ensembleFooter
-  bookTitleMarkup = \ensembleBookTitle
+  oddHeaderMarkup = \scorePageHeader
+  evenHeaderMarkup = \scorePageHeader
+  oddFooterMarkup = \scorePageFooter
+  evenFooterMarkup = \scorePageFooter
+  bookTitleMarkup = \scoreBookTitle
 }
 
 scoreCompactLayout = \layout {
   \context {
     \Score
-    % One boxed number per bar, centered below the complete ensemble.
+    % One boxed number per bar, centered below the complete orchestra.
     % Uses the same measure numbers as the JSON/SVG playback clock.
     centerBarNumbers = ##t
     barNumberVisibility = #all-bar-numbers-visible

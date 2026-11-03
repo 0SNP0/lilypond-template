@@ -1,7 +1,6 @@
 % Contrabasses: source MusicXML P21, 152 printed measures, 268 playback measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
 contrabassesOpening = {
-  \clef bass
   \key e \major
   \time 3/4
   % Bars 1–4

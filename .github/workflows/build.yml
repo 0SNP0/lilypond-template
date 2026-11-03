@@ -6,11 +6,14 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
-      viewer:
-        description: "Viewer is built by default; option retained for compatibility"
+      full_export:
+        description: "Build MP3, MIDI and synchronized SVG/JSON viewer too"
         type: boolean
         required: false
         default: false
+concurrency:
+  group: orchestra-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/v') }}
 permissions:
   contents: read
 jobs:
@@ -36,11 +39,15 @@ jobs:
           test -x "$RUNNER_TEMP/lilypond-${version}/bin/lilypond"
           echo "$RUNNER_TEMP/lilypond-${version}/bin" >> "$GITHUB_PATH"
           "$RUNNER_TEMP/lilypond-${version}/bin/lilypond" --version | head -n 1
-      - name: Install audio and validation dependencies
+      - name: Install PDF validation dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends fluidsynth ffmpeg python3-pypdf fonts-texgyre
+          sudo apt-get install -y --no-install-recommends python3-pypdf fonts-texgyre
+      - name: Install audio dependencies
+        if: ${{ startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.full_export) }}
+        run: sudo apt-get install -y --no-install-recommends fluidsynth ffmpeg
       - name: Download MuseScore MS Basic SoundFont
+        if: ${{ startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.full_export) }}
         shell: bash
         run: |
           set -euo pipefail
@@ -48,17 +55,23 @@ jobs:
           curl --retry 3 -fLsS --output soundfonts/MS_Basic.sf3 \
             "https://raw.githubusercontent.com/musescore/MuseScore/0e44d8e1dd7e0cad1fac85915330c5225bd7882e/share/sound/MS%20Basic.sf3"
           test "$(stat -c %s soundfonts/MS_Basic.sf3)" -gt 50000000
-          echo "MS Basic downloaded from MuseScore (pinned source revision)"
       - name: Validate printed/playback repeat structure
         run: python3 scripts/check_music_structure.py
-      - name: Build all PDF parts and MP3 tracks
+      - name: Build PDF and package (full export only on request or tag)
         env:
           SOURCE_TAG: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
           SOUNDFONT: soundfonts/MS_Basic.sf3
-          LILYPOND_EXPORT_VIEWER: ${{ inputs.viewer && '1' || '0' }}
+          FULL_EXPORT: ${{ (startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.full_export)) && '1' || '0' }}
+        shell: bash
         run: |
-          python3 scripts/build.py build --audio
-          python3 scripts/build.py package
+          set -euo pipefail
+          if [[ "$FULL_EXPORT" == "1" ]]; then
+            python3 scripts/build.py build --audio
+            python3 scripts/build.py package --full
+          else
+            python3 scripts/build.py build
+            python3 scripts/build.py package
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:

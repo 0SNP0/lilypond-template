@@ -132,7 +132,7 @@ def metadata_section() -> str:
         ("Произведение", "workTitle"),
         ("Короткое имя файлов", "workFileSlug"),
         ("Подзаголовок", "workSubtitle"),
-        ("Оркестр", "ensembleName"),
+        ("Оркестр", "orchestraName"),
         ("Композитор", "composerCredit"),
         ("Автор текста", "lyricistCredit"),
         ("Перевод", "translatorCredit"),
@@ -168,7 +168,7 @@ def score_staff_count() -> int:
 
 
 def natural_score_staff_size(count: int) -> float:
-    """Starting A4 size for the ensemble; the final size must fit uncompressed."""
+    """Starting A4 size for the orchestra; the final size must fit uncompressed."""
     if count <= 6:
         return 20.0
     if count <= 10:
@@ -196,12 +196,12 @@ def compile_lilypond(source: Path, output: Path, version: str,
             lilypond, "-dno-point-and-click",
             "-o", str(output), str(source),
         ]
-        env = {"ENSEMBLE_SCORE_VERSION": version}
+        env = {"SCORE_BUILD_REVISION": version}
         # Start from the number of staves and find the largest usable A4 size.
         if score_staff_size is not None:
-            env["ENSEMBLE_SCORE_STAFF_SIZE"] = str(score_staff_size)
+            env["SCORE_STAFF_SIZE"] = str(score_staff_size)
         if part_staff_size is not None:
-            env["ENSEMBLE_PART_STAFF_SIZE"] = str(part_staff_size)
+            env["PART_STAFF_SIZE"] = str(part_staff_size)
         text = run(args, capture=True, environment=env)
         print(text, end="", flush=True)
         overfull = "compressing over-full page" in text
@@ -224,7 +224,7 @@ def compile_lilypond(source: Path, output: Path, version: str,
         if not score:
             # Dense individual parts have a limited, separate adjustment.
 
-            current = float(env.get("ENSEMBLE_PART_STAFF_SIZE", "20"))
+            current = float(env.get("PART_STAFF_SIZE", "20"))
             reduced = round(current - 0.5, 2)
             if reduced < 15 or attempt >= 10:
                 print(f"WARNING: overfull part at {current} pt: {source}", flush=True)
@@ -252,7 +252,7 @@ def build(*, audio: bool, font: str | None) -> None:
         path.mkdir(parents=True)
     (BUILD / "build-info.json").write_text(
         json.dumps({"revision": rev, "commit": sha, "work": metadata().get("workTitle"),
-                    "ensemble": metadata().get("ensembleName"),
+                    "orchestra": metadata().get("orchestraName"),
                     "parts": [p.stem for p in parts],
                     "combined_parts": [p.stem for p in combined_parts()]},
                    ensure_ascii=False, indent=2) + "\n",
@@ -404,8 +404,8 @@ def verify(*, audio: bool = False) -> None:
     print(f"Verified {len(expected)} PDFs (individual + paired), MIDI" + (f", {len(parts)} MP3 stems and mixed MP3" if audio else ""))
 
 
-def package() -> None:
-    verify(audio=True)
+def package(*, full: bool = False) -> None:
+    verify(audio=full)
     naming = current_names()
     PACKAGES.mkdir(parents=True, exist_ok=True)
     for old in PACKAGES.glob("*.zip"):
@@ -451,26 +451,27 @@ def package() -> None:
         manifest_file = ROOT / "dist" / "print-manifest.json"
         if manifest_file.is_file():
             archive.write(manifest_file, "print-manifest.json")
-    with zipfile.ZipFile(PACKAGES / naming["audio_zip"], "w", zipfile.ZIP_DEFLATED) as archive:
-        for ext in (".mp3", ".midi"):
-            item = AUDIO / (naming["mix"] + ext)
-            archive.write(item, f"audio/{item.name}")
-        for item in sorted((AUDIO / "stems").glob("*.mp3")):
-            archive.write(item, f"audio/stems/{item.name}")
-        archive.write(BUILD / "build-info.json", "build-info.json")
-    viewer = ROOT / "dist" / "viewer"
-    if (viewer / "manifest.json").is_file() and (viewer / "timeline.json").is_file():
-        archive_name = naming["slug"] + "-viewer-" + naming["revision"] + ".zip"
-        with zipfile.ZipFile(PACKAGES / archive_name, "w", zipfile.ZIP_DEFLATED) as archive:
-            for item in sorted(viewer.rglob("*")):
-                if item.is_file():
-                    archive.write(item, str(item.relative_to(ROOT / "dist")))
+    if full:
+        with zipfile.ZipFile(PACKAGES / naming["audio_zip"], "w", zipfile.ZIP_DEFLATED) as archive:
+            for ext in (".mp3", ".midi"):
+                item = AUDIO / (naming["mix"] + ext)
+                archive.write(item, f"audio/{item.name}")
+            for item in sorted((AUDIO / "stems").glob("*.mp3")):
+                archive.write(item, f"audio/stems/{item.name}")
             archive.write(BUILD / "build-info.json", "build-info.json")
-            mix = AUDIO / (naming["mix"] + ".mp3")
-            archive.write(mix, f"audio/{mix.name}")
-            for stem in sorted((AUDIO / "stems").glob("*.mp3")):
-                archive.write(stem, f"audio/stems/{stem.name}")
-    print("Ready:", naming["pdf_zip"], naming["audio_zip"])
+        viewer = ROOT / "dist" / "viewer"
+        if (viewer / "manifest.json").is_file() and (viewer / "timeline.json").is_file():
+            archive_name = naming["slug"] + "-viewer-" + naming["revision"] + ".zip"
+            with zipfile.ZipFile(PACKAGES / archive_name, "w", zipfile.ZIP_DEFLATED) as archive:
+                for item in sorted(viewer.rglob("*")):
+                    if item.is_file():
+                        archive.write(item, str(item.relative_to(ROOT / "dist")))
+                archive.write(BUILD / "build-info.json", "build-info.json")
+                mix = AUDIO / (naming["mix"] + ".mp3")
+                archive.write(mix, f"audio/{mix.name}")
+                for stem in sorted((AUDIO / "stems").glob("*.mp3")):
+                    archive.write(stem, f"audio/stems/{stem.name}")
+    print("Ready:", naming["pdf_zip"], *( [naming["audio_zip"]] if full else [] ))
 
 
 def main() -> None:
@@ -480,7 +481,9 @@ def main() -> None:
     build_command.add_argument("--audio", action="store_true")
     build_command.add_argument("--soundfont")
     commands.add_parser("verify")
-    commands.add_parser("package")
+    package_command = commands.add_parser("package")
+    package_command.add_argument("--full", action="store_true",
+                                 help="include audio and interactive SVG viewer")
     commands.add_parser("version")
     commands.add_parser("readme")
     commands.add_parser("readme-check")
@@ -492,7 +495,7 @@ def main() -> None:
         elif args.command == "verify":
             verify()
         elif args.command == "package":
-            package()
+            package(full=args.full)
         elif args.command == "version":
             print(revision()[0])
         elif args.command == "readme":

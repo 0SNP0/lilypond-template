@@ -6,7 +6,7 @@
 \include "../music/cymbals.ily"
 \include "../music/bass-drum.ily"
 \include "../music/percussion.ily"
-\include "../layout/part.ily"
+\include "../scorekit/lilypond/layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle
           composer = \composerCredit instrument = "Percussion" tagline = ##f }
 \score {

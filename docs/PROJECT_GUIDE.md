@@ -65,3 +65,11 @@ In parts/violins-2.ly, "#(define partStaffSize 22)" means preferred staff size
 22 pt (edit the number to 21, 23, etc.); "\paper { page-count = #2 }"
 requests two A4 pages. The default for other parts is 20 pt. If a page
 overflows, the builder can reduce the chosen part size in 0.5 pt steps.
+
+
+Для вторых скрипок `partTargetPages = 2` теперь означает автоматический
+подбор *максимального* размера стана в двух страницах A4. `partStaffSize = 22`
+— начальная точка поиска; размер увеличивается по 0,5 pt, пока не возникает
+третья страница или переполнение. Обе страницы растягиваются по высоте,
+а выбранное значение выводится в лог сборки. `page-count` намеренно не
+используется: он скрывал недостаточно заполненную последнюю страницу.

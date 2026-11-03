@@ -3,10 +3,11 @@
 \include "../metadata.ily"
 \include "../music/violins-2.ily"
 \include "../music/global.ily"
-% Staff size in points. Tune 21, 22, 23, ... for readability.
+% Start at this size and enlarge until exactly two A4 pages fit.
 #(define partStaffSize 22)
+#(define partTargetPages 2)
 \include "../layout/part.ily"
-\paper { page-count = #2 }
+\paper { ragged-bottom = ##f ragged-last-bottom = ##f }
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Violins II" tagline = ##f }
 \score { \new Staff \with { midiInstrument = "violin" } << { \global } { \rehearsalMarks } { \violinsTwoMusic } >> \partPrintLayout }
 \score { \articulate \new Staff \with { midiInstrument = "violin" } << { \globalPlayback } { \rehearsalMarksPlayback } { \violinsTwoMusicPlayback } >> \midi { } }

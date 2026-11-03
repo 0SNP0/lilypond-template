@@ -189,54 +189,79 @@ def compile_lilypond(source: Path, output: Path, version: str,
     if not lilypond:
         raise RuntimeError("Install native LilyPond; lilypond executable not in PATH")
     output.parent.mkdir(parents=True, exist_ok=True)
-    part_staff_size: float | None = None
+    source_text = source.read_text(encoding="utf-8")
     size_match = (re.search(r'#\(define\s+partStaffSize\s+(\d+(?:\.\d+)?)\)',
-                            source.read_text(encoding="utf-8")) if not score else None)
-    preferred_part_staff_size = float(size_match.group(1)) if size_match else 20.0
-    score_staff_size = natural_score_staff_size(score_staff_count()) if score else None
-    attempt = 0
+                            source_text) if not score else None)
+    preferred_size = float(size_match.group(1)) if size_match else 20.0
+    pages_match = (re.search(r'#\(define\s+partTargetPages\s+(\d+)\)',
+                             source_text) if not score else None)
+    target_pages = int(pages_match.group(1)) if pages_match else None
+    score_size = natural_score_staff_size(score_staff_count()) if score else None
+    size = preferred_size
+    best_size: float | None = None
+    attempts = 0
+    if target_pages:
+        try:
+            from pypdf import PdfReader
+        except ImportError as exc:
+            raise RuntimeError("Automatic page filling requires pypdf") from exc
+        if target_pages < 1:
+            raise ValueError("partTargetPages must be positive")
     while True:
-        args = [
-            lilypond, "-dno-point-and-click",
-            "-o", str(output), str(source),
-        ]
         env = {"SCORE_BUILD_REVISION": version}
-        # Start from the number of staves and find the largest usable A4 size.
-        if score_staff_size is not None:
-            env["SCORE_STAFF_SIZE"] = str(score_staff_size)
-        if part_staff_size is not None:
-            env["PART_STAFF_SIZE"] = str(part_staff_size)
-        text = run(args, capture=True, environment=env)
-        print(text, end="", flush=True)
-        overfull = "compressing over-full page" in text
-        if "error:" in text.lower() or not Path(str(output) + ".pdf").is_file():
+        if score_size is not None:
+            env["SCORE_STAFF_SIZE"] = str(score_size)
+        elif target_pages or size != preferred_size:
+            env["PART_STAFF_SIZE"] = str(size)
+        result = run([lilypond, "-dno-point-and-click",
+                      "-o", str(output), str(source)],
+                     capture=True, environment=env)
+        print(result, end="", flush=True)
+        pdf = Path(str(output) + ".pdf")
+        if "error:" in result.lower() or not pdf.is_file():
             raise RuntimeError(f"LilyPond failed or produced no PDF: {source}")
+        overfull = "compressing over-full page" in result
+        if target_pages:
+            pages = len(PdfReader(str(pdf)).pages)
+            valid = pages <= target_pages and not overfull
+            print(f"Part {source.name}: {size:g} pt, {pages} pages "
+                  f"(target {target_pages}, overfull={overfull})", flush=True)
+            if valid:
+                best_size = size
+                if size >= 34 or attempts >= 26:
+                    return
+                size = round(size + 0.5, 2)
+                attempts += 1
+                continue
+            if best_size is not None:
+                # The last probe exceeded the page budget: restore the largest
+                # valid setting, not the overflowing final test.
+                print(f"Selected {best_size:g} pt for {source.name}", flush=True)
+                run([lilypond, "-dno-point-and-click",
+                     "-o", str(output), str(source)],
+                    capture=True,
+                    environment={"SCORE_BUILD_REVISION": version,
+                                 "PART_STAFF_SIZE": str(best_size)})
+                return
+            size = round(size - 0.5, 2)
+            attempts += 1
+            if size < 15 or attempts >= 40:
+                raise RuntimeError(
+                    f"Cannot fit {source.name} into {target_pages} A4 pages")
+            continue
         if not overfull:
             return
         if score:
-            assert score_staff_size is not None
-            next_size = round(score_staff_size - 0.5, 1)
-            if next_size < 11.5 or attempt >= 18:
-                raise RuntimeError(
-                    f"A4 score still overfull at {score_staff_size} pt: {source}; "
-                    "adjust score layout, not the A4 paper size.")
-            print(f"Retry A4 score at {next_size:.1f} pt "
-                  f"({score_staff_count()} staves)", flush=True)
-            score_staff_size = next_size
-            attempt += 1
+            assert score_size is not None
+            score_size = round(score_size - 0.5, 1)
+            if score_size < 11.5 or attempts >= 18:
+                raise RuntimeError(f"Overfull A4 score: {source}")
+            attempts += 1
             continue
-        if not score:
-            # Dense individual parts have a limited, separate adjustment.
-
-            current = float(env.get("PART_STAFF_SIZE", preferred_part_staff_size))
-            reduced = round(current - 0.5, 2)
-            if reduced < 15 or attempt >= 10:
-                print(f"WARNING: overfull part at {current} pt: {source}", flush=True)
-                return
-            print(f"Retry part at {reduced:.1f} pt: {source}", flush=True)
-            part_staff_size = reduced
-            attempt += 1
-            continue
+        size = round(size - 0.5, 2)
+        if size < 15 or attempts >= 10:
+            raise RuntimeError(f"Overfull part at minimum staff size: {source}")
+        attempts += 1
 
 
 def build(*, audio: bool, font: str | None) -> None:

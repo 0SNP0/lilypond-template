@@ -8,108 +8,13 @@ trumpetThreeOpening = {
  f'8 _\markup \italic { "marc." }-_ \f f'8-_ f'4 r4 |
  ges'8-_ ges'8-_ ges'4 r4 |
  f'8-_ f'8-_ f'4-^ r4 |
-  R2. |
-  % Bars 5–8
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 9–12
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 13–16
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 17–20
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 21–24
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 25–28
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 29–32
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 33–36
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 37–40
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 41–44
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 45–48
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 49–52
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 53–56
+ R2.*49 |
  << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo a'2. } >> |
- R2. |
- R2. |
- R2. |
-  % Bars 57–60
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 61–64
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 65–68
- R2. |
+ R2.*12 |
  << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo a'2. } >> |
- R2. |
- R2. |
-  % Bars 69–72
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 73–76
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 77–80
+ R2.*10 |
  << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo a'2. } >> |
- R2. |
- R2. |
- R2. |
-  % Bars 81–84
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 85–88
+ R2.*7 |
  r4 bes4-. \f bes4-. |
  r4 bes4-. bes4-. |
  r4 bes4-. bes4-. |
@@ -128,9 +33,7 @@ trumpetThreeOpening = {
  ces'4-. r4 r4 |
  c'4-. r4 r4 |
  ces'4-. r4 r4 |
- R2. |
-  % Bars 101–104
- R2. |
+ R2.*2 |
  ais'2.~ \f ^\markup \italic { "III" } |
  ais'2.~ |
  ais'2.~ |
@@ -141,62 +44,12 @@ trumpetThreeOpening = {
  ais'2.~ |
   % Bars 109–112
  ais'4 r4 r4 |
- R2. |
- R2. |
- R2. |
-  % Bars 113–116
- R2. |
- R2. |
- R2. |
- R2. |
+ R2.*7 |
 }
 
 trumpetThreeBridge = {
   % Bars 117–120
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 121–124
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 125–128
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 129–132
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 133–136
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 137–140
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 141–144
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 145–148
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 149–152
- R2. |
- R2. |
- R2. |
- R2. |
+ R2.*36 |
 }
 
 trumpetThreeMusic = { \trumpetThreeOpening \trumpetThreeBridge }

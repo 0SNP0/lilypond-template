@@ -5,11 +5,7 @@ violasOpening = {
   \key e \major
   \time 3/4
   % Bars 1–4
- R2. |
- R2. |
- R2. |
-  R2. |
-  % Bars 5–8
+ R2.*4 |
  r4 ^\markup \italic { "div." } <gis cis'>4-_ \mf <gis cis'>4 |
  r4 <gis cis'>4-_ <gis cis'>4 |
  r4 <a cis'>4-_ <a cis'>4 |
@@ -108,28 +104,9 @@ violasOpening = {
  <gis cis'>4 r4 <gis cis'>4 |
  <gis bis>4 r4 <gis bis>4 |
  <gis cis'>4 r4 r4 |
- R2. |
-  % Bars 85–88
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 89–92
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 93–96
+ R2.*9 |
  << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo gis2. } >> |
- R2. |
- R2. |
- R2. |
-  % Bars 97–100
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 101–104
+ R2.*7 |
  gis'2. _\markup \italic { "espr." }~ \f |
  gis'4-_ a'4.( gis'8-_) |
  gis'4( cis''4. gis'8-_) |
@@ -142,11 +119,7 @@ violasOpening = {
   % Bars 109–112
  cis''2.~ |
  cis''4 r4 r4 |
- R2. |
- R2. |
-  % Bars 113–116
- R2. |
- R2. |
+ R2.*4 |
  e'8 \ff gis'8 gis'4-. fis'4-. |
  e'4-. r4 r4 |
 }

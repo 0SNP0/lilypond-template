@@ -5,11 +5,7 @@ violinsOneOpening = {
   \key e \major
   \time 3/4
   % Bars 1–4
- R2. |
- R2. |
- R2. |
-  R2. |
-  % Bars 5–8
+ R2.*4 |
  gis''4-. ^\markup \italic { "unis." } \mf e''8 dis''8 cis''4~ |
  cis''8 dis''8-. e''8-. fis''8-. gis''8-. cis'''8-. |
  e'''4 dis'''4 cis'''4 |
@@ -70,26 +66,10 @@ violinsOneOpening = {
  gis'8( e''8) e''4-. dis''4-. |
  cis''4-. r4 r4 |
   % Bars 53–56
- R2. |
- R2. |
- R2. |
+ R2.*3 |
  << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo gis'2. } >> |
   % Bars 57–60
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 61–64
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 65–68
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 69–72
+ R2.*12 |
  <cis'' cis'''>2. _\markup \italic { "espr." } ^\markup \italic { "div." } \f |
  <e'' e'''>2. |
  <a'' a'''>2. |
@@ -154,49 +134,13 @@ violinsOneOpening = {
 violinsOneBridge = {
   % Bars 117–120
  << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo gis'2. } >> |
- R2. |
- R2. |
- R2. |
-  % Bars 121–124
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 125–128
- R2. |
- R2. |
+ R2.*9 |
  << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo gis'2. } >> |
- R2. |
-  % Bars 129–132
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 133–136
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 137–140
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 141–144
+ R2.*13 |
  << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo gis'2. } >> |
- R2. |
- R2. |
- R2. |
-  % Bars 145–148
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 149–152
- R2. |
+ R2.*8 |
  << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo gis'2. } >> |
- R2. |
- R2. |
+ R2.*2 |
 }
 
 violinsOneMusic = { \violinsOneOpening \violinsOneBridge }

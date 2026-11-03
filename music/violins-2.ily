@@ -5,11 +5,7 @@ violinsTwoOpening = {
   \key e \major
   \time 3/4
   % Bars 1–4
- R2. |
- R2. |
- R2. |
-  R2. |
-  % Bars 5–8
+ R2.*4 |
  r4 ^\markup \italic { "div." } <e' gis'>4 \mf <e' gis'>4 |
  r4 <e' gis'>4 <e' gis'>4 |
  r4 <e' a'>4 <e' a'>4 |
@@ -131,15 +127,7 @@ violinsTwoOpening = {
  fis'4( e'4. dis'8) |
   % Bars 101–104
  gis'4 r4 r4 |
- R2. |
- R2. |
- R2. |
-  % Bars 105–108
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 109–112
+ R2.*7 |
  cis''2.~ \f |
  cis''4 d''4.( cis''8) |
  a''2.~ |

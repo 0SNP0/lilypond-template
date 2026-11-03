@@ -10,7 +10,7 @@ piccoloMusic = {
   R2. |
   << { \voiceOne R2. } \\ { \voiceTwo gis'2. } >> |
   % Bars 5–8
-  R2. \mark \markup { " 10  " } |
+  R2.  |
   R2. |
   R2. |
   R2. |
@@ -30,7 +30,7 @@ piccoloMusic = {
   R2. |
   R2. |
   % Bars 21–24
-  R2. \mark \markup { " 11  " } |
+  R2.  |
   R2. |
   R2. |
   R2. |
@@ -50,7 +50,7 @@ piccoloMusic = {
   R2. |
   R2. |
   % Bars 37–40
-  R2. \mark \markup { " 12  " } |
+  R2.  |
   R2. |
   R2. |
   R2. |
@@ -70,7 +70,7 @@ piccoloMusic = {
   R2. |
   R2. |
   % Bars 53–56
-  R2. \mark \markup { " 13  " } |
+  R2.  |
   R2. |
   R2. |
   R2. |
@@ -80,7 +80,7 @@ piccoloMusic = {
   R2. |
   R2. |
   % Bars 61–64
-  R2. \mark \markup { " 14  " } |
+  R2.  |
   R2. |
   R2. |
   R2. |
@@ -90,7 +90,7 @@ piccoloMusic = {
   R2. |
   R2. |
   % Bars 69–72
-  << { \voiceOne R2. \mark \markup { " 15  " } } \\ { \voiceTwo R2. \mark \markup { " 15  " } } >> |
+  << { \voiceOne R2.  } \\ { \voiceTwo R2.  } >> |
   R2. |
   R2. |
   R2. |
@@ -100,7 +100,7 @@ piccoloMusic = {
   R2. |
   R2. |
   % Bars 77–80
-  gis''4-. \mark \markup { " 16  " } \ff r8 \mark \markup { " 16  " } \ff cis'''8-. e'''4-. |
+  gis''4-.  \ff r8  \ff cis'''8-. e'''4-. |
   gis'''4-. r8 fis'''8-. e'''4-. |
   cis'''4-. r8 fis'''8-. a'''4-. |
   a'''4-. r8 b'''8-. a'''4-. |
@@ -110,7 +110,7 @@ piccoloMusic = {
   cis'''4-. r4 r4 |
   R2. |
   % Bars 85–88
-  R2. \mark \markup { " 17  " } |
+  R2.  |
   R2. |
   R2. |
   R2. |
@@ -130,7 +130,7 @@ piccoloMusic = {
   R2. |
   R2. |
   % Bars 101–104
-  R2. \mark \markup { " 18  " } |
+  R2.  |
   R2. |
   R2. |
   R2. |
@@ -150,7 +150,7 @@ piccoloMusic = {
   gis''8( \ff e'''8) \ff e'''4-. dis'''4-. |
   cis'''4-. r4 r4 |
   % Bars 117–120
-  R2. \mark \markup { " 19  " } |
+  R2.  |
   R2. |
   R2. |
   R2. |
@@ -160,7 +160,7 @@ piccoloMusic = {
   R2. |
   R2. |
   % Bars 125–128
-  R2. \mark \markup { " 20  " } |
+  R2.  |
   R2. |
   R2. |
   R2. |
@@ -175,7 +175,7 @@ piccoloMusic = {
   R2. |
   R2. |
   % Bars 137–140
-  R2. \mark \markup { " 21 " } |
+  R2.  |
   R2. |
   R2. |
   R2. |
@@ -185,7 +185,7 @@ piccoloMusic = {
   R2. |
   R2. |
   % Bars 145–148
-  R2. \mark \markup { " 22  " } |
+  R2.  |
   R2. |
   R2. |
   R2. |
@@ -195,7 +195,7 @@ piccoloMusic = {
   R2. |
   R2. |
   % Bars 153–156
-  R2. \mark \markup { "Reprise" } |
+  R2.  |
   R2. |
   R2. |
   R2. |

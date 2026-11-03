@@ -225,5 +225,19 @@
     "trombone-3": {
       "1": "marc."
     }
-  }
+  },
+  "source_section_split": 116,
+  "validate_navigation": true,
+  "required_final_barline": "||",
+  "forbid_duplicate_music_sources": [
+    "flutes-1-2",
+    "oboes-1-2",
+    "clarinets-in-a-1-2",
+    "bassoons-1-2",
+    "horns-1-3",
+    "horns-2-4",
+    "trumpets-1-2",
+    "trombones-1-2",
+    "trombone-3-and-tuba"
+  ]
 }

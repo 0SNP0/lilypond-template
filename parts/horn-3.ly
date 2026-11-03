@@ -6,4 +6,4 @@
 \include "../layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Horn in F III" tagline = ##f }
 \score { \new Staff \with { midiInstrument = "french horn" } << { \global } { \rehearsalMarks } { \hornThreeMusic } >> \layout { } }
-\score { \articulate \new Staff \with { midiInstrument = "french horn" } << { \global } { \rehearsalMarks } { \transpose c f, \hornThreeMusic } >> \midi { } }
+\score { \articulate \new Staff \with { midiInstrument = "french horn" } << { \globalPlayback } { \rehearsalMarksPlayback } { \transpose c f, \hornThreeMusicPlayback } >> \midi { } }

@@ -1,6 +1,6 @@
-% Trombones I–II: source MusicXML P12, 268 measures, written pitch
+% Trombones I–II: source MusicXML P12, 152 printed measures, 268 playback measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-trombonesOneTwoMusic = {
+trombonesOneTwoOpening = {
   \clef bass
   \key e \major
   \time 3/4
@@ -8,7 +8,7 @@ trombonesOneTwoMusic = {
  R2. |
  R2. |
  R2. |
- << { \voiceOne R2. } \\ { \voiceTwo gis2. } >> |
+  R2. |
   % Bars 5–8
  R2. |
  R2. |
@@ -149,6 +149,9 @@ trombonesOneTwoMusic = {
  R2. |
  <gis cis'>4-. \f r4 <gis bis>4-. |
  <gis cis'>4-. r4 r4 |
+}
+
+trombonesOneTwoBridge = {
   % Bars 117–120
  R2. |
  R2. |
@@ -194,150 +197,7 @@ trombonesOneTwoMusic = {
  R2. |
  R2. |
  R2. |
-  % Bars 153–156
- R2. |
- R2. |
- R2. |
- << { \voiceOne R2. } \\ { \voiceTwo gis2. } >> |
-  % Bars 157–160
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 161–164
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 165–168
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 169–172
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 173–176
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 177–180
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 181–184
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 185–188
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 189–192
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 193–196
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 197–200
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 201–204
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 205–208
- r4 <cis' e'>4-. \mf <cis' e'>4-. |
- r4 <cis' e'>4-. <cis' e'>4-. |
- r4 <a cis'>4-. <a cis'>4-. |
- r4 <gis cis'>4-. <gis cis'>4-. |
-  % Bars 209–212
- r4 <fis a>4-. <fis a>4-. |
- r4 <fis a>4-. <fis a>4-. |
- r4 <a cis'>4-. <a cis'>4-. |
- r4 <gis d'>4-. <gis d'>4-. |
-  % Bars 213–216
- r4 <a cis'>4-. <a cis'>4-. |
- r4 <gis cis'>4-. <gis cis'>4-. |
- r4 <fis a>4-. <fis a>4-. |
- r4 <a cis'>4-. <a cis'>4-. |
-  % Bars 217–220
- r4 <fis a>4-. <fis a>4-. |
- r4 <fis a>4-. <fis a>4-. |
- r4 <fis ais>4-. <fis ais>4-. |
- r4 <fis b>4-. <fis b>4-. |
-  % Bars 221–224
- r4 <cis' e'>4-. <cis' e'>4-. |
- r4 <cis' e'>4-. <cis' e'>4-. |
- r4 <a cis'>4-. <a cis'>4-. |
- r4 <gis cis'>4-. <gis cis'>4-. |
-  % Bars 225–228
- r4 <fis a>4-. <fis a>4-. |
- r4 <fis a>4-. <fis a>4-. |
- r4 <b d'>4-. <b d'>4-. |
- r4 <a cis'>4-. <a cis'>4-. |
-  % Bars 229–232
- <gis cis'>4-. \sf r4 r4 |
- R2. |
- R2. |
- R2. |
-  % Bars 233–236
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 237–240
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 241–244
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 245–248
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 249–252
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 253–256
- R2. |
- gis2.~ \f ^\markup \italic { "I" } |
- gis2.~ |
- gis2.~ |
-  % Bars 257–260
- gis4 r4 r4 |
- gis2.~ \f |
- gis2.~ |
- << { \voiceOne gis2.~ } \\ { \voiceTwo gis2. } >> |
-  % Bars 261–264
- gis4 r4 r4 |
- R2. |
- R2. |
- R2. |
-  % Bars 265–268
- R2. |
- R2. |
- <gis cis'>4-. \f r4 <gis bis>4-. |
- <gis cis'>4-. r4 r4 |
-  \bar "|."
 }
+
+trombonesOneTwoMusic = { \trombonesOneTwoOpening \trombonesOneTwoBridge }
+trombonesOneTwoMusicPlayback = { \trombonesOneTwoOpening \trombonesOneTwoBridge \trombonesOneTwoOpening }

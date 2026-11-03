@@ -72,7 +72,11 @@ async function setView(id){
     sheet.addEventListener("click",ev=>{
       const target=ev.target.closest?.("[data-measure-id]");
       if(!target)return;
-      const measure=measures.find(m=>m.id===target.getAttribute("data-measure-id"));
+      const printedId=target.getAttribute("data-measure-id");
+      const occurrences=measures.filter(m=>m.printed_measure_id===printedId);
+      const now=$("audio").currentTime*1000;
+      const measure=occurrences.reduce((best,m)=>!best ||
+        Math.abs(m.start_ms-now)<Math.abs(best.start_ms-now)?m:best,null);
       if(measure)$("audio").currentTime=measure.start_ms/1000;
     });
     $("pages").appendChild(sheet);
@@ -91,11 +95,14 @@ function updateCursor(force=false){
   if(!timeline||!currentView||!docs.size)return;
   const measure=activeMeasure($("audio").currentTime*1000);
   if(!measure)return;
-  $("position").textContent="Такт "+measure.number+" / "+measures.length;
+  $("position").textContent="Такт "+measure.printed_number+
+    " / "+(timeline.printed_measures||measures.length)+
+    (measure.number>timeline.printed_measures?" · D.C.":"");
   if(!force&&shown===measure.number)return;
   shown=measure.number;
   for(const node of docs.values())node.querySelector(".cursor").style.display="none";
-  const anchors=manifest.views[currentView].measure_anchors.filter(a=>a.measure_id===measure.id);
+  const anchors=manifest.views[currentView].measure_anchors.filter(
+    a=>a.measure_id===measure.printed_measure_id);
   if(!anchors.length)return;
   const anchor=anchors[0];
   const sheet=docs.get(anchor.page);

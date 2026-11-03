@@ -6,4 +6,4 @@
 \include "../layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Violoncellos" tagline = ##f }
 \score { \new Staff \with { midiInstrument = "cello" } << { \global } { \rehearsalMarks } { \violoncellosMusic } >> \layout { } }
-\score { \articulate \new Staff \with { midiInstrument = "cello" } << { \global } { \rehearsalMarks } { \violoncellosMusic } >> \midi { } }
+\score { \articulate \new Staff \with { midiInstrument = "cello" } << { \globalPlayback } { \rehearsalMarksPlayback } { \violoncellosMusicPlayback } >> \midi { } }

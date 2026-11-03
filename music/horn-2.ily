@@ -1,5 +1,5 @@
 % PROVISIONAL solo split of MusicXML horns-2-4. Review pitches, chords, solo/a2.
-hornTwoMusic = {
+hornTwoOpening = {
   \clef treble
   \key c \major
   \time 3/4
@@ -7,7 +7,7 @@ hornTwoMusic = {
  dis''8-_ \f dis''8-_ dis''4-_ r4 |
  dis''8-_ dis''8-_ dis''4-_ r4 |
  dis''8-_ dis''8-_ dis''4-_ r4 |
- R2. |
+  R2. |
   % Bars 5-8
  R2. |
  R2. |
@@ -148,6 +148,9 @@ hornTwoMusic = {
  cis''4-> r4 r4 |
  R2. |
  R2. |
+}
+
+hornTwoBridge = {
   % Bars 117-120
  R2. |
  R2. |
@@ -193,150 +196,7 @@ hornTwoMusic = {
  R2. |
  R2. |
  R2. |
-  % Bars 153-156
- dis''8-_ \f dis''8-_ dis''4-_ r4 |
- dis''8-_ dis''8-_ dis''4-_ r4 |
- dis''8-_ dis''8-_ dis''4-_ r4 |
- R2. |
-  % Bars 157-160
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 161-164
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 165-168
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 169-172
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 173-176
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 177-180
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 181-184
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 185-188
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 189-192
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 193-196
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 197-200
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 201-204
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 205-208
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 209-212
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 213-216
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 217-220
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 221-224
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 225-228
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 229-232
- b'4-. \ff r4 b'4-. |
- b'4-. r4 b'4-. |
- cis''4-. r4 cis''4-. |
- cis''4-. r4 cis''4-. |
-  % Bars 233-236
- b'4-. r4 b'4-. |
- cis''4-. r4 cis''4-. |
- b'4-. r4 r4 |
- R2. |
-  % Bars 237-240
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 241-244
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 245-248
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 249-252
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 253-256
- r4 cis''4-. \ff cis''4-. |
- r4 cis''4-. cis''4-. |
- r4 b'4-. b'4-. |
- r4 b'4-. b'4-. |
-  % Bars 257-260
- r4 cis''4-. cis''4-. |
- r4 cis''4-. cis''4-. |
- r4 b'4-. b'4-. |
- r4 b'4-. b'4-. |
-  % Bars 261-264
- r4 bis'4-. bis'4-. |
- r4 bis'4-. bis'4-. |
- r4 cis''4-. cis''4-. |
- r4 cis''4-. cis''4-. |
-  % Bars 265-268
- cis''4-> \ff r4 r4 |
- cis''4-> r4 r4 |
- R2. |
- R2. |
-  \bar "|."
 }
+
+hornTwoMusic = { \hornTwoOpening \hornTwoBridge }
+hornTwoMusicPlayback = { \hornTwoOpening \hornTwoBridge \hornTwoOpening }

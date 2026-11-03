@@ -1,5 +1,5 @@
 % PROVISIONAL solo split of MusicXML trumpets-1-2. Review chords and solo/a2 labels.
-trumpetOneMusic = {
+trumpetOneOpening = {
   \clef treble
   \key c \major
   \time 3/4
@@ -7,7 +7,7 @@ trumpetOneMusic = {
  bes'8-^ \f ^\markup \italic { "a2" } bes'8-^ bes'4-^ r4 |
  c''8-^ \f c''8-^ c''4-^ r4 |
  d''8-^ \f d''8-^ d''4-^ r4 |
- R2. |
+  R2. |
   % Bars 5-8
  R2. |
  R2. |
@@ -148,6 +148,9 @@ trumpetOneMusic = {
  R2. |
  ais'8-. \f ais'8-. ais'4-. ais'4-. |
  ais'4-. r4 r4 |
+}
+
+trumpetOneBridge = {
   % Bars 117-120
  R2. |
  R2. |
@@ -193,150 +196,7 @@ trumpetOneMusic = {
  R2. |
  R2. |
  R2. |
-  % Bars 153-156
- bes'8-^ \f ^\markup \italic { "a2" } bes'8-^ bes'4-^ r4 |
- c''8-^ \f c''8-^ c''4-^ r4 |
- d''8-^ \f d''8-^ d''4-^ r4 |
- R2. |
-  % Bars 157-160
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 161-164
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 165-168
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 169-172
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 173-176
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 177-180
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 181-184
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 185-188
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 189-192
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 193-196
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 197-200
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 201-204
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 205-208
- r4 ^\markup \italic { "I, II" } dis''4-. \mf dis''4-. |
- r4 dis''4-. dis''4-. |
- r4 b'4-. b'4-. |
- r4 ais'4-. ais'4-. |
-  % Bars 209-212
- r4 gis'4-. gis'4-. |
- r4 \mf gis'4-. gis'4-. |
- r4 \> b'4-. b'4-. |
- r4 ais'4-. ais'4-. |
-  % Bars 213-216
- r4 \mf b'4-. b'4-. |
- r4 ais'4-. ais'4-. |
- r4 \< gis'4-. gis'4-. |
- r4 b'4-. b'4-. |
-  % Bars 217-220
- r4 \mf gis'4-. gis'4-. |
- r4 gis'4-. gis'4-. |
- r4 \> gis'4-. gis'4-. |
- r4 \mf gis'4-. gis'4-. |
-  % Bars 221-224
- r4 \mf dis''4-. dis''4-. |
- r4 dis''4-. dis''4-. |
- r4 b'4-. b'4-. |
- r4 ais'4-. ais'4-. |
-  % Bars 225-228
- r4 gis'4-. gis'4-. |
- r4 gis'4-. gis'4-. |
- r4 cis''4-. cis''4-. |
- r4 b'4-. b'4-. |
-  % Bars 229-232
- ais'4-. \sf r4 r4 |
- R2. |
- R2. |
- R2. |
-  % Bars 233-236
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 237-240
- r4 aes'4-. \f aes'4-. |
- r4 aes'4-. aes'4-. |
- r4 ges'4-. ges'4-. |
- r4 ges'4-. ges'4-. |
-  % Bars 241-244
- r4 aes'4-. aes'4-. |
- r4 aes'4-. aes'4-. |
- r4 ges'4-. ges'4-. |
- r4 ges'4-. ges'4-. |
-  % Bars 245-248
- r4 g'4-. g'4-. |
- r4 g'4-. g'4-. |
- r4 aes'4-. aes'4-. |
- r4 aes'4-. aes'4-. |
-  % Bars 249-252
- aes'4-. \mf r4 r4 |
- a'4-. r4 r4 |
- ges'4-. r4 r4 |
- R2. |
-  % Bars 253-256
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 257-260
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 261-264
- R2. |
- dis''2.~ \f ^\markup \italic { "I, II" } |
- dis''2.~ |
- dis''2.~ |
-  % Bars 265-268
- dis''4 r4 r4 |
- R2. |
- ais'8-. \f ais'8-. ais'4-. ais'4-. |
- ais'4-. r4 r4 |
-  \bar "|."
 }
+
+trumpetOneMusic = { \trumpetOneOpening \trumpetOneBridge }
+trumpetOneMusicPlayback = { \trumpetOneOpening \trumpetOneBridge \trumpetOneOpening }

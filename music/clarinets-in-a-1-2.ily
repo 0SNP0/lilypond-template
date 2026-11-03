@@ -1,6 +1,6 @@
-% Clarinets in A I–II: source MusicXML P5, 268 measures, written pitch
+% Clarinets in A I–II: source MusicXML P5, 152 printed measures, 268 playback measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-clarinetsInAOneTwoMusic = {
+clarinetsInAOneTwoOpening = {
   \clef treble
   \key g \major
   \time 3/4
@@ -8,7 +8,7 @@ clarinetsInAOneTwoMusic = {
  R2. |
  R2. |
  R2. |
- << { \voiceOne R2. } \\ { \voiceTwo b'2. } >> |
+  R2. |
   % Bars 5–8
  R2. |
  R2. |
@@ -52,13 +52,13 @@ clarinetsInAOneTwoMusic = {
   % Bars 37–40
  << { \voiceOne b'2.~( \f } \\ { \voiceTwo b'8( c''8 b'8 a'8 \> fis'8 dis'8 } >> |
  << { \voiceOne b'4 \mf c''2) \f } \\ { \voiceTwo b4) \mf r4 \f r4 } >> |
- << { \voiceOne b'4( \f e''2) } \\ { \voiceTwo R2. } >> |
- << { \voiceOne b'4( e''2) } \\ { \voiceTwo R2. } >> |
+ << { \voiceOne b'4( \f e''2) } \\ { \voiceTwo \once \override MultiMeasureRest.staff-position = #-10 R2. } >> |
+ << { \voiceOne b'4( e''2) } \\ { \voiceTwo \once \override MultiMeasureRest.staff-position = #-10 R2. } >> |
   % Bars 41–44
  << { \voiceOne b'2.~( \f } \\ { \voiceTwo b'8( c''8 b'8 a'8 fis'8 dis'8 } >> |
  << { \voiceOne b'4 c''2) \f } \\ { \voiceTwo b4) r4 r4 } >> |
- << { \voiceOne b'4( \f e''2) } \\ { \voiceTwo R2. } >> |
- << { \voiceOne b'4( e''2) } \\ { \voiceTwo R2. } >> |
+ << { \voiceOne b'4( \f e''2) } \\ { \voiceTwo \once \override MultiMeasureRest.staff-position = #-10 R2. } >> |
+ << { \voiceOne b'4( e''2) } \\ { \voiceTwo \once \override MultiMeasureRest.staff-position = #-10 R2. } >> |
   % Bars 45–48
  << { \voiceOne e''2.~ \f } \\ { \voiceTwo e''8( f''8 e''8 d''8 b'8 gis'8 } >> |
  << { \voiceOne e''4 f''4.( e''8 } \\ { \voiceTwo e'4) r4 r4 } >> |
@@ -122,13 +122,13 @@ clarinetsInAOneTwoMusic = {
   % Bars 93–96
  << { \voiceOne e''2.~ ^\markup \italic { "II" } ^\markup \italic { "I" } } \\ { \voiceTwo e''2.~ } >> |
  << { \voiceOne e''4 r4 r4 } \\ { \voiceTwo e''4 f''4. e''8 } >> |
- << { \voiceOne R2. } \\ { \voiceTwo c'''2.~ } >> |
- << { \voiceOne R2. } \\ { \voiceTwo c'''4 a''4( b''4 } >> |
+ << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo c'''2.~ } >> |
+ << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo c'''4 a''4( b''4 } >> |
   % Bars 97–100
- << { \voiceOne R2. } \\ { \voiceTwo c'''4 b''4 a''4 } >> |
- << { \voiceOne R2. } \\ { \voiceTwo g''4 fis''4 e''4 } >> |
- << { \voiceOne R2. } \\ { \voiceTwo d''4 c''4 b'4 } >> |
- << { \voiceOne R2. } \\ { \voiceTwo a'4 g'4. fis'8 } >> |
+ << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo c'''4 b''4 a''4 } >> |
+ << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo g''4 fis''4 e''4 } >> |
+ << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo d''4 c''4 b'4 } >> |
+ << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo a'4 g'4. fis'8 } >> |
   % Bars 101–104
  << { \voiceOne b''8( \ff c'''8 b''8 a''8 fis''8 dis''8 } \\ { \voiceTwo b'8 c''8 b'8 a'8 fis'8 dis'8 } >> |
  << { \voiceOne b'4) r4 r4 } \\ { \voiceTwo b4) s2 } >> |
@@ -149,6 +149,9 @@ clarinetsInAOneTwoMusic = {
  g''4 e''4 c''4 |
  << { \voiceOne g''8( \ff b''8) b''4-. a''4-. } \\ { \voiceTwo b'8( g''8) g''4-. fis''4-. } >> |
  << { \voiceOne g''4-. r4 r4 } \\ { \voiceTwo e''4-. s2 } >> |
+}
+
+clarinetsInAOneTwoBridge = {
   % Bars 117–120
  <g' b'>2.( \pp |
  <b' d''>2. |
@@ -194,150 +197,7 @@ clarinetsInAOneTwoMusic = {
  << { \voiceOne b'4-. a'4.( b'8 } \\ { \voiceTwo g'4-. fis'2 } >> |
  << { \voiceOne g'2.~ } \\ { \voiceTwo g'2.~ } >> |
  << { \voiceOne g'4) r4 r4 } \\ { \voiceTwo g'4 s2 } >> |
-  % Bars 153–156
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 157–160
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 161–164
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 165–168
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 169–172
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 173–176
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 177–180
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 181–184
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 185–188
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 189–192
- << { \voiceOne b'2.~( \f } \\ { \voiceTwo b'8( c''8-> b'8 a'8 \> fis'8 dis'8 } >> |
- << { \voiceOne b'4 \mf c''2) \f } \\ { \voiceTwo b4) \mf r4 \f r4 } >> |
- << { \voiceOne b'4( \f e''2) } \\ { \voiceTwo R2. } >> |
- << { \voiceOne b'4( e''2) } \\ { \voiceTwo R2. } >> |
-  % Bars 193–196
- << { \voiceOne b'2.~( \f } \\ { \voiceTwo b'8( c''8-^ b'8 a'8 fis'8 dis'8 } >> |
- << { \voiceOne b'4 c''2) \f } \\ { \voiceTwo b4) r4 r4 } >> |
- << { \voiceOne b'4( \f e''2) } \\ { \voiceTwo R2. } >> |
- << { \voiceOne b'4( e''2) } \\ { \voiceTwo R2. } >> |
-  % Bars 197–200
- << { \voiceOne e''2.~ \f } \\ { \voiceTwo e''8( f''8 e''8 d''8 b'8 gis'8 } >> |
- << { \voiceOne e''4 f''4.( e''8 } \\ { \voiceTwo e'4) r4 r4 } >> |
- << { \voiceOne c'''2.~ } \\ { \voiceTwo r4 r4 r4 } >> |
- << { \voiceOne c'''4) a''4( \f ^\markup \italic { "I" } b''4 } \\ { \voiceTwo r4 r4 r4 } >> |
-  % Bars 201–204
- c'''4 b''4 a''4 |
- g''4 e''4 c''4) |
- b'4( g''4-.) fis''4-. |
- e''4-. r4 r4 |
-  % Bars 205–208
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 209–212
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 213–216
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 217–220
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 221–224
- e''2.( ^\markup \italic { "I" } \f |
- g''2.) |
- c'''2.( |
- b''2.) |
-  % Bars 225–228
- a''2. |
- g''4( f''4. g''8 |
- f''2. |
- e''2.) |
-  % Bars 229–232
- <g' b'>4-. \ff r8 <b' e''>8-. <e'' g''>4-. |
- <g'' b''>4-. r8 <fis'' a''>8-. <e'' g''>4-. |
- <c'' e''>4-. r8 <e'' a''>8-. <a'' c'''>4-. |
- <a'' c'''>4-. r8 <b'' d'''>8-. <a'' c'''>4-. |
-  % Bars 233–236
- <g'' b''>4-. r8 <fis'' a''>8-. <e'' g''>4-. |
- << { \voiceOne fis''4-. r8 g''8-. fis''4-. } \\ { \voiceTwo dis''4 r4 dis''4 } >> |
- << { \voiceOne e''4 r4 r4 } \\ { \voiceTwo e''4 s2 } >> |
- R2. |
-  % Bars 237–240
- b'2.~( \f ^\markup \italic { "I" } |
- b'4-_ \acciaccatura { b'16 } c''2) |
- b'4( e''2) |
- b'4( e''2) |
-  % Bars 241–244
- b'2.~( |
- b'4 c''2) |
- b'4( e''2) |
- b'4( g''2) |
-  % Bars 245–248
- << { \voiceOne e''2.~ ^\markup \italic { "II" } ^\markup \italic { "I" } } \\ { \voiceTwo e''2.~ } >> |
- << { \voiceOne e''4 r4 r4 } \\ { \voiceTwo e''4 f''4. e''8 } >> |
- << { \voiceOne R2. } \\ { \voiceTwo c'''2.~ } >> |
- << { \voiceOne R2. } \\ { \voiceTwo c'''4 a''4( b''4 } >> |
-  % Bars 249–252
- << { \voiceOne R2. } \\ { \voiceTwo c'''4 b''4 a''4 } >> |
- << { \voiceOne R2. } \\ { \voiceTwo g''4 fis''4 e''4 } >> |
- << { \voiceOne R2. } \\ { \voiceTwo d''4 c''4 b'4 } >> |
- << { \voiceOne R2. } \\ { \voiceTwo a'4 g'4. fis'8 } >> |
-  % Bars 253–256
- << { \voiceOne b''8( \ff c'''8 b''8 a''8 fis''8 dis''8 } \\ { \voiceTwo b'8 c''8 b'8 a'8 fis'8 dis'8 } >> |
- << { \voiceOne b'4) r4 r4 } \\ { \voiceTwo b4) s2 } >> |
- R2. |
- R2. |
-  % Bars 257–260
- << { \voiceOne b''8( \ff c'''8 b''8 a''8 fis''8 dis''8 } \\ { \voiceTwo b'8( c''8 b'8 a'8 fis'8 dis'8 } >> |
- << { \voiceOne b'4) r4 r4 } \\ { \voiceTwo b4) s2 } >> |
- R2. |
- R2. |
-  % Bars 261–264
- << { \voiceOne e'''8( \ff f'''8 e'''8 d'''8 b''8 gis''8 } \\ { \voiceTwo e''8( f''8 e''8 d''8 b'8 gis'8 } >> |
- << { \voiceOne e''4) r4 r4 } \\ { \voiceTwo e'4) s2 } >> |
- R2. |
- r4 ^\markup \italic { "II" } a''4 \ff b''4 |
-  % Bars 265–268
- c'''4 b''4 a''4 |
- g''4 e''4 c''4 |
- << { \voiceOne g''8( \ff b''8) b''4-. a''4-. } \\ { \voiceTwo b'8( g''8) g''4-. fis''4-. } >> |
- << { \voiceOne g''4-. r4 r4 } \\ { \voiceTwo e''4-. s2 } >> |
-  \bar "|."
 }
+
+clarinetsInAOneTwoMusic = { \clarinetsInAOneTwoOpening \clarinetsInAOneTwoBridge }
+clarinetsInAOneTwoMusicPlayback = { \clarinetsInAOneTwoOpening \clarinetsInAOneTwoBridge \clarinetsInAOneTwoOpening }

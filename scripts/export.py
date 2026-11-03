@@ -114,12 +114,32 @@ def music_digest(file: Path) -> str:
     return digest(json.dumps([division, normalized], separators=(",", ":")).encode())
 
 
+
+def playback_print_map() -> tuple[list[int] | None, int | None]:
+    """Optional work-specific repeat map; generic viewer knows no work names."""
+    config = ROOT / "music" / "playback-map.json"
+    if not config.is_file():
+        return None, None
+    document = json.loads(config.read_text(encoding="utf-8"))
+    printed = int(document["printed_measures"])
+    sections = document["playback_sections"]
+    playback: list[int] = []
+    for section in sections:
+        start, end = int(section["start"]), int(section["end"])
+        if not 1 <= start <= end <= printed:
+            raise ValueError(f"Invalid repeat section {section}")
+        playback.extend(range(start, end + 1))
+    if not playback or set(playback) != set(range(1, printed + 1)):
+        raise ValueError("Playback map omits some printed measures")
+    return playback, printed
+
 def make_timeline(file: Path) -> dict:
     """Compute exact MIDI-clock measure intervals, including tempo changes.
 
     A time-signature change must occur at a measure boundary. Repeats may
     create multiple playback visits and will need an explicit notation map.
     """
+    playback_map, printed_measure_count = playback_print_map()
     division, events = midi_events(file)
     timings = [(0, 500000)]
     meters = [(0, 4, 4)]
@@ -160,8 +180,13 @@ def make_timeline(file: Path) -> dict:
         change = next((t for t, _ in meter_points if tick < t < following), None)
         if change is not None:
             raise ValueError("Time-signature change mid-measure: unsupported")
+        if playback_map is not None and number > len(playback_map):
+            raise ValueError("Playback MIDI exceeds the declared repeat structure")
+        printed_number = playback_map[number - 1] if playback_map else number
         out.append({
-            "id": f"measure-{number:04d}",
+            "id": f"playback-{number:04d}",
+            "printed_measure_id": f"measure-{printed_number:04d}",
+            "printed_number": printed_number,
             "number": number,
             "start_tick": tick,
             "end_tick": following,
@@ -171,9 +196,15 @@ def make_timeline(file: Path) -> dict:
         tick = following
         if tick >= max_tick:
             break
+    if playback_map is not None and len(out) != len(playback_map):
+        raise ValueError(f"Expected {len(playback_map)} playback measures; got {len(out)}")
+    if printed_measure_count is None:
+        printed_measure_count = len(out)
     return {
         "schema": SCHEMA,
         "clock_source": file.name,
+        "printed_measures": printed_measure_count,
+        "playback_measures": len(out),
         "ticks_per_quarter": division,
         "tempo_events": [{"tick": tick, "microseconds_per_quarter": us} for tick, us in tempo_points],
         "time_signature_events": [
@@ -183,7 +214,7 @@ def make_timeline(file: Path) -> dict:
         "measures": out,
         "limitations": [
             "The audio player may introduce a small MP3 encoder delay.",
-            "Repeated sections need a future occurrence-to-printed-measure mapping.",
+            "D.C./Fine playback occurrence maps to printed_measure_id.",
             "Fermatas without explicit MIDI tempo changes cannot be inferred.",
         ],
     }
@@ -250,7 +281,7 @@ def tag_svg(pages: list[Path], timeline: dict) -> list[dict]:
     missing anchor is reported rather than inventing geometric positions.
     """
     anchors: list[dict] = []
-    allowed = {m["number"] for m in timeline["measures"]}
+    allowed = {m["printed_number"] for m in timeline["measures"]}
     for page_idx, file in enumerate(pages, start=1):
         doc = ET.parse(file)
         root = doc.getroot()
@@ -382,7 +413,7 @@ def main() -> None:
         "shared_timeline": "timeline.json",
         "views": views,
         "notes": [
-            "Every measure ID is shared across all score and part views.",
+            "Each SVG uses printed measure IDs. Playback measures map via printed_measure_id.",
             "Only recovered LilyPond SVG anchors have a geometric target; missing anchors are never fabricated.",
             "Audio tracks share the same MIDI-derived measure timeline; MP3 delay is not compensated.",
         ],
@@ -397,9 +428,9 @@ def main() -> None:
         if not target.is_file():
             raise RuntimeError("Missing viewer audio track: " + str(target))
     for name, view in views.items():
-        if view["anchors_found"] != len(timeline["measures"]):
+        if view["anchors_found"] != timeline["printed_measures"]:
             print(f"WARNING: {name}: recovered {view['anchors_found']} / "
-                  f"{len(timeline['measures'])} SVG measure anchors; "
+                  f"{timeline['printed_measures']} SVG measure anchors; "
                   "unmatched measures remain available in the JSON/CSV clock")
     print("SVG and synchronization data:", len(views), "views,",
           len(timeline["measures"]), "measures")

@@ -1,5 +1,5 @@
 % PROVISIONAL solo split of MusicXML clarinets-in-a-1-2. Review chords and solo/a2 labels.
-clarinetInATwoMusic = {
+clarinetInATwoOpening = {
   \clef treble
   \key g \major
   \time 3/4
@@ -7,7 +7,7 @@ clarinetInATwoMusic = {
  R2. |
  R2. |
  R2. |
- b'2. |
+  R2. |
   % Bars 5-8
  R2. |
  R2. |
@@ -148,6 +148,9 @@ clarinetInATwoMusic = {
  g''4 e''4 c''4 |
  b'8( \ff g''8) g''4-. fis''4-. |
  e''4-. s2 |
+}
+
+clarinetInATwoBridge = {
   % Bars 117-120
  g'2.( \pp |
  b'2. |
@@ -193,150 +196,7 @@ clarinetInATwoMusic = {
  g'4-. fis'2 |
  g'2.~ |
  g'4 s2 |
-  % Bars 153-156
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 157-160
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 161-164
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 165-168
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 169-172
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 173-176
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 177-180
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 181-184
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 185-188
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 189-192
- b'8( \f c''8-> b'8 a'8 \> fis'8 dis'8 |
- b4) \mf r4 \f r4 |
- R2. \f |
- R2. |
-  % Bars 193-196
- b'8( \f c''8-^ b'8 a'8 fis'8 dis'8 |
- b4) r4 \f r4 |
- R2. \f |
- R2. |
-  % Bars 197-200
- e''8( \f f''8 e''8 d''8 b'8 gis'8 |
- e'4) r4 r4 |
- r4 r4 r4 |
- r4 r4 \f ^\markup \italic { "I" } r4 |
-  % Bars 201-204
- c'''4 b''4 a''4 |
- g''4 e''4 c''4) |
- b'4( g''4-.) fis''4-. |
- e''4-. r4 r4 |
-  % Bars 205-208
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 209-212
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 213-216
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 217-220
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 221-224
- R2. |
- g''2.) |
- c'''2.( |
- b''2.) |
-  % Bars 225-228
- a''2. |
- g''4( f''4. g''8 |
- f''2. |
- e''2.) |
-  % Bars 229-232
- g'4-. \ff r8 b'8-. e''4-. |
- g''4-. r8 fis''8-. e''4-. |
- c''4-. r8 e''8-. a''4-. |
- a''4-. r8 b''8-. a''4-. |
-  % Bars 233-236
- g''4-. r8 fis''8-. e''4-. |
- dis''4 r4 dis''4 |
- e''4 s2 |
- R2. |
-  % Bars 237-240
- R2. |
- b'4-_ \acciaccatura { b'16 } c''2) |
- b'4( e''2) |
- b'4( e''2) |
-  % Bars 241-244
- b'2.~( |
- b'4 c''2) |
- b'4( e''2) |
- b'4( g''2) |
-  % Bars 245-248
- e''2.~ ^\markup \italic { "II" } ^\markup \italic { "I" } |
- e''4 f''4. e''8 |
- c'''2.~ |
- c'''4 a''4( b''4 |
-  % Bars 249-252
- c'''4 b''4 a''4 |
- g''4 fis''4 e''4 |
- d''4 c''4 b'4 |
- a'4 g'4. fis'8 |
-  % Bars 253-256
- b'8 \ff c''8 b'8 a'8 fis'8 dis'8 |
- b4) s2 |
- R2. |
- R2. |
-  % Bars 257-260
- b'8( \ff c''8 b'8 a'8 fis'8 dis'8 |
- b4) s2 |
- R2. |
- R2. |
-  % Bars 261-264
- e''8( \ff f''8 e''8 d''8 b'8 gis'8 |
- e'4) s2 |
- R2. |
- r4 ^\markup \italic { "II" } a''4 \ff b''4 |
-  % Bars 265-268
- c'''4 b''4 a''4 |
- g''4 e''4 c''4 |
- b'8( \ff g''8) g''4-. fis''4-. |
- e''4-. s2 |
-  \bar "|."
 }
+
+clarinetInATwoMusic = { \clarinetInATwoOpening \clarinetInATwoBridge }
+clarinetInATwoMusicPlayback = { \clarinetInATwoOpening \clarinetInATwoBridge \clarinetInATwoOpening }

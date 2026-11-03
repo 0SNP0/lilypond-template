@@ -25,6 +25,6 @@
 
 % Concert pitch MIDI; written transpositions are only for printed score.
 \score {
-  \articulate \keepWithTag #'concert \ensembleScore
+  \articulate \keepWithTag #'playback \ensembleScore
   \midi { \context { \Score midiChannelMapping = #'instrument } }
 }

@@ -1,6 +1,6 @@
-% English Horn: source MusicXML P4, 268 measures, written pitch
+% English Horn: source MusicXML P4, 152 printed measures, 268 playback measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-englishHornMusic = {
+englishHornOpening = {
   \clef treble
   \key b \major
   \time 3/4
@@ -8,7 +8,7 @@ englishHornMusic = {
  R2. |
  R2. |
  R2. |
- << { \voiceOne R2. } \\ { \voiceTwo dis''2. } >> |
+  R2. |
   % Bars 5–8
  R2. |
  R2. |
@@ -149,6 +149,9 @@ englishHornMusic = {
  R2. |
  b'8( \ff dis''8) dis''4-. cis''4-. |
  b'4-. r4 r4 |
+}
+
+englishHornBridge = {
   % Bars 117–120
  R2. |
  R2. |
@@ -194,150 +197,7 @@ englishHornMusic = {
  R2. |
  R2. |
  R2. |
-  % Bars 153–156
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 157–160
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 161–164
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 165–168
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 169–172
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 173–176
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 177–180
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 181–184
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 185–188
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 189–192
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 193–196
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 197–200
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 201–204
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 205–208
- b'2.( \f |
- dis''2.) |
- gis'2.( |
- b'2.) |
-  % Bars 209–212
- e'2. |
- dis''4( cis''4. gis'8 |
- b'2. |
- a'2.) |
-  % Bars 213–216
- gis'2.( |
- b'2.) |
- e'2.( |
- gis'2.) |
-  % Bars 217–220
- cis''2.~ |
- cis''4 cis''2( |
- eis''4) eis''4.( b'8 |
- cis''2.) |
-  % Bars 221–224
- b'2. |
- b'2. |
- e''2.( |
- dis''2.) |
-  % Bars 225–228
- cis''2. |
- b'4( a'4. b'8 |
- a'2. |
- gis'2.~ |
-  % Bars 229–232
- gis'4) r4 r4 |
- R2. |
- R2. |
- R2. |
-  % Bars 233–236
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 237–240
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 241–244
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 245–248
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 249–252
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 253–256
- dis''8( \ff e''8 dis''8 cis''8 ais'8 fisis'8 |
- dis'4) r4 r4 |
- R2. |
- R2. |
-  % Bars 257–260
- dis''8( \ff e''8 dis''8 cis''8 ais'8 fisis'8 |
- dis'4) r4 r4 |
- R2. |
- R2. |
-  % Bars 261–264
- gis''8( \ff a''8 gis''8 fis''8 dis''8 bis'8 |
- gis'4) r4 r4 |
- R2. |
- R2. |
-  % Bars 265–268
- R2. |
- R2. |
- b'8( \ff dis''8) dis''4-. cis''4-. |
- b'4-. r4 r4 |
-  \bar "|."
 }
+
+englishHornMusic = { \englishHornOpening \englishHornBridge }
+englishHornMusicPlayback = { \englishHornOpening \englishHornBridge \englishHornOpening }

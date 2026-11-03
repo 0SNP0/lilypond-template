@@ -1,6 +1,6 @@
-% Trombone III / Tuba: source MusicXML P13, 268 measures, written pitch
+% Trombone III / Tuba: source MusicXML P13, 152 printed measures, 268 playback measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-tromboneThreeAndTubaMusic = {
+tromboneThreeAndTubaOpening = {
   \clef bass
   \key e \major
   \time 3/4
@@ -126,7 +126,7 @@ tromboneThreeAndTubaMusic = {
  R2. |
   % Bars 97–100
  R2. |
- << { \voiceOne R2. } \\ { \voiceTwo gis2. } >> |
+ << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo gis2. } >> |
  R2. |
  R2. |
   % Bars 101–104
@@ -149,6 +149,9 @@ tromboneThreeAndTubaMusic = {
  R2. |
  <gis,, gis,>4-. \f r4 <gis,, gis,>4-. |
  <cis, cis>4-. r4 r4 |
+}
+
+tromboneThreeAndTubaBridge = {
   % Bars 117–120
  R2. |
  R2. |
@@ -194,150 +197,7 @@ tromboneThreeAndTubaMusic = {
  R2. |
  R2. |
  R2. |
-  % Bars 153–156
- gis,8-_ \f ^\markup \italic { "III" } gis,8-_ gis,4 r4 |
- gis,8-_ gis,8-_ gis,4 r4 |
- gis,8-_ gis,8-_ gis,4 r4 |
- fis,4-. ^\markup \italic { "Tuba sola" } \mf e,4-. dis,4-. |
-  % Bars 157–160
- cis,4-. r4 r4 |
- R2. |
- R2. |
- R2. |
-  % Bars 161–164
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 165–168
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 169–172
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 173–176
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 177–180
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 181–184
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 185–188
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 189–192
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 193–196
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 197–200
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 201–204
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 205–208
- <a, a>4 \mf r4 r4 |
- <gis, gis>4 r4 r4 |
- <fis, fis>4 r4 r4 |
- <e, e>4 r4 r4 |
-  % Bars 209–212
- <d, d>4 r4 r4 |
- <b,, b,>4 r4 r4 |
- <e,, e,>4 r4 r4 |
- <e,, e,>4 r4 r4 |
-  % Bars 213–216
- <a,, a,>4 r4 r4 |
- <gis,, gis,>4 r4 r4 |
- <fis, fis>4 r4 r4 |
- <e, e>4 r4 r4 |
-  % Bars 217–220
- <d, d>4 r4 r4 |
- <a,, a,>4 r4 r4 |
- <fis,, fis,>4 r4 r4 |
- <b,, b,>4 r4 r4 |
-  % Bars 221–224
- <a, a>4 r4 r4 |
- <gis, gis>4 r4 r4 |
- <fis, fis>4 r4 r4 |
- <e, e>4 r4 r4 |
-  % Bars 225–228
- <d, d>4 r4 r4 |
- <e,, e,>4 r4 r4 |
- <eis,, eis,>4 r4 r4 |
- <fis,, fis,>4 r4 r4 |
-  % Bars 229–232
- <gis,, gis,>4 \sf r4 r4 |
- R2. |
- R2. |
- R2. |
-  % Bars 233–236
- R2. |
- R2. |
- cis4-. ^\markup \italic { "Tuba sola" } \mf gis,4-. e,4-. |
- cis,4-. r4 r4 |
-  % Bars 237–240
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 241–244
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 245–248
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 249–252
- R2. |
- << { \voiceOne R2. } \\ { \voiceTwo gis2. } >> |
- R2. |
- R2. |
-  % Bars 253–256
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 257–260
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 261–264
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 265–268
- R2. |
- R2. |
- <gis,, gis,>4-. \f r4 <gis,, gis,>4-. |
- <cis, cis>4-. r4 r4 |
-  \bar "|."
 }
+
+tromboneThreeAndTubaMusic = { \tromboneThreeAndTubaOpening \tromboneThreeAndTubaBridge }
+tromboneThreeAndTubaMusicPlayback = { \tromboneThreeAndTubaOpening \tromboneThreeAndTubaBridge \tromboneThreeAndTubaOpening }

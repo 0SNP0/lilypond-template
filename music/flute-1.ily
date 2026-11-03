@@ -1,5 +1,5 @@
 % PROVISIONAL solo split of MusicXML flutes-1-2. Review chords and solo/a2 labels.
-fluteOneMusic = {
+fluteOneOpening = {
   \clef treble
   \key e \major
   \time 3/4
@@ -7,7 +7,7 @@ fluteOneMusic = {
  R2. |
  R2. |
  R2. |
- R2. |
+  R2. |
   % Bars 5-8
  R2. |
  R2. |
@@ -148,6 +148,9 @@ fluteOneMusic = {
  e'''4 cis'''4 a''4 |
  e'''8( \ff gis'''8) gis'''4-. fis'''4-. |
  e'''4-. r4 r4 |
+}
+
+fluteOneBridge = {
   % Bars 117-120
  R2. |
  R2. |
@@ -193,150 +196,7 @@ fluteOneMusic = {
  R2. |
  R2. |
  R2. |
-  % Bars 153-156
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 157-160
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 161-164
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 165-168
- R2. |
- R2. |
- R2. |
- \acciaccatura { a'''16 } a'''2.-> \f ^\markup \italic { "I" } |
-  % Bars 169-172
- gis'''4( e'''4 cis'''4 |
- gis''4 \acciaccatura { b''16 } a''4.) gis''8 |
- cis'''2.~ |
- cis'''4) r4 r4 |
-  % Bars 173-176
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 177-180
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 181-184
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 185-188
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 189-192
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 193-196
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 197-200
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 201-204
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 205-208
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 209-212
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 213-216
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 217-220
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 221-224
- cis'''2.( ^\markup \italic { "I" } \f |
- e'''2.) |
- a'''2.( |
- gis'''2.) |
-  % Bars 225-228
- fis'''2. |
- e'''4( \f d'''4. e'''8 |
- d'''2. |
- cis'''2.) |
-  % Bars 229-232
- gis''4-. \ff r8 cis'''8-. e'''4-. |
- gis'''4-. r8 fis'''8-. e'''4-. |
- cis'''4-. r8 fis'''8-. a'''4-. |
- a'''4-. r8 b'''8-. a'''4-. |
-  % Bars 233-236
- gis'''4-. r8 fis'''8-. e'''4-. |
- dis'''4-. r8 e'''8-. dis'''4-. |
- cis'''4 r4 r4 |
- R2. |
-  % Bars 237-240
- gis''2.~( \f ^\markup \italic { "I" } |
- gis''4 \acciaccatura { gis''16 } a''2) |
- gis''4( cis'''2) |
- gis''4( cis'''2) |
-  % Bars 241-244
- gis''2.~( |
- gis''4 a''2) |
- gis''4( cis'''2) |
- gis''4( e'''2) |
-  % Bars 245-248
- cis'''2.~( |
- cis'''4 d'''4. cis'''8 |
- a'''2.~ |
- a'''4) fis'''4( gis'''4 |
-  % Bars 249-252
- a'''4 gis'''4 fis'''4 |
- e'''4 dis'''4 cis'''4 |
- b''4 a''4 gis''4 |
- fis''4 e''4. dis''8 |
-  % Bars 253-256
- gis''4) r4 r4 |
- R2. |
- R2. |
- R2. |
-  % Bars 257-260
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 261-264
- R2. |
- R2. |
- a'''2.~ |
- a'''4 fis'''4 \ff gis'''4 |
-  % Bars 265-268
- a'''4 gis'''4 fis'''4 |
- e'''4 cis'''4 a''4 |
- e'''8( \ff gis'''8) gis'''4-. fis'''4-. |
- e'''4-. r4 r4 |
-  \bar "|."
 }
+
+fluteOneMusic = { \fluteOneOpening \fluteOneBridge }
+fluteOneMusicPlayback = { \fluteOneOpening \fluteOneBridge \fluteOneOpening }

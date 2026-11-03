@@ -10,3 +10,14 @@ bassoonsTogether = \bassoonsOneTwoMusic
 hornsOneThreeTogether = \hornsOneThreeMusic
 hornsTwoFourTogether = \hornsTwoFourMusic
 tromboneThreeTubaTogether = \tromboneThreeAndTubaMusic
+
+% Full performance uses the same desks in expanded playback order.
+flutesTogetherPlayback = \flutesOneTwoMusicPlayback
+clarinetsInATogetherPlayback = \clarinetsInAOneTwoMusicPlayback
+trumpetsTogetherPlayback = \trumpetsOneTwoMusicPlayback
+trombonesTogetherPlayback = \trombonesOneTwoMusicPlayback
+oboesTogetherPlayback = \oboesOneTwoMusicPlayback
+bassoonsTogetherPlayback = \bassoonsOneTwoMusicPlayback
+hornsOneThreeTogetherPlayback = \hornsOneThreeMusicPlayback
+hornsTwoFourTogetherPlayback = \hornsTwoFourMusicPlayback
+tromboneThreeTubaTogetherPlayback = \tromboneThreeAndTubaMusicPlayback

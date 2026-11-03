@@ -49,6 +49,8 @@ jobs:
             "https://raw.githubusercontent.com/musescore/MuseScore/0e44d8e1dd7e0cad1fac85915330c5225bd7882e/share/sound/MS%20Basic.sf3"
           test "$(stat -c %s soundfonts/MS_Basic.sf3)" -gt 50000000
           echo "MS Basic downloaded from MuseScore (pinned source revision)"
+      - name: Validate printed/playback repeat structure
+        run: python3 scripts/check_music_structure.py
       - name: Build all PDF parts and MP3 tracks
         env:
           SOURCE_TAG: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}

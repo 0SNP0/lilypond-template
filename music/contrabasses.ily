@@ -1,6 +1,6 @@
-% Contrabasses: source MusicXML P21, 268 measures, written pitch
+% Contrabasses: source MusicXML P21, 152 printed measures, 268 playback measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-contrabassesMusic = {
+contrabassesOpening = {
   \clef bass
   \key e \major
   \time 3/4
@@ -8,7 +8,7 @@ contrabassesMusic = {
  R2. |
  R2. |
  R2. |
- R2. |
+  R2. |
   % Bars 5–8
  cis4 \mf r4 r4 |
  e4 r4 r4 |
@@ -149,6 +149,9 @@ contrabassesMusic = {
  e4 r4 r4 |
  gis,4 \ff r4 gis,4 |
  cis4 r4 r4 |
+}
+
+contrabassesBridge = {
   % Bars 117–120
   \set Staff.midiInstrument = "pizzicato strings"
  e4 ^\markup \italic { "pizz." } \p r4 r4 |
@@ -195,151 +198,7 @@ contrabassesMusic = {
  b,4 r4 r4 |
  e4 r4 b,4 |
  e,4 r4 r4 |
-  % Bars 153–156
- R2. |
- R2. |
- R2. |
-  \set Staff.midiInstrument = "contrabass"
- R2. ^\markup \italic { "arco" } |
-  % Bars 157–160
- cis4 \mf r4 r4 |
- e4 r4 r4 |
- a,4 r4 r4 |
- fis,4 r4 r4 |
-  % Bars 161–164
- e4 r4 r4 |
- fis4 r4 r4 |
- e4 r4 r4 |
- dis4 r4 r4 |
-  % Bars 165–168
- cis4 r4 r4 |
- b,4 r4 r4 |
- a,4 r4 r4 |
- fis,4 r4 r4 |
-  % Bars 169–172
- e4 r4 r4 |
- gis,4 r4 r4 |
- cis4 r4 gis,4-_ |
- cis4 r4 r4 |
-  % Bars 173–176
- dis4 \mf r4 r4 |
- gis,4 r4 r4 |
- cis4 r4 r4 |
- e4 r4 r4 |
-  % Bars 177–180
- dis4 r4 r4 |
- gis,4 r4 r4 |
- cis4 r4 r4 |
- e4 r4 r4 |
-  % Bars 181–184
- cis4 r4 r4 |
- cis4 r4 r4 |
- fis4 r4 r4 |
- e4 r4 r4 |
-  % Bars 185–188
- dis4-> r4 r4 |
- e4-> r4 r4 |
- fis4-> r4 r4 |
- R2. |
-  % Bars 189–192
- dis4 \f r4 r4 |
- gis,4 r4 r4 |
- cis4 r4 r4 |
- e4 r4 r4 |
-  % Bars 193–196
- dis4 r4 r4 |
- gis,4 r4 r4 |
- cis4 r4 r4 |
- e4 r4 r4 |
-  % Bars 197–200
- cis4 r4 r4 |
- cis4 r4 r4 |
- fis4 r4 r4 |
- e4 r4 r4 |
-  % Bars 201–204
- dis4 r4 r4 |
- e4 r4 r4 |
- gis,4 r4 gis,4 |
- cis4 r4 r4 |
-  % Bars 205–208
- a2. \f |
- gis2. |
- fis2. |
- e2. |
-  % Bars 209–212
- d2. |
- b,2. |
- e,2. |
- e,2. |
-  % Bars 213–216
- a,2. |
- gis,2. |
- fis2. |
- e2. |
-  % Bars 217–220
- d2. |
- a,2. |
- fis,2. |
- b,2. |
-  % Bars 221–224
- a2. |
- gis2. |
- fis2. |
- e2. |
-  % Bars 225–228
- d2. |
- e,2.-> |
- eis,2.-> |
- fis,2. |
-  % Bars 229–232
- gis,4 \ff r4 gis,4 |
- gis,4 r4 gis,4 |
- fis,4 r4 fis,4 |
- fis,4 r4 fis,4 |
-  % Bars 233–236
- gis,4 r4 gis,4 |
- gis,4 r4 gis,4 |
- cis4 r4 r4 |
- R2. |
-  % Bars 237–240
- dis4 \f r4 r4 |
- gis,4 r4 r4 |
- cis4 r4 r4 |
- e4 r4 r4 |
-  % Bars 241–244
- dis4 r4 r4 |
- gis,4 r4 r4 |
- cis4 r4 r4 |
- e4 r4 r4 |
-  % Bars 245–248
- cis4 r4 r4 |
- cis4 r4 r4 |
- fis4 r4 r4 |
- e4 r4 r4 |
-  % Bars 249–252
- dis4 r4 r4 |
- e4 r4 r4 |
- fis4 r4 r4 |
- R2. |
-  % Bars 253–256
- dis4 \f r4 r4 |
- gis,4 r4 r4 |
- cis4 r4 r4 |
- e4 r4 r4 |
-  % Bars 257–260
- dis4 r4 r4 |
- gis,4 r4 r4 |
- cis4 r4 r4 |
- e4 r4 r4 |
-  % Bars 261–264
- cis4 r4 r4 |
- cis4 r4 r4 |
- fis4 r4 r4 |
- e4 r4 r4 |
-  % Bars 265–268
- dis4 r4 r4 |
- e4 r4 r4 |
- gis,4 \ff r4 gis,4 |
- cis4 r4 r4 |
-  \bar "|."
 }
+
+contrabassesMusic = { \contrabassesOpening \contrabassesBridge }
+contrabassesMusicPlayback = { \contrabassesOpening \contrabassesBridge \contrabassesOpening }

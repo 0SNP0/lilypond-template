@@ -1,6 +1,6 @@
-% Horns in F II & IV: source MusicXML P9, 268 measures, written pitch
+% Horns in F II & IV: source MusicXML P9, 152 printed measures, 268 playback measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-hornsTwoFourMusic = {
+hornsTwoFourOpening = {
   \clef treble
   \key c \major
   \time 3/4
@@ -8,7 +8,7 @@ hornsTwoFourMusic = {
  <dis' dis''>8-_ \f <dis' dis''>8-_ <dis' dis''>4-_ r4 |
  <dis' dis''>8-_ <dis' dis''>8-_ <dis' dis''>4-_ r4 |
  <dis' dis''>8-_ <dis' dis''>8-_ <dis' dis''>4-_ r4 |
- R2. |
+  R2. |
   % Bars 5–8
  R2. |
  R2. |
@@ -61,7 +61,7 @@ hornsTwoFourMusic = {
  R2. |
   % Bars 45–48
  R2. |
- << { \voiceOne R2. } \\ { \voiceTwo d''2. } >> |
+ << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo d''2. } >> |
  R2. |
  R2. |
   % Bars 49–52
@@ -149,6 +149,9 @@ hornsTwoFourMusic = {
  <e' cis''>4-> r4 r4 |
  R2. |
  R2. |
+}
+
+hornsTwoFourBridge = {
   % Bars 117–120
  R2. |
  R2. |
@@ -194,150 +197,7 @@ hornsTwoFourMusic = {
  R2. |
  R2. |
  R2. |
-  % Bars 153–156
- <dis' dis''>8-_ \f <dis' dis''>8-_ <dis' dis''>4-_ r4 |
- <dis' dis''>8-_ <dis' dis''>8-_ <dis' dis''>4-_ r4 |
- <dis' dis''>8-_ <dis' dis''>8-_ <dis' dis''>4-_ r4 |
- R2. |
-  % Bars 157–160
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 161–164
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 165–168
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 169–172
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 173–176
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 177–180
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 181–184
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 185–188
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 189–192
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 193–196
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 197–200
- R2. |
- << { \voiceOne R2. } \\ { \voiceTwo d''2. } >> |
- R2. |
- R2. |
-  % Bars 201–204
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 205–208
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 209–212
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 213–216
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 217–220
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 221–224
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 225–228
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 229–232
- <dis' b'>4-. \ff r4 <dis' b'>4-. |
- <dis' b'>4-. r4 <dis' b'>4-. |
- <e' cis''>4-. r4 <e' cis''>4-. |
- <e' cis''>4-. r4 <e' cis''>4-. |
-  % Bars 233–236
- <dis' b'>4-. r4 <dis' b'>4-. |
- <dis' cis''>4-. r4 <dis' cis''>4-. |
- <dis' b'>4-. r4 r4 |
- R2. |
-  % Bars 237–240
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 241–244
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 245–248
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 249–252
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 253–256
- r4 <dis' cis''>4-. \ff <dis' cis''>4-. |
- r4 <dis' cis''>4-. <dis' cis''>4-. |
- r4 <dis' b'>4-. <dis' b'>4-. |
- r4 <dis' b'>4-. <dis' b'>4-. |
-  % Bars 257–260
- r4 <dis' cis''>4-. <dis' cis''>4-. |
- r4 <dis' cis''>4-. <dis' cis''>4-. |
- r4 <dis' b'>4-. <dis' b'>4-. |
- r4 <dis' b'>4-. <dis' b'>4-. |
-  % Bars 261–264
- r4 <fis' bis'>4-. <fis' bis'>4-. |
- r4 <fis' bis'>4-. <fis' bis'>4-. |
- r4 <e' cis''>4-. <e' cis''>4-. |
- r4 <e' cis''>4-. <e' cis''>4-. |
-  % Bars 265–268
- <e' cis''>4-> \ff r4 r4 |
- <e' cis''>4-> r4 r4 |
- R2. |
- R2. |
-  \bar "|."
 }
+
+hornsTwoFourMusic = { \hornsTwoFourOpening \hornsTwoFourBridge }
+hornsTwoFourMusicPlayback = { \hornsTwoFourOpening \hornsTwoFourBridge \hornsTwoFourOpening }

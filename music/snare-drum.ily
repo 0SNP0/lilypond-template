@@ -1,13 +1,13 @@
-% Snare Drum: source MusicXML P14, 268 measures, written pitch
+% Snare Drum: source MusicXML P14, 152 printed measures, 268 playback measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-snareDrumMusic = \drummode {
+snareDrumOpening = \drummode {
   \clef percussion
   \time 3/4
   % Bars 1–4
  sn8-^ \f sn8-^ sn4-^ r4 |
  sn8-^ \f sn8-^ sn4-^ r4 |
  sn8-^ \f sn8-^ sn4-^ r4 |
- R2. |
+  R2. |
   % Bars 5–8
  R2. |
  R2. |
@@ -148,6 +148,9 @@ snareDrumMusic = \drummode {
  \acciaccatura { sn16 } sn4 r4 r4 |
  \acciaccatura { sn16 } sn8 \f sn8 sn4 sn4 |
  \acciaccatura { sn16 } sn4 r4 r4 |
+}
+
+snareDrumBridge = \drummode {
   % Bars 117–120
  R2. |
  R2. |
@@ -193,150 +196,7 @@ snareDrumMusic = \drummode {
  R2. |
  R2. |
  R2. |
-  % Bars 153–156
- sn8-^ \f sn8-^ sn4-^ r4 |
- sn8-^ \f sn8-^ sn4-^ r4 |
- sn8-^ \f sn8-^ sn4-^ r4 |
- R2. |
-  % Bars 157–160
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 161–164
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 165–168
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 169–172
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 173–176
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 177–180
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 181–184
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 185–188
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 189–192
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 193–196
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 197–200
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 201–204
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 205–208
- r4 \mf sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
-  % Bars 209–212
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
-  % Bars 213–216
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
-  % Bars 217–220
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
-  % Bars 221–224
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
-  % Bars 225–228
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
-  % Bars 229–232
- sn4 \f r4 sn4 |
- sn4 r4 sn4 |
- sn4 r4 sn4 |
- sn4 r4 sn4 |
-  % Bars 233–236
- sn4 r4 sn4 |
- sn4 r4 sn4 |
- sn4 r4 r4 |
- R2. |
-  % Bars 237–240
- r4 sn4 \mf sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
-  % Bars 241–244
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
-  % Bars 245–248
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
-  % Bars 249–252
- sn4 r4 r4 |
- \acciaccatura { sn16 } sn4 r4 r4 |
- \acciaccatura { sn16 } sn4 r4 r4 |
- R2. |
-  % Bars 253–256
- r4 sn4 \f sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
-  % Bars 257–260
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 sn4 |
-  % Bars 261–264
- r4 sn4 sn4 |
- r4 sn4 sn4 |
- r4 sn4 \< sn4 |
- r4 sn4 sn4 |
-  % Bars 265–268
- sn4 \mf r4 r4 |
- \acciaccatura { sn16 } sn4 r4 r4 |
- \acciaccatura { sn16 } sn8 \f sn8 sn4 sn4 |
- \acciaccatura { sn16 } sn4 r4 r4 |
-  \bar "|."
 }
+
+snareDrumMusic = { \snareDrumOpening \snareDrumBridge }
+snareDrumMusicPlayback = { \snareDrumOpening \snareDrumBridge \snareDrumOpening }

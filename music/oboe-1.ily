@@ -1,5 +1,5 @@
 % PROVISIONAL solo split of MusicXML oboes-1-2. Review pitches, chords, solo/a2.
-oboeOneMusic = {
+oboeOneOpening = {
   \clef treble
   \key e \major
   \time 3/4
@@ -7,7 +7,7 @@ oboeOneMusic = {
  R2. |
  R2. |
  R2. |
- R2. |
+  R2. |
   % Bars 5-8
  gis''4-. ^\markup \italic { "I" } \mf e''8-. dis''8-. cis''4~ |
  cis''8 dis''8-. e''8-. fis''8-. gis''8-. cis'''8-. |
@@ -148,6 +148,9 @@ oboeOneMusic = {
  R2. |
  e''8( \ff gis''8) gis''4-. fis''4-. |
  e''4-. r4 r4 |
+}
+
+oboeOneBridge = {
   % Bars 117-120
  b'4.( \p ^\markup \italic { "I" } cis''8 gis'8 cis''8 |
  b'4) gis''4. gis''8 |
@@ -193,150 +196,7 @@ oboeOneMusic = {
  R2. |
  R2. |
  R2. |
-  % Bars 153-156
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 157-160
- gis''4-. ^\markup \italic { "I" } \mf e''8-. dis''8-. cis''4~ |
- cis''8 dis''8-. e''8-. fis''8-. gis''8-. cis'''8-. |
- e'''4-. dis'''4-. cis'''4-. |
- a''2. |
-  % Bars 161-164
- gis''4( cis'''2) |
- fis''4( cis'''2) |
- \acciaccatura { fis''16 } e''4-_( dis''4 cis''4 |
- \acciaccatura { cis''16 } fis''4-. e''4 dis''4 |
-  % Bars 165-168
- gis''4-_) e''8-. dis''8-. cis''4~ |
- cis''8 dis''8-. e''8-. fis''8-. gis''8-. cis'''8-. |
- e'''4-. dis'''4-. cis'''4-. |
- cis'''4-. r4 r4 |
-  % Bars 169-172
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 173-176
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 177-180
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 181-184
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 185-188
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 189-192
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 193-196
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 197-200
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 201-204
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 205-208
- cis''2.( \f |
- e''2.) |
- a'2.( |
- cis''2.) |
-  % Bars 209-212
- fis'2. |
- e''4(( d''4. a'8 |
- cis''2. |
- b'2.)) |
-  % Bars 213-216
- a'2.(( \f |
- cis''2.)) |
- fis'2.( |
- a'2.) |
-  % Bars 217-220
- d''2.~ |
- d''4 cis''4( d''4 |
- fis''4 e''4. cis''8 |
- d''2.) |
-  % Bars 221-224
- cis''2. |
- cis''2. |
- fis''2.( |
- e''2.) |
-  % Bars 225-228
- d''2. |
- cis''4( b'4. cis''8 |
- b'2. |
- a'2.) |
-  % Bars 229-232
- gis'4-. \ff r8 cis''8-. e''4-. |
- gis''4-. r8 fis''8-. e''4-. |
- cis''4-. r8 fis''8-. a''4-. |
- a''4-. r8 b''8-. a''4-. |
-  % Bars 233-236
- gis''4-. r8 fis''8-. e''4-. |
- dis''4-. r8 e''8-. dis''4-. |
- cis''4 r4 r4 |
- R2. |
-  % Bars 237-240
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 241-244
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 245-248
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 249-252
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 253-256
- gis''8( \ff a''8 gis''8 fis''8 dis''8 bis'8 |
- gis'4) r4 \f r4 |
- R2. |
- R2. |
-  % Bars 257-260
- gis''8( \ff a''8 gis''8 fis''8 dis''8 bis'8 |
- gis'4) r4 r4 |
- R2. |
- R2. |
-  % Bars 261-264
- cis'''8( \ff d'''8 cis'''8 b''8 gis''8 eis''8 |
- cis''4) r4 r4 |
- R2. |
- R2. |
-  % Bars 265-268
- R2. |
- R2. |
- e''8( \ff gis''8) gis''4-. fis''4-. |
- e''4-. r4 r4 |
-  \bar "|."
 }
+
+oboeOneMusic = { \oboeOneOpening \oboeOneBridge }
+oboeOneMusicPlayback = { \oboeOneOpening \oboeOneBridge \oboeOneOpening }

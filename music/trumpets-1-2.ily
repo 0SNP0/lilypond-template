@@ -1,6 +1,6 @@
-% Trumpets in B-flat I–II: source MusicXML P10, 268 measures, written pitch
+% Trumpets in B-flat I–II: source MusicXML P10, 152 printed measures, 268 playback measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-trumpetsOneTwoMusic = {
+trumpetsOneTwoOpening = {
   \clef treble
   \key c \major
   \time 3/4
@@ -8,7 +8,7 @@ trumpetsOneTwoMusic = {
  bes'8-^ \f ^\markup \italic { "a2" } bes'8-^ bes'4-^ r4 |
  <bes' c''>8-^ \f <bes' c''>8-^ <bes' c''>4-^ r4 |
  <aes' d''>8-^ \f <aes' d''>8-^ <aes' d''>4-^ r4 |
- R2. |
+  R2. |
   % Bars 5–8
  R2. |
  R2. |
@@ -140,7 +140,7 @@ trumpetsOneTwoMusic = {
  R2. |
  R2. |
   % Bars 109–112
- << { \voiceOne R2. } \\ { \voiceTwo a'2. } >> |
+ << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo a'2. } >> |
  <dis' dis''>2.~ \f ^\markup \italic { "I, II" } |
  <dis' dis''>2.~ |
  <dis' dis''>2.~ |
@@ -149,6 +149,9 @@ trumpetsOneTwoMusic = {
  R2. |
  << { \voiceOne ais'8-. \f ais'8-. ais'4-. ais'4-. } \\ { \voiceTwo fis'4-. r4 gis'4-. } >> |
  << { \voiceOne ais'4-. r4 r4 } \\ { \voiceTwo fis'4-. s2 } >> |
+}
+
+trumpetsOneTwoBridge = {
   % Bars 117–120
  R2. |
  R2. |
@@ -194,150 +197,7 @@ trumpetsOneTwoMusic = {
  R2. |
  R2. |
  R2. |
-  % Bars 153–156
- bes'8-^ \f ^\markup \italic { "a2" } bes'8-^ bes'4-^ r4 |
- <bes' c''>8-^ \f <bes' c''>8-^ <bes' c''>4-^ r4 |
- <aes' d''>8-^ \f <aes' d''>8-^ <aes' d''>4-^ r4 |
- R2. |
-  % Bars 157–160
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 161–164
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 165–168
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 169–172
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 173–176
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 177–180
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 181–184
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 185–188
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 189–192
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 193–196
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 197–200
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 201–204
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 205–208
- r4 ^\markup \italic { "I, II" } <b' dis''>4-. \mf <b' dis''>4-. |
- r4 <ais' dis''>4-. <ais' dis''>4-. |
- r4 <gis' b'>4-. <gis' b'>4-. |
- r4 <fis' ais'>4-. <fis' ais'>4-. |
-  % Bars 209–212
- r4 <e' gis'>4-. <e' gis'>4-. |
- r4 \mf <e' gis'>4-. <e' gis'>4-. |
- r4 \> <gis' b'>4-. <gis' b'>4-. |
- r4 <fis' ais'>4-. <fis' ais'>4-. |
-  % Bars 213–216
- r4 \mf <gis' b'>4-. <gis' b'>4-. |
- r4 <fis' ais'>4-. <fis' ais'>4-. |
- r4 \< <dis' gis'>4-. <dis' gis'>4-. |
- r4 <gis' b'>4-. <gis' b'>4-. |
-  % Bars 217–220
- r4 \mf <e' gis'>4-. <e' gis'>4-. |
- r4 <e' gis'>4-. <e' gis'>4-. |
- r4 \> <fis' gis'>4-. <fis' gis'>4-. |
- r4 \mf <e' gis'>4-. <e' gis'>4-. |
-  % Bars 221–224
- r4 \mf <b' dis''>4-. <b' dis''>4-. |
- r4 <ais' dis''>4-. <ais' dis''>4-. |
- r4 <gis' b'>4-. <gis' b'>4-. |
- r4 <fis' ais'>4-. <fis' ais'>4-. |
-  % Bars 225–228
- r4 <e' gis'>4-. <e' gis'>4-. |
- r4 <e' gis'>4-. <e' gis'>4-. |
- r4 <ais' cis''>4-. <ais' cis''>4-. |
- r4 <gis' b'>4-. <gis' b'>4-. |
-  % Bars 229–232
- <fis' ais'>4-. \sf r4 r4 |
- R2. |
- R2. |
- R2. |
-  % Bars 233–236
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 237–240
- r4 <d' aes'>4-. \f <d' aes'>4-. |
- r4 <d' aes'>4-. <d' aes'>4-. |
- r4 <ees' ges'>4-. <ees' ges'>4-. |
- r4 <ees' ges'>4-. <ees' ges'>4-. |
-  % Bars 241–244
- r4 <d' aes'>4-. <d' aes'>4-. |
- r4 <d' aes'>4-. <d' aes'>4-. |
- r4 <ees' ges'>4-. <ees' ges'>4-. |
- r4 <ees' ges'>4-. <ees' ges'>4-. |
-  % Bars 245–248
- r4 <ees' g'>4-. <ees' g'>4-. |
- r4 <ees' g'>4-. <ees' g'>4-. |
- r4 <ees' aes'>4-. <ees' aes'>4-. |
- r4 <ees' aes'>4-. <ees' aes'>4-. |
-  % Bars 249–252
- <ees' aes'>4-. \mf r4 r4 |
- <ees' a'>4-. r4 r4 |
- <ees' ges'>4-. r4 r4 |
- R2. |
-  % Bars 253–256
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 257–260
- R2. |
- R2. |
- R2. |
- << { \voiceOne R2. } \\ { \voiceTwo a'2. } >> |
-  % Bars 261–264
- R2. |
- <dis' dis''>2.~ \f ^\markup \italic { "I, II" } |
- <dis' dis''>2.~ |
- <dis' dis''>2.~ |
-  % Bars 265–268
- <dis' dis''>4 r4 r4 |
- R2. |
- << { \voiceOne ais'8-. \f ais'8-. ais'4-. ais'4-. } \\ { \voiceTwo fis'4-. r4 gis'4-. } >> |
- << { \voiceOne ais'4-. r4 r4 } \\ { \voiceTwo fis'4-. s2 } >> |
-  \bar "|."
 }
+
+trumpetsOneTwoMusic = { \trumpetsOneTwoOpening \trumpetsOneTwoBridge }
+trumpetsOneTwoMusicPlayback = { \trumpetsOneTwoOpening \trumpetsOneTwoBridge \trumpetsOneTwoOpening }

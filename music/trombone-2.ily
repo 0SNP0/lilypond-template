@@ -1,5 +1,5 @@
 % PROVISIONAL solo split of MusicXML trombones-1-2. Review chords and solo/a2 labels.
-tromboneTwoMusic = {
+tromboneTwoOpening = {
   \clef bass
   \key e \major
   \time 3/4
@@ -7,7 +7,7 @@ tromboneTwoMusic = {
  R2. |
  R2. |
  R2. |
- gis2. |
+  R2. |
   % Bars 5-8
  R2. |
  R2. |
@@ -148,6 +148,9 @@ tromboneTwoMusic = {
  R2. |
  gis4-. \f r4 gis4-. |
  gis4-. r4 r4 |
+}
+
+tromboneTwoBridge = {
   % Bars 117-120
  R2. |
  R2. |
@@ -193,150 +196,7 @@ tromboneTwoMusic = {
  R2. |
  R2. |
  R2. |
-  % Bars 153-156
- R2. |
- R2. |
- R2. |
- gis2. |
-  % Bars 157-160
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 161-164
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 165-168
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 169-172
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 173-176
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 177-180
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 181-184
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 185-188
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 189-192
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 193-196
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 197-200
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 201-204
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 205-208
- r4 cis'4-. \mf cis'4-. |
- r4 cis'4-. cis'4-. |
- r4 a4-. a4-. |
- r4 gis4-. gis4-. |
-  % Bars 209-212
- r4 fis4-. fis4-. |
- r4 fis4-. fis4-. |
- r4 a4-. a4-. |
- r4 gis4-. gis4-. |
-  % Bars 213-216
- r4 a4-. a4-. |
- r4 gis4-. gis4-. |
- r4 fis4-. fis4-. |
- r4 a4-. a4-. |
-  % Bars 217-220
- r4 fis4-. fis4-. |
- r4 fis4-. fis4-. |
- r4 fis4-. fis4-. |
- r4 fis4-. fis4-. |
-  % Bars 221-224
- r4 cis'4-. cis'4-. |
- r4 cis'4-. cis'4-. |
- r4 a4-. a4-. |
- r4 gis4-. gis4-. |
-  % Bars 225-228
- r4 fis4-. fis4-. |
- r4 fis4-. fis4-. |
- r4 b4-. b4-. |
- r4 a4-. a4-. |
-  % Bars 229-232
- gis4-. \sf r4 r4 |
- R2. |
- R2. |
- R2. |
-  % Bars 233-236
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 237-240
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 241-244
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 245-248
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 249-252
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 253-256
- R2. |
- R2. |
- gis2.~ |
- gis2.~ |
-  % Bars 257-260
- gis4 r4 r4 |
- gis2.~ \f |
- gis2.~ |
- gis2. |
-  % Bars 261-264
- gis4 r4 r4 |
- R2. |
- R2. |
- R2. |
-  % Bars 265-268
- R2. |
- R2. |
- gis4-. \f r4 gis4-. |
- gis4-. r4 r4 |
-  \bar "|."
 }
+
+tromboneTwoMusic = { \tromboneTwoOpening \tromboneTwoBridge }
+tromboneTwoMusicPlayback = { \tromboneTwoOpening \tromboneTwoBridge \tromboneTwoOpening }

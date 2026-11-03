@@ -1,6 +1,6 @@
-% Violas: source MusicXML P19, 268 measures, written pitch
+% Violas: source MusicXML P19, 152 printed measures, 268 playback measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-violasMusic = {
+violasOpening = {
   \clef alto
   \key e \major
   \time 3/4
@@ -8,7 +8,7 @@ violasMusic = {
  R2. |
  R2. |
  R2. |
- R2. |
+  R2. |
   % Bars 5–8
  r4 ^\markup \italic { "div." } <gis cis'>4-_ \mf <gis cis'>4 |
  r4 <gis cis'>4-_ <gis cis'>4 |
@@ -120,7 +120,7 @@ violasMusic = {
  R2. |
  R2. |
   % Bars 93–96
- << { \voiceOne R2. } \\ { \voiceTwo gis2. } >> |
+ << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo gis2. } >> |
  R2. |
  R2. |
  R2. |
@@ -149,6 +149,9 @@ violasMusic = {
  R2. |
  e'8 \ff gis'8 gis'4-. fis'4-. |
  e'4-. r4 r4 |
+}
+
+violasBridge = {
   % Bars 117–120
   \set Staff.midiInstrument = "pizzicato strings"
  r4 ^\markup \italic { "pizz." } b4 \p b4 |
@@ -195,151 +198,7 @@ violasMusic = {
  r4 cis'4 cis'4 |
  r4 b4 b4 |
  b4 r4 r4 |
-  % Bars 153–156
- R2. |
- R2. |
- R2. |
-  \set Staff.midiInstrument = "viola"
- R2. ^\markup \italic { "arco" } |
-  % Bars 157–160
- r4 ^\markup \italic { "div." } <gis cis'>4-_ \mf <gis cis'>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
-  % Bars 161–164
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
-  % Bars 165–168
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
-  % Bars 169–172
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <gis bis>4-_ <gis bis>4 |
- r4 <gis cis'>4-_ <gis cis'>4-_ |
- <gis cis'>4 r4 r4 |
-  % Bars 173–176
- r4 <gis bis>4-_ \mf <gis bis>4 |
- r4 <gis bis>4-_ <gis bis>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
-  % Bars 177–180
- r4 <gis bis>4-_ <gis bis>4 |
- r4 <gis bis>4-_ <gis bis>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
-  % Bars 181–184
- r4 <b cis'>4-_ <b cis'>4 |
- r4 <b cis'>4-_ <b cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
-  % Bars 185–188
- <a cis'>4-> r4 r4 |
- <ais cis'>4-> r4 r4 |
- <a cis'>4-> r4 r4 |
- R2. |
-  % Bars 189–192
- r4 <gis bis>4-_ \f <gis bis>4 |
- r4 <gis bis>4-_ <gis bis>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
-  % Bars 193–196
- r4 <gis bis>4-_ <gis bis>4 |
- r4 <gis bis>4-_ <gis bis>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
-  % Bars 197–200
- r4 <b cis'>4-_ <b cis'>4 |
- r4 <b cis'>4-_ <b cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
-  % Bars 201–204
- <a cis'>4 r4 r4 |
- <a cis'>4 r4 r4 |
- <gis cis'>4-_ r4 <gis bis>4-_ |
- <gis cis'>4 r4 r4 |
-  % Bars 205–208
- << { \voiceOne e'2. \f } \\ { \voiceTwo cis'2. } >> |
- << { \voiceOne gis'2. } \\ { \voiceTwo e'2. } >> |
- << { \voiceOne cis'2. } \\ { \voiceTwo a2. } >> |
- << { \voiceOne e'2. } \\ { \voiceTwo cis'2. } >> |
-  % Bars 209–212
- << { \voiceOne a2. } \\ { \voiceTwo fis2. } >> |
- <e' gis'>4 <d' fis'>4. <a cis'>8 |
- << { \voiceOne e'2. } \\ { \voiceTwo cis'2. } >> |
- << { \voiceOne d'2. } \\ { \voiceTwo b2. } >> |
-  % Bars 213–216
- << { \voiceOne cis'2. } \\ { \voiceTwo a2. } >> |
- << { \voiceOne e'2. } \\ { \voiceTwo cis'2. } >> |
- << { \voiceOne a2. } \\ { \voiceTwo fis2. } >> |
- << { \voiceOne cis'2. } \\ { \voiceTwo a2. } >> |
-  % Bars 217–220
- << { \voiceOne fis'2.~ } \\ { \voiceTwo d'2.~ } >> |
- << { \voiceOne fis'4 fis'4 fis'4 } \\ { \voiceTwo d'4 cis'4 d'4 } >> |
- << { \voiceOne ais'4 ais'4. e'8 } \\ { \voiceTwo f'4 e'4. cis'8 } >> |
- << { \voiceOne fis'2. \< } \\ { \voiceTwo d'2. } >> |
-  % Bars 221–224
- <cis' e'>2. \f |
- <cis' e'>2. |
- <fis' a'>2. |
- <e' gis'>2. |
-  % Bars 225–228
- <d' fis'>2. |
- <cis' e'>4 <b d'>4. <cis' e'>8 |
- <b d'>2. |
- <a cis'>2. |
-  % Bars 229–232
- <gis cis'>4 \ff r4 <gis cis'>4 |
- <gis cis'>4 r4 <gis cis'>4 |
- <a cis'>4 r4 <a cis'>4 |
- <a cis'>4 r4 <a cis'>4 |
-  % Bars 233–236
- <gis cis'>4 r4 <gis cis'>4 |
- <gis bis>4 r4 <gis bis>4 |
- <gis cis'>4 r4 r4 |
- R2. |
-  % Bars 237–240
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 241–244
- R2. |
- << { \voiceOne R2. } \\ { \voiceTwo gis2. } >> |
- R2. |
- R2. |
-  % Bars 245–248
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 249–252
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 253–256
- gis'2.~ \f |
- gis'4-_ a'4.( gis'8-_) |
- gis'4( cis''4. gis'8-_) |
- gis'4( cis''4. gis'8) |
-  % Bars 257–260
- gis'2.~ |
- gis'4 a'4.( gis'8-_) |
- gis'4( cis''4. gis'8-_) |
- gis'4( e''4. cis''8) |
-  % Bars 261–264
- cis''2.~ |
- cis''4 r4 r4 |
- R2. |
- R2. |
-  % Bars 265–268
- R2. |
- R2. |
- e'8 \ff gis'8 gis'4-. fis'4-. |
- e'4-. r4 r4 |
-  \bar "|."
 }
+
+violasMusic = { \violasOpening \violasBridge }
+violasMusicPlayback = { \violasOpening \violasBridge \violasOpening }

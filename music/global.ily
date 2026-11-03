@@ -1,10 +1,8 @@
-% Common metric timeline: source of time and measure lengths.
-% The first conductor staff uses rehearsalMarks; every individual part
-% also uses it, so boxes do not repeat on all staves in the full score.
-global = {
-  \time 3/4
-  s2.*268
-}
+% Written score: 152 unique measures, then Da Capo al Fine.
+% Playback: opening 116 + middle 36 + opening 116 = 268 measures.
+global = { \time 3/4 s2.*152 }
+globalPlayback = { \time 3/4 s2.*268 }
+
 rehearsalMarks = {
   \tempo 2. = 66
   % Bars 1–4
@@ -151,7 +149,7 @@ rehearsalMarks = {
   s2. |
   s2. |
   s2. |
-  s2. |
+  s2. \mark \markup \box \bold "Fine" |
   % Bars 117–120
   \mark \markup \box \bold \abs-fontsize #14 "19" s2. |
   s2. |
@@ -196,150 +194,9 @@ rehearsalMarks = {
   s2. |
   s2. |
   s2. |
-  s2. |
-  % Bars 153–156
-  \mark \markup \box \bold \abs-fontsize #14 "Reprise" s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 157–160
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 161–164
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 165–168
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 169–172
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 173–176
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 177–180
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 181–184
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 185–188
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 189–192
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 193–196
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 197–200
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 201–204
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 205–208
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 209–212
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 213–216
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 217–220
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 221–224
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 225–228
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 229–232
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 233–236
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 237–240
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 241–244
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 245–248
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 249–252
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 253–256
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 257–260
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 261–264
-  s2. |
-  s2. |
-  s2. |
-  s2. |
-  % Bars 265–268
-  s2. |
-  s2. |
-  s2. |
-  s2. |
+  s2. \mark \markup \box \bold "D.C. al Fine" |
+}
+rehearsalMarksPlayback = {
+  \tempo 2. = 66
+  s2.*268
 }

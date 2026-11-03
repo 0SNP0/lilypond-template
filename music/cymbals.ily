@@ -1,13 +1,13 @@
-% Cymbals: source MusicXML P15, 268 measures, written pitch
+% Cymbals: source MusicXML P15, 152 printed measures, 268 playback measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
-cymbalsMusic = \drummode {
+cymbalsOpening = \drummode {
   \clef percussion
   \time 3/4
   % Bars 1–4
  R2. |
  R2. |
  R2. |
- << { \voiceOne R2. } \\ { \voiceTwo cymc2. } >> |
+  R2. |
   % Bars 5–8
  R2. |
  R2. |
@@ -148,6 +148,9 @@ cymbalsMusic = \drummode {
  R2. |
  R2. |
  R2. |
+}
+
+cymbalsBridge = \drummode {
   % Bars 117–120
  r4 ^\markup \italic { "with stick for triangle" } cymc4-! \p cymc4-! |
  r4 cymc4-! cymc4-! |
@@ -193,150 +196,7 @@ cymbalsMusic = \drummode {
  r4 cymc4-! cymc4-! |
  r4 cymc4-! cymc4-! |
  cymc4-! r4 r4 |
-  % Bars 153–156
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 157–160
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 161–164
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 165–168
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 169–172
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 173–176
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 177–180
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 181–184
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 185–188
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 189–192
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 193–196
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 197–200
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 201–204
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 205–208
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 209–212
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 213–216
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 217–220
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 221–224
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 225–228
- R2. |
- R2. |
- R2. ^\markup \italic { "with stick for snare drum" } |
- R2. |
-  % Bars 229–232
- cymc4-! \f r4 cymc4-! |
- cymc4-! r4 cymc4-! |
- cymc4-! r4 cymc4-! |
- cymc4-! r4 cymc4-! |
-  % Bars 233–236
- cymc4 r4 cymc4 |
- cymc4 r4 cymc4 |
- cymc4 r4 r4 |
- R2. |
-  % Bars 237–240
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 241–244
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 245–248
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 249–252
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 253–256
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 257–260
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 261–264
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 265–268
- R2. |
- R2. |
- R2. |
- R2. |
-  \bar "|."
 }
+
+cymbalsMusic = { \cymbalsOpening \cymbalsBridge }
+cymbalsMusicPlayback = { \cymbalsOpening \cymbalsBridge \cymbalsOpening }

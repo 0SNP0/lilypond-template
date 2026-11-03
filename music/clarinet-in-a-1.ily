@@ -1,5 +1,5 @@
 % PROVISIONAL solo split of MusicXML clarinets-in-a-1-2. Review chords and solo/a2 labels.
-clarinetInAOneMusic = {
+clarinetInAOneOpening = {
   \clef treble
   \key g \major
   \time 3/4
@@ -7,7 +7,7 @@ clarinetInAOneMusic = {
  R2. |
  R2. |
  R2. |
- R2. |
+  R2. |
   % Bars 5-8
  R2. |
  R2. |
@@ -148,6 +148,9 @@ clarinetInAOneMusic = {
  g''4 e''4 c''4 |
  g''8( \ff b''8) b''4-. a''4-. |
  g''4-. r4 r4 |
+}
+
+clarinetInAOneBridge = {
   % Bars 117-120
  b'2.( \pp |
  d''2. |
@@ -193,150 +196,7 @@ clarinetInAOneMusic = {
  b'4-. a'4.( b'8 |
  g'2.~ |
  g'4) r4 r4 |
-  % Bars 153-156
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 157-160
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 161-164
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 165-168
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 169-172
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 173-176
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 177-180
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 181-184
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 185-188
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 189-192
- b'2.~( \f |
- b'4 \mf c''2) \f |
- b'4( \f e''2) |
- b'4( e''2) |
-  % Bars 193-196
- b'2.~( \f |
- b'4 c''2) \f |
- b'4( \f e''2) |
- b'4( e''2) |
-  % Bars 197-200
- e''2.~ \f |
- e''4 f''4.( e''8 |
- c'''2.~ |
- c'''4) a''4( \f ^\markup \italic { "I" } b''4 |
-  % Bars 201-204
- c'''4 b''4 a''4 |
- g''4 e''4 c''4) |
- b'4( g''4-.) fis''4-. |
- e''4-. r4 r4 |
-  % Bars 205-208
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 209-212
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 213-216
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 217-220
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 221-224
- e''2.( ^\markup \italic { "I" } \f |
- g''2.) |
- c'''2.( |
- b''2.) |
-  % Bars 225-228
- a''2. |
- g''4( f''4. g''8 |
- f''2. |
- e''2.) |
-  % Bars 229-232
- b'4-. \ff r8 e''8-. g''4-. |
- b''4-. r8 a''8-. g''4-. |
- e''4-. r8 a''8-. c'''4-. |
- c'''4-. r8 d'''8-. c'''4-. |
-  % Bars 233-236
- b''4-. r8 a''8-. g''4-. |
- fis''4-. r8 g''8-. fis''4-. |
- e''4 r4 r4 |
- R2. |
-  % Bars 237-240
- b'2.~( \f ^\markup \italic { "I" } |
- b'4-_ \acciaccatura { b'16 } c''2) |
- b'4( e''2) |
- b'4( e''2) |
-  % Bars 241-244
- b'2.~( |
- b'4 c''2) |
- b'4( e''2) |
- b'4( g''2) |
-  % Bars 245-248
- e''2.~ ^\markup \italic { "II" } ^\markup \italic { "I" } |
- e''4 r4 r4 |
- R2. |
- R2. |
-  % Bars 249-252
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 253-256
- b''8( \ff c'''8 b''8 a''8 fis''8 dis''8 |
- b'4) r4 r4 |
- R2. |
- R2. |
-  % Bars 257-260
- b''8( \ff c'''8 b''8 a''8 fis''8 dis''8 |
- b'4) r4 r4 |
- R2. |
- R2. |
-  % Bars 261-264
- e'''8( \ff f'''8 e'''8 d'''8 b''8 gis''8 |
- e''4) r4 r4 |
- R2. |
- r4 ^\markup \italic { "II" } a''4 \ff b''4 |
-  % Bars 265-268
- c'''4 b''4 a''4 |
- g''4 e''4 c''4 |
- g''8( \ff b''8) b''4-. a''4-. |
- g''4-. r4 r4 |
-  \bar "|."
 }
+
+clarinetInAOneMusic = { \clarinetInAOneOpening \clarinetInAOneBridge }
+clarinetInAOneMusicPlayback = { \clarinetInAOneOpening \clarinetInAOneBridge \clarinetInAOneOpening }

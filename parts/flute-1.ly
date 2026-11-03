@@ -5,5 +5,5 @@
 \include "../music/flute-1.ily"
 \include "../layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Flute I" tagline = ##f }
-\score { \compressEmptyMeasures \new Staff \with { midiInstrument = "flute" } << { \global } { \rehearsalMarks } { \fluteOneMusic } >> \partPrintLayout }
+\score { \new Staff \with { midiInstrument = "flute" } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \fluteOneMusic } >> \partPrintLayout }
 \score { \articulate \new Staff \with { midiInstrument = "flute" } << { \globalPlayback } { \rehearsalMarksPlayback } { \fluteOneMusicPlayback } >> \midi { } }

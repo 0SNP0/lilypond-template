@@ -5,5 +5,5 @@
 \include "../music/global.ily"
 \include "../layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Contrabassoon" tagline = ##f }
-\score { \compressEmptyMeasures \new Staff \with { midiInstrument = "bassoon" } << { \global } { \rehearsalMarks } { \clef bass \contrabassoonMusic } >> \partPrintLayout }
+\score { \new Staff \with { midiInstrument = "bassoon" } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \clef bass \contrabassoonMusic } >> \partPrintLayout }
 \score { \articulate \new Staff \with { midiInstrument = "bassoon" } << { \globalPlayback } { \rehearsalMarksPlayback } { \transpose c c, \contrabassoonMusicPlayback } >> \midi { } }

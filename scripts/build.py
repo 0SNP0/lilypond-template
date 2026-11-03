@@ -144,7 +144,8 @@ def metadata_section() -> str:
     ]
     def value(k: str) -> str:
         return m.get(k, "") or "—"
-    return "| Поле | Значение |\n|---|---|\n" + "\n".join(\n        f"| {title} | {value(key)} |" for title, key in fields)
+    return "| Поле | Значение |\n|---|---|\n" + "\n".join(
+        f"| {title} | {value(key)} |" for title, key in fields)
 
 
 def sync_readme(*, check: bool = False) -> None:

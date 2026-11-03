@@ -9,7 +9,7 @@
 \include "../layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle
           composer = \composerCredit instrument = "Percussion" tagline = ##f }
-\score {
+\score { \compressEmptyMeasures
   \new DrumStaff << { \global } { \rehearsalMarks } \percussionKitMusic >>
   \partPrintLayout
 }

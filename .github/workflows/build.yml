@@ -29,6 +29,8 @@ jobs:
     needs: pdf
     runs-on: ubuntu-24.04
     timeout-minutes: 120
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -38,17 +40,8 @@ jobs:
         uses: ./scorekit/actions/media
         with:
           source_tag: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
-  release:
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs: media
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-      - name: ScoreKit release
+      - name: Publish musician-facing GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
         uses: ./scorekit/actions/release
         with:
           tag: ${{ github.ref_name }}

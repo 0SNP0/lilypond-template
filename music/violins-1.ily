@@ -17,10 +17,10 @@ violinsOneOpening = {
   % Bars 9–12
  gis''8 gis''8 cis'''2 |
  fis''8 fis''8 cis'''2 |
- \acciaccatura { fis''16 } e''4-.) dis''4 cis''4-_ |
- \acciaccatura { cis''16 } fis''4) e''4 dis''4-_ |
+ \acciaccatura { fis''16-_-^ } e''4-.) dis''4 cis''4-_ |
+ \acciaccatura { cis''16-_-^ } fis''4) e''4 dis''4-_ |
   % Bars 13–16
- \acciaccatura { dis''16 } gis''4-.) e''8 dis''8 cis''4~ |
+ \acciaccatura { dis''16-_-^ } gis''4-.) e''8 dis''8 cis''4~ |
  cis''8 dis''8-. e''8-. fis''8-. gis''8-. cis'''8-. |
  e'''4 dis'''4 cis'''4-_ |
  \acciaccatura { cis'''16 } a'''2.) |
@@ -111,12 +111,12 @@ violinsOneOpening = {
  R2. |
   % Bars 85–88
  gis''2.~ \f ^\markup \italic { "unis." } |
- gis''4-_ \acciaccatura { b''16 } a''4.)( gis''8) |
+ gis''4-_ \acciaccatura { b''16-^ } a''4.)( gis''8) |
  gis''4( cis'''4. gis''8) |
  gis''4( cis'''4. gis''8) |
   % Bars 89–92
  gis''2.~ |
- gis''4-_ \acciaccatura { b''16 } a''4.)( gis''8) |
+ gis''4-_ \acciaccatura { b''16-^ } a''4.)( gis''8) |
  gis''4( cis'''4. gis''8) |
  gis''4( e'''4. cis'''8) |
   % Bars 93–96
@@ -131,12 +131,12 @@ violinsOneOpening = {
  \acciaccatura { fis''16 gis''16 } fis''4) e''4. dis''8) |
   % Bars 101–104
  gis''2.~ |
- gis''4-_ \acciaccatura { b''16 } a''4.)( gis''8) |
+ gis''4-_ \acciaccatura { b''16-^ } a''4.)( gis''8) |
  gis''4( cis'''4. gis''8) |
  gis''4( cis'''4. gis''8) |
   % Bars 105–108
  gis''2.~ |
- gis''4-_ \acciaccatura { b''16 } a''4.)( gis''8) |
+ gis''4-_ \acciaccatura { b''16-^ } a''4.)( gis''8) |
  gis''4( cis'''4. gis''8) |
  gis''4( e'''4. cis'''8) |
   % Bars 109–112

@@ -70,6 +70,24 @@ def main() -> None:
                     raise ValueError(f"{file}: expected notes in measure {number}")
             elif bar != "R2. |":
                 raise ValueError(f"{file}: unexpected events in measure {number}: {bar}")
+    # Work-specific assertions for explicitly designated solo passages.
+    # Prevent doubled notes from returning to the non-playing desk.
+    for stem, measure_numbers in spec.get("solo_part_rests", {}).items():
+        file = stem + ".ily"
+        if file not in per_file:
+            raise ValueError(f"Unknown solo part {file}")
+        for number in measure_numbers:
+            if not 1 <= number <= printed:
+                raise ValueError(f"Invalid solo-only measure {stem}: {number}")
+            if per_file[file][number - 1].strip() != "R2. |":
+                raise ValueError(
+                    f"Solo-only split regression: {stem}, measure {number}: "
+                    f"{per_file[file][number - 1]}")
+
+    printed_global = (MUSIC / "global.ily").read_text(encoding="utf-8")
+    if '\\bar "||"' not in printed_global:
+        raise ValueError("Missing double barline at the end of the printed score")
+
     print(f"Music checked: {len(music_files)} sources, {printed} printed bars, "
           f"{sum(s['end']-s['start']+1 for s in sections)} playback bars")
 

@@ -66,6 +66,13 @@ def music_fingerprint(source: Path) -> str:
     """Sounding/expressive source events; ignores purely visual overrides."""
     fields = [("edition", source.name)]
     for path in sources(source):
+        # Generated engravings and paired-staff merging are views, not
+        # independent sounding sources.
+        if path.name == "paired.ily":
+            continue
+        if path.name == "percussion.ily" and path.read_text(
+                encoding="utf-8").startswith("% AUTO-GENERATED PRINT VIEW"):
+            continue
         if not path.is_file():
             raise FileNotFoundError(path)
         fields.append((path.relative_to(ROOT).as_posix(),

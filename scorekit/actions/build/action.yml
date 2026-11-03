@@ -34,6 +34,7 @@ runs:
           sudo apt-get install -y --no-install-recommends python3-pypdf fonts-texgyre
       - name: Install audio dependencies
         if: ${{ inputs.full_export == 'true' }}
+        shell: bash
         run: sudo apt-get install -y --no-install-recommends fluidsynth ffmpeg
       - name: Download MuseScore MS Basic SoundFont
         if: ${{ inputs.full_export == 'true' }}

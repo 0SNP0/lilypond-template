@@ -14,8 +14,17 @@ MUSIC = ROOT / "music"
 
 
 def bars(block: str) -> list[str]:
-    return [line.strip() for line in block.splitlines()
-            if line.rstrip().endswith("|")]
+    result = []
+    for line in block.splitlines():
+        line = line.strip()
+        if not line.endswith("|"):
+            continue
+        match = re.fullmatch(r"R2\.\*(\d+)\s*\|", line)
+        if match:
+            result.extend(["R2. |"] * int(match.group(1)))
+        else:
+            result.append(line)
+    return result
 
 
 def extract(text: str, suffix: str) -> list[str]:

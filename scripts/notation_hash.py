@@ -45,7 +45,11 @@ def normalize(text: str, *, music_only: bool = False) -> str:
             cleaned = PRINT_ONLY.sub("", cleaned)
         if cleaned.strip():
             lines.append(cleaned.strip())
-    return " ".join(" ".join(lines).split())
+    result = " ".join(" ".join(lines).split())
+    if music_only:
+        result = re.sub(r"R2\.\*(\d+)\s*\|",
+                        lambda m: " ".join(["R2. |"] * int(m.group(1))), result)
+    return result
 
 def _digest(version: str, fields: list[tuple[str, str]]) -> str:
     h = hashlib.sha256()

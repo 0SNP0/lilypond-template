@@ -160,6 +160,28 @@ def sync_readme(*, check: bool = False) -> None:
         print("README.md refreshed from LilyPond metadata")
 
 
+def score_staff_count() -> int:
+    """Count printed staves, not individual players or optional parts."""
+    orchestration = (ROOT / "orchestra.ily").read_text(encoding="utf-8")
+    return len(re.findall(r'\\new\s+(?:Staff|DrumStaff|RhythmicStaff|TabStaff)\b',
+                          orchestration))
+
+
+def natural_score_staff_size(count: int) -> float:
+    """Starting A4 size for the ensemble; the final size must fit uncompressed."""
+    if count <= 6:
+        return 20.0
+    if count <= 10:
+        return 18.0
+    if count <= 14:
+        return 16.0
+    if count <= 18:
+        return 15.0
+    if count <= 22:
+        return 14.0
+    return 12.5
+
+
 def compile_lilypond(source: Path, output: Path, version: str,
                      *, score: bool = False) -> None:
     lilypond = shutil.which("lilypond")
@@ -167,6 +189,7 @@ def compile_lilypond(source: Path, output: Path, version: str,
         raise RuntimeError("Install native LilyPond; lilypond executable not in PATH")
     output.parent.mkdir(parents=True, exist_ok=True)
     part_staff_size: float | None = None
+    score_staff_size = natural_score_staff_size(score_staff_count()) if score else None
     attempt = 0
     while True:
         args = [
@@ -174,8 +197,9 @@ def compile_lilypond(source: Path, output: Path, version: str,
             "-o", str(output), str(source),
         ]
         env = {"ENSEMBLE_SCORE_VERSION": version}
-        # A4 score size is fixed in layout/score.ily; retrying at smaller
-        # scales made the full score unusable for a conductor.
+        # Start from the number of staves and find the largest usable A4 size.
+        if score_staff_size is not None:
+            env["ENSEMBLE_SCORE_STAFF_SIZE"] = str(score_staff_size)
         if part_staff_size is not None:
             env["ENSEMBLE_PART_STAFF_SIZE"] = str(part_staff_size)
         text = run(args, capture=True, environment=env)
@@ -186,10 +210,17 @@ def compile_lilypond(source: Path, output: Path, version: str,
         if not overfull:
             return
         if score:
-            raise RuntimeError(
-                f"A4 score does not fit with readable staves: {source}. "
-                "Adjust score layout, instrument groups or page breaks, "
-                "not the global staff size.")
+            assert score_staff_size is not None
+            next_size = round(score_staff_size - 0.5, 1)
+            if next_size < 11.5 or attempt >= 18:
+                raise RuntimeError(
+                    f"A4 score still overfull at {score_staff_size} pt: {source}; "
+                    "adjust score layout, not the A4 paper size.")
+            print(f"Retry A4 score at {next_size:.1f} pt "
+                  f"({score_staff_count()} staves)", flush=True)
+            score_staff_size = next_size
+            attempt += 1
+            continue
         if not score:
             # Dense individual parts have a limited, separate adjustment.
 
@@ -250,7 +281,6 @@ def build(*, audio: bool, font: str | None) -> None:
     verify(audio=audio)
     if audio:
         run([sys.executable, str(ROOT / "scripts" / "export.py")])
-        run([sys.executable, str(ROOT / "scripts" / "timeline_csv.py")])
 
 
 def locate_soundfont(override: str | None) -> Path:
@@ -418,9 +448,6 @@ def package() -> None:
                    else "parts")
             archive.write(item, f"{sub}/{item.name}")
         archive.write(BUILD / "build-info.json", "build-info.json")
-        timeline_file = ROOT / "dist" / "timeline.csv"
-        if timeline_file.exists():
-            archive.write(timeline_file, "timeline.csv")
         manifest_file = ROOT / "dist" / "print-manifest.json"
         if manifest_file.is_file():
             archive.write(manifest_file, "print-manifest.json")
@@ -431,9 +458,6 @@ def package() -> None:
         for item in sorted((AUDIO / "stems").glob("*.mp3")):
             archive.write(item, f"audio/stems/{item.name}")
         archive.write(BUILD / "build-info.json", "build-info.json")
-        timeline_file = ROOT / "dist" / "timeline.csv"
-        if timeline_file.exists():
-            archive.write(timeline_file, "timeline.csv")
     viewer = ROOT / "dist" / "viewer"
     if (viewer / "manifest.json").is_file() and (viewer / "timeline.json").is_file():
         archive_name = naming["slug"] + "-viewer-" + naming["revision"] + ".zip"
@@ -441,8 +465,6 @@ def package() -> None:
             for item in sorted(viewer.rglob("*")):
                 if item.is_file():
                     archive.write(item, str(item.relative_to(ROOT / "dist")))
-            for item in sorted((ROOT / "dist" / "timelines").glob("*.csv")):
-                archive.write(item, str(item.relative_to(ROOT / "dist")))
             archive.write(BUILD / "build-info.json", "build-info.json")
             mix = AUDIO / (naming["mix"] + ".mp3")
             archive.write(mix, f"audio/{mix.name}")

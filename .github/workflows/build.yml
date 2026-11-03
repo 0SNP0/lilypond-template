@@ -65,12 +65,9 @@ jobs:
             dist/audio/stems/*.mp3
             dist/packages/*.zip
             dist/print-manifest.json
-            dist/timeline.csv
-            dist/timelines/*.csv
             dist/viewer/index.html
             dist/viewer/manifest.json
             dist/viewer/timeline.json
-            dist/viewer/csv/*.csv
             dist/viewer/**/*.svg
             dist/viewer/*.json
           if-no-files-found: warn
@@ -94,8 +91,8 @@ jobs:
         run: |
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "Release $TAG already exists; upload or replace assets"
-            gh release upload "$TAG" dist/pdf/*.pdf dist/packages/*.zip dist/timeline.csv --clobber
+            gh release upload "$TAG" dist/pdf/*.pdf dist/packages/*.zip --clobber
           else
             echo "Create release $TAG with compiled assets"
-            gh release create "$TAG" dist/pdf/*.pdf dist/packages/*.zip dist/timeline.csv --verify-tag --generate-notes --title "$TAG"
+            gh release create "$TAG" dist/pdf/*.pdf dist/packages/*.zip --verify-tag --generate-notes --title "$TAG"
           fi

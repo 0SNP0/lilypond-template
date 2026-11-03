@@ -216,6 +216,7 @@ def render_svg(source: Path, view_id: str, naming: dict) -> list[Path]:
         '    \\override BarNumber.break-visibility = ##(#t #t #t)\n'
         '    \\override BarNumber.font-size = #-7\n'
         '    \\override BarNumber.output-attributes = #\'((class . "ea-measure-number"))\n'
+        '    \\override CenteredBarNumber.output-attributes = #\'((class . "ea-measure-number"))\n'
         '  }\n'
         '}\n'
         f'\\include "{source.as_posix()}"\n',
@@ -342,7 +343,6 @@ def main() -> None:
         views[view_id] = {
             "kind": kind,
             "source": str(source.relative_to(ROOT)),
-            "timeline_csv": "csv/" + view_id + ".csv",
             "pages": [str(file.relative_to(VIEWER)) for file in pages],
             "measure_anchors": anchors,
             "anchors_found": len({a["measure_id"] for a in anchors}),

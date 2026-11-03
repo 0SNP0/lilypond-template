@@ -13,10 +13,21 @@
 #(define ea-staff-count (max 1 (ea-count-staves ensembleScore)))
 % Smaller ensembles can use bigger notes. Dense A4 orchestral scores
 % must not get progressively smaller just to save paper.
+% Fit the size to the actual number of orchestral staves.  The builder
+% starts with this size and only retries a smaller one if A4 is overfull.
+#(define ea-natural-staff-size
+   (cond ((<= ea-staff-count 6) 20)
+         ((<= ea-staff-count 10) 18)
+         ((<= ea-staff-count 14) 16)
+         ((<= ea-staff-count 18) 15)
+         ((<= ea-staff-count 22) 14)
+         (else 12.5)))
+#(define ea-staff-size-override (getenv "ENSEMBLE_SCORE_STAFF_SIZE"))
 #(define ea-print-staff-size
-   (cond ((<= ea-staff-count 8) 20)
-         ((<= ea-staff-count 14) 17)
-         (else 12)))
+   (if (and ea-staff-size-override
+            (string->number ea-staff-size-override))
+       (string->number ea-staff-size-override)
+       ea-natural-staff-size))
 #(set-global-staff-size ea-print-staff-size)
 
 \paper {
@@ -26,13 +37,13 @@
   left-margin = 6\mm
   right-margin = 6\mm
   % Full names on the first system; short labels after the first break.
-  indent = 43\mm
-  short-indent = 18\mm
+  indent = 39\mm
+  short-indent = 16\mm
   print-first-page-number = ##t
   print-page-number = ##t
   % Do not vertically stretch a single system or force another system onto A4.
-  ragged-bottom = ##t
-  ragged-last-bottom = ##t
+  ragged-bottom = ##f
+  ragged-last-bottom = ##f
   page-breaking = #ly:optimal-breaking
   oddHeaderMarkup = \ensembleHeader
   evenHeaderMarkup = \ensembleHeader
@@ -42,17 +53,32 @@
 }
 
 scoreCompactLayout = \layout {
-  % French-style orchestral score: keep all instruments on the first system,
-  % hide completely resting desks only on later systems.
-  \context { \Staff \RemoveEmptyStaves }
-  \context { \DrumStaff \RemoveEmptyStaves }
   \context {
     \Score
+    % One boxed number per bar, centered below the complete ensemble.
+    % Uses the same measure numbers as the JSON/SVG playback clock.
+    centerBarNumbers = ##t
+    barNumberVisibility = #all-bar-numbers-visible
+    \override CenteredBarNumber.stencil =
+      #(make-stencil-boxer 0.08 0.20 ly:text-interface::print)
+    \override CenteredBarNumber.font-size = #-3
+    \override CenteredBarNumberLineSpanner.direction = #DOWN
+    \override CenteredBarNumberLineSpanner.padding = #0.4
     \override StaffGrouper.staff-staff-spacing.basic-distance = #5.5
     \override StaffGrouper.staff-staff-spacing.minimum-distance = #4.5
     \override StaffGrouper.staff-staff-spacing.padding = #0.5
     \override StaffGrouper.staffgroup-staff-spacing.basic-distance = #7
     \override StaffGrouper.staffgroup-staff-spacing.minimum-distance = #5.5
     \override StaffGrouper.staffgroup-staff-spacing.padding = #0.5
+  }
+  \context {
+    \Staff
+    \override InstrumentName.self-alignment-X = #RIGHT
+    \override InstrumentName.padding = #0.25
+  }
+  \context {
+    \DrumStaff
+    \override InstrumentName.self-alignment-X = #RIGHT
+    \override InstrumentName.padding = #0.25
   }
 }

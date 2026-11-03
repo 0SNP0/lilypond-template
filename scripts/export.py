@@ -341,6 +341,7 @@ def main() -> None:
         views[view_id] = {
             "kind": kind,
             "source": str(source.relative_to(ROOT)),
+            "timeline_csv": "csv/" + view_id + ".csv",
             "pages": [str(file.relative_to(VIEWER)) for file in pages],
             "measure_anchors": anchors,
             "anchors_found": len({a["measure_id"] for a in anchors}),

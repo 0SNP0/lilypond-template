@@ -200,4 +200,4 @@ englishHornBridge = {
 }
 
 englishHornMusic = { \englishHornOpening \englishHornBridge }
-englishHornMusicPlayback = { \englishHornOpening \englishHornBridge \englishHornOpening }
+englishHornMusicPlayback = \scorePlayback \englishHornOpening \englishHornBridge

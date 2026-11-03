@@ -199,4 +199,4 @@ clarinetInATwoBridge = {
 }
 
 clarinetInATwoMusic = { \clarinetInATwoOpening \clarinetInATwoBridge }
-clarinetInATwoMusicPlayback = { \clarinetInATwoOpening \clarinetInATwoBridge \clarinetInATwoOpening }
+clarinetInATwoMusicPlayback = \scorePlayback \clarinetInATwoOpening \clarinetInATwoBridge

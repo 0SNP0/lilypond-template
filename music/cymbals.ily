@@ -199,4 +199,4 @@ cymbalsBridge = \drummode {
 }
 
 cymbalsMusic = { \cymbalsOpening \cymbalsBridge }
-cymbalsMusicPlayback = { \cymbalsOpening \cymbalsBridge \cymbalsOpening }
+cymbalsMusicPlayback = \scorePlayback \cymbalsOpening \cymbalsBridge

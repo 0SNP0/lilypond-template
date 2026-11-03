@@ -200,4 +200,4 @@ contrabassesBridge = {
 }
 
 contrabassesMusic = { \contrabassesOpening \contrabassesBridge }
-contrabassesMusicPlayback = { \contrabassesOpening \contrabassesBridge \contrabassesOpening }
+contrabassesMusicPlayback = \scorePlayback \contrabassesOpening \contrabassesBridge

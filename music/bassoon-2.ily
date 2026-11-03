@@ -199,4 +199,4 @@ bassoonTwoBridge = {
 }
 
 bassoonTwoMusic = { \bassoonTwoOpening \bassoonTwoBridge }
-bassoonTwoMusicPlayback = { \bassoonTwoOpening \bassoonTwoBridge \bassoonTwoOpening }
+bassoonTwoMusicPlayback = \scorePlayback \bassoonTwoOpening \bassoonTwoBridge

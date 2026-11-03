@@ -199,4 +199,4 @@ contrabassoonBridge = {
 }
 
 contrabassoonMusic = { \contrabassoonOpening \contrabassoonBridge }
-contrabassoonMusicPlayback = { \contrabassoonOpening \contrabassoonBridge \contrabassoonOpening }
+contrabassoonMusicPlayback = \scorePlayback \contrabassoonOpening \contrabassoonBridge

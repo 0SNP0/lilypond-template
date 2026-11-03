@@ -199,4 +199,4 @@ bassDrumBridge = \drummode {
 }
 
 bassDrumMusic = { \bassDrumOpening \bassDrumBridge }
-bassDrumMusicPlayback = { \bassDrumOpening \bassDrumBridge \bassDrumOpening }
+bassDrumMusicPlayback = \scorePlayback \bassDrumOpening \bassDrumBridge

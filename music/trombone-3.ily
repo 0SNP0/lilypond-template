@@ -9,7 +9,7 @@ tromboneThreeOpening = {
  gis,8-_ gis,8-_ gis,4 r4 |
   R2. |
   % Bars 5-8
- cis,4-. r4 r4 |
+  R2. |
  R2. |
  R2. |
  R2. |
@@ -106,8 +106,8 @@ tromboneThreeOpening = {
   % Bars 81-84
  R2. |
  R2. |
- cis4-. ^\markup \italic { "Tuba sola" } \mf gis,4-. e,4-. |
- cis,4-. r4 r4 |
+  R2. |
+  R2. |
   % Bars 85-88
  R2. |
  R2. |

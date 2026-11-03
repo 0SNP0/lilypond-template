@@ -61,13 +61,13 @@ hornThreeOpening = {
   % Bars 45-48
  R2. |
  R2. |
- gis'2.~) \f |
- gis'2.( |
+  R2. |
+  R2. |
   % Bars 49-52
- gis'4) \mf r4 r4 |
+  R2. |
  R2. |
- b'4( \mf dis''4-.) cis''4-. |
- b'4-. r4 r4 |
+  R2. |
+  R2. |
   % Bars 53-56
  R2. |
  R2. |

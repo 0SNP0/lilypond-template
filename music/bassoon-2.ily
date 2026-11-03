@@ -51,15 +51,15 @@ bassoonTwoOpening = {
   % Bars 37-40
  R2. |
  R2. |
- gis2.~) \f |
- gis2.~ |
+  R2. |
+  R2. |
   % Bars 41-44
- gis4 r4 r4 |
- gis2.->( \f |
- gis2.~) \f |
- gis2.( |
+  R2. |
+  R2. |
+  R2. |
+  R2. |
   % Bars 45-48
- gis4) \mf r4 r4 |
+  R2. |
  R2. |
  R2. |
  R2. |
@@ -110,23 +110,23 @@ bassoonTwoOpening = {
  cis,4-. r4 r4 |
   % Bars 85-88
  R2. |
- gis,4 r4 r4 |
- cis4 r4 r4 |
- e4 r4 r4 |
+  R2. |
+  R2. |
+  R2. |
   % Bars 89-92
- dis4 r4 r4 |
- gis,4 r4 r4 |
- cis4 r4 r4 |
- e4 r4 r4 |
+  R2. |
+  R2. |
+  R2. |
+  R2. |
   % Bars 93-96
- cis4 r4 r4 |
- cis4 r4 r4 |
- fis4 r4 r4 |
- e4 r4 r4 |
+  R2. |
+  R2. |
+  R2. |
+  R2. |
   % Bars 97-100
- dis4 r4 r4 |
- e4 r4 r4 |
- fis4 r4 r4 |
+  R2. |
+  R2. |
+  R2. |
  R2. |
   % Bars 101-104
  dis4 ^\markup \italic { "a2" } \f r4 r4 |

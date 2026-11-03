@@ -24,10 +24,10 @@ fluteTwoOpening = {
  R2. |
  R2. |
   % Bars 17-20
- gis'''4( e'''4 cis'''4 |
- gis''4 \acciaccatura { b''16 } a''4.) gis''8 |
- cis'''2.~ |
- cis'''4) r4 r4 |
+  R2. |
+  R2. |
+  R2. |
+  R2. |
   % Bars 21-24
  R2. |
  R2. |
@@ -90,14 +90,14 @@ fluteTwoOpening = {
  R2. |
   % Bars 69-72
  R2. |
- e'''2.) |
- a'''2.( |
- gis'''2.) |
+  R2. |
+  R2. |
+  R2. |
   % Bars 73-76
- fis'''2. |
- e'''4( \f d'''4. e'''8 |
- d'''2. |
- cis'''2.) |
+  R2. |
+  R2. |
+  R2. |
+  R2. |
   % Bars 77-80
  e''4-. \ff r8 gis''8-. cis'''4-. |
  e'''4-. r8 dis'''8-. cis'''4-. |
@@ -110,24 +110,24 @@ fluteTwoOpening = {
  R2. |
   % Bars 85-88
  R2. |
- gis''4 \acciaccatura { gis''16 } a''2) |
- gis''4( cis'''2) |
- gis''4( cis'''2) |
+  R2. |
+  R2. |
+  R2. |
   % Bars 89-92
- gis''2.~( |
- gis''4 a''2) |
- gis''4( cis'''2) |
- gis''4( e'''2) |
+  R2. |
+  R2. |
+  R2. |
+  R2. |
   % Bars 93-96
- cis'''2.~( |
- cis'''4 d'''4. cis'''8 |
- a'''2.~ |
- a'''4) fis'''4( gis'''4 |
+  R2. |
+  R2. |
+  R2. |
+  R2. |
   % Bars 97-100
- a'''4 gis'''4 fis'''4 |
- e'''4 dis'''4 cis'''4 |
- b''4 a''4 gis''4 |
- fis''4 e''4. dis''8 |
+  R2. |
+  R2. |
+  R2. |
+  R2. |
   % Bars 101-104
  gis''2.~( |
  gis''4 \acciaccatura { gis''16 } a''2) |
@@ -141,11 +141,11 @@ fluteTwoOpening = {
   % Bars 109-112
  cis'''2.~ |
  cis'''4 d'''2 |
- a'''2.~ |
- a'''4 fis'''4 \ff gis'''4 |
+  R2. |
+  R2. |
   % Bars 113-116
- a'''4 gis'''4 fis'''4 |
- e'''4 cis'''4 a''4 |
+  R2. |
+  R2. |
  gis''8( \ff e'''8) e'''4-. dis'''4-. |
  cis'''4-. s2 |
 }

@@ -142,10 +142,10 @@ clarinetInAOneOpening = {
  e'''8( \ff f'''8 e'''8 d'''8 b''8 gis''8 |
  e''4) r4 r4 |
  R2. |
- r4 ^\markup \italic { "II" } a''4 \ff b''4 |
+  R2. |
   % Bars 113-116
- c'''4 b''4 a''4 |
- g''4 e''4 c''4 |
+  R2. |
+  R2. |
  g''8( \ff b''8) b''4-. a''4-. |
  g''4-. r4 r4 |
 }

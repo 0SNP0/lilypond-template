@@ -64,10 +64,10 @@ clarinetInATwoOpening = {
  r4 r4 r4 |
  r4 r4 \f ^\markup \italic { "I" } r4 |
   % Bars 49-52
- c'''4 b''4 a''4 |
- g''4 e''4 c''4) |
- b'4( g''4-.) fis''4-. |
- e''4-. r4 r4 |
+  R2. |
+  R2. |
+  R2. |
+  R2. |
   % Bars 53-56
  R2. |
  R2. |
@@ -90,14 +90,14 @@ clarinetInATwoOpening = {
  R2. |
   % Bars 69-72
  R2. |
- g''2.) |
- c'''2.( |
- b''2.) |
+  R2. |
+  R2. |
+  R2. |
   % Bars 73-76
- a''2. |
- g''4( f''4. g''8 |
- f''2. |
- e''2.) |
+  R2. |
+  R2. |
+  R2. |
+  R2. |
   % Bars 77-80
  g'4-. \ff r8 b'8-. e''4-. |
  g''4-. r8 fis''8-. e''4-. |
@@ -110,14 +110,14 @@ clarinetInATwoOpening = {
  R2. |
   % Bars 85-88
  R2. |
- b'4-_ \acciaccatura { b'16 } c''2) |
- b'4( e''2) |
- b'4( e''2) |
+  R2. |
+  R2. |
+  R2. |
   % Bars 89-92
- b'2.~( |
- b'4 c''2) |
- b'4( e''2) |
- b'4( g''2) |
+  R2. |
+  R2. |
+  R2. |
+  R2. |
   % Bars 93-96
  e''2.~ ^\markup \italic { "II" } ^\markup \italic { "I" } |
  e''4 f''4. e''8 |

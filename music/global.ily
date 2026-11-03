@@ -1,6 +1,6 @@
 % Written score: 152 unique measures, then Da Capo al Fine.
 % Playback: opening 116 + middle 36 + opening 116 = 268 measures.
-global = { \time 3/4 s2.*152 }
+global = { \time 3/4 s2.*152 \bar "||" }
 globalPlayback = { \time 3/4 s2.*268 }
 
 rehearsalMarks = {

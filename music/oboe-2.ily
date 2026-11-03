@@ -10,19 +10,19 @@ oboeTwoOpening = {
   R2. |
   % Bars 5-8
  R2. |
- cis''8 dis''8-. e''8-. fis''8-. gis''8-. cis'''8-. |
- e'''4-. dis'''4-. cis'''4-. |
- a''2. |
+  R2. |
+  R2. |
+  R2. |
   % Bars 9-12
- gis''4( cis'''2) |
- fis''4( cis'''2) |
- \acciaccatura { fis''16 } e''4-_( dis''4 cis''4 |
- \acciaccatura { cis''16 } fis''4-. e''4 dis''4 |
+  R2. |
+  R2. |
+  R2. |
+  R2. |
   % Bars 13-16
- gis''4-_) e''8-. dis''8-. cis''4~ |
- cis''8 dis''8-. e''8-. fis''8-. gis''8-. cis'''8-. |
- e'''4-. dis'''4-. cis'''4-. |
- cis'''4-. r4 r4 |
+  R2. |
+  R2. |
+  R2. |
+  R2. |
   % Bars 17-20
  R2. |
  R2. |
@@ -153,13 +153,13 @@ oboeTwoOpening = {
 oboeTwoBridge = {
   % Bars 117-120
  R2. |
- b'4) gis''4. gis''8 |
- gis''2.( |
- cis''2.) |
+  R2. |
+  R2. |
+  R2. |
   % Bars 121-124
- gis''4.( fis''8 e''8 dis''8 |
- cis''4 fis''4. cis''8 |
- b'2.~ |
+  R2. |
+  R2. |
+  R2. |
  r4 e'4( \p fis'4 |
   % Bars 125-128
  gis'4-.) gis'4-. gis'4-. |
@@ -180,11 +180,11 @@ oboeTwoBridge = {
  gis'4 \mp \pp r4 \mp \pp r4 |
  R2. |
  R2. |
- cis''2.) |
+  R2. |
   % Bars 141-144
- gis''4.( fis''8 e''8 dis''8 |
- cis''4 fis''4. cis''8 |
- b'2.~ |
+  R2. |
+  R2. |
+  R2. |
  r4 e'4( \p fis'4 |
   % Bars 145-148
  gis'4-.) gis'4-. gis'4-. |

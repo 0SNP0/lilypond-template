@@ -131,15 +131,15 @@ tromboneTwoOpening = {
   % Bars 101-104
  R2. |
  R2. |
- gis2.~ |
- gis2.~ |
+  R2. |
+  R2. |
   % Bars 105-108
- gis4 r4 r4 |
- gis2.~ \f |
- gis2.~ |
+  R2. |
+  R2. |
+  R2. |
  gis2. |
   % Bars 109-112
- gis4 r4 r4 |
+  R2. |
  R2. |
  R2. |
  R2. |

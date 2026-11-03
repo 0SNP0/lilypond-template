@@ -29,24 +29,6 @@ jobs:
         with:
           full_export: ${{ (startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.full_export)) && 'true' || 'false' }}
           source_tag: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: orchestra-${{ github.sha }}
-          path: |
-            dist/pdf/*.pdf
-            dist/audio/*.mp3
-            dist/audio/*.midi
-            dist/audio/stems/*.mp3
-            dist/packages/*.zip
-            dist/print-manifest.json
-            dist/viewer/index.html
-            dist/viewer/manifest.json
-            dist/viewer/timeline.json
-            dist/viewer/**/*.svg
-            dist/viewer/*.json
-          if-no-files-found: warn
-          retention-days: 14
   release:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: build
@@ -55,10 +37,6 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: orchestra-${{ github.sha }}
-          path: dist/
       - name: ScoreKit release
         uses: ./scorekit/actions/release
         with:

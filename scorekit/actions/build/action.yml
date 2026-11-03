@@ -63,3 +63,21 @@ runs:
             python3 scorekit/scripts/build.py build
             python3 scorekit/scripts/build.py package
           fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: orchestra-${{ github.sha }}
+          path: |
+            dist/pdf/*.pdf
+            dist/audio/*.mp3
+            dist/audio/*.midi
+            dist/audio/stems/*.mp3
+            dist/packages/*.zip
+            dist/print-manifest.json
+            dist/viewer/index.html
+            dist/viewer/manifest.json
+            dist/viewer/timeline.json
+            dist/viewer/**/*.svg
+            dist/viewer/*.json
+          if-no-files-found: warn
+          retention-days: 14

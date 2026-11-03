@@ -3,8 +3,8 @@
 % These voices intentionally use a single physical DrumStaff.
 percussionKitMusic = <<
   \new DrumVoice { \voiceOne \snareDrumMusic }
-  \new DrumVoice { \voiceThree \cymbalsMusic }
-  \new DrumVoice { \voiceTwo \bassDrumMusic }
+  \new DrumVoice { \voiceThree \omit MultiMeasureRest \cymbalsMusic }
+  \new DrumVoice { \voiceTwo \omit MultiMeasureRest \bassDrumMusic }
 >>
 percussionKitPlayback = <<
   \new DrumVoice { \voiceOne \snareDrumMusicPlayback }

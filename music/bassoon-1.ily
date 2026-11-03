@@ -4,52 +4,7 @@ bassoonOneOpening = {
   \key e \major
   \time 3/4
   % Bars 1-4
- R2. |
- R2. |
- R2. |
-  R2. |
-  % Bars 5-8
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 9-12
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 13-16
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 17-20
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 21-24
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 25-28
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 29-32
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 33-36
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 37-40
- R2. |
+ R2.*37 |
  gis2. _\markup \italic { "espr." }( \f ^\markup \italic { "I" } |
  gis2.~) \f |
  gis2.~ |
@@ -60,15 +15,7 @@ bassoonOneOpening = {
  gis2.( |
   % Bars 45-48
  gis4) \mf r4 r4 |
- R2. |
- R2. |
- R2. |
-  % Bars 49-52
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 53-56
+ R2.*7 |
  cis'2. _\markup \italic { "espr." }( \f |
  e'2.) |
  a2.( |
@@ -100,15 +47,7 @@ bassoonOneOpening = {
  a2.) |
   % Bars 77-80
  gis4 \ff r4 r4 |
- R2. |
- R2. |
- R2. |
-  % Bars 81-84
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 85-88
+ R2.*7 |
  dis4 ^\markup \italic { "I" } \f r4 r4 |
  gis,4 r4 r4 |
  cis4 r4 r4 |
@@ -167,16 +106,7 @@ bassoonOneBridge = {
  a'2 gis'4~ |
  gis'2~ gis'8 r8 |
   % Bars 129-132
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 133-136
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 137-140
+ R2.*8 |
  gis'2.~( \pp |
  gis'2. |
  e'2.~ |

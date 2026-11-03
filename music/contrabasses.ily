@@ -4,11 +4,7 @@ contrabassesOpening = {
   \key e \major
   \time 3/4
   % Bars 1–4
- R2. |
- R2. |
- R2. |
-  R2. |
-  % Bars 5–8
+ R2.*4 |
  cis4 \mf r4 r4 |
  e4 r4 r4 |
  a,4 r4 r4 |

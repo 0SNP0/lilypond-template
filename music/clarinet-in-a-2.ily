@@ -4,51 +4,7 @@ clarinetInATwoOpening = {
   \key g \major
   \time 3/4
   % Bars 1-4
- R2. |
- R2. |
- R2. |
-  R2. |
-  % Bars 5-8
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 9-12
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 13-16
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 17-20
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 21-24
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 25-28
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 29-32
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 33-36
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 37-40
+ R2.*36 |
  b'8( \f c''8 b'8 a'8 \> fis'8 dis'8 |
  b4) \mf r4 \f r4 |
  R2. \f |
@@ -64,41 +20,7 @@ clarinetInATwoOpening = {
  r4 r4 r4 |
  r4 r4 \f ^\markup \italic { "I" } r4 |
   % Bars 49-52
-  R2. |
-  R2. |
-  R2. |
-  R2. |
-  % Bars 53-56
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 57-60
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 61-64
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 65-68
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 69-72
- R2. |
-  R2. |
-  R2. |
-  R2. |
-  % Bars 73-76
-  R2. |
-  R2. |
-  R2. |
-  R2. |
-  % Bars 77-80
+ R2.*28 |
  g'4-. \ff r8 b'8-. e''4-. |
  g''4-. r8 fis''8-. e''4-. |
  c''4-. r8 e''8-. a''4-. |
@@ -107,18 +29,7 @@ clarinetInATwoOpening = {
  g''4-. r8 fis''8-. e''4-. |
  dis''4 r4 dis''4 |
  e''4 s2 |
- R2. |
-  % Bars 85-88
- R2. |
-  R2. |
-  R2. |
-  R2. |
-  % Bars 89-92
-  R2. |
-  R2. |
-  R2. |
-  R2. |
-  % Bars 93-96
+ R2.*9 |
  e''2.~ ^\markup \italic { "II" } ^\markup \italic { "I" } |
  e''4 f''4. e''8 |
  c'''2.~ |
@@ -131,14 +42,10 @@ clarinetInATwoOpening = {
   % Bars 101-104
  b'8 \ff c''8 b'8 a'8 fis'8 dis'8 |
  b4) s2 |
- R2. |
- R2. |
-  % Bars 105-108
+ R2.*2 |
  b'8( \ff c''8 b'8 a'8 fis'8 dis'8 |
  b4) s2 |
- R2. |
- R2. |
-  % Bars 109-112
+ R2.*2 |
  e''8( \ff f''8 e''8 d''8 b'8 gis'8 |
  e'4) s2 |
  R2. |
@@ -162,9 +69,7 @@ clarinetInATwoBridge = {
  b'2.~ |
  b'4) r4 r4 |
   % Bars 125-128
- R2. |
- R2. |
- R2. |
+ R2.*3 |
  r4 b'4( \mf cis''4 |
   % Bars 129-132
  d''4-.) d''4-. d''4-. |
@@ -187,9 +92,7 @@ clarinetInATwoBridge = {
  b'2.~ |
  b'4) r4 r4 |
   % Bars 145-148
- R2. |
- R2. |
- R2. |
+ R2.*3 |
  r4 e'4(( \mp fis'4 |
   % Bars 149-152
  g'4-.)) g'4-. g'4-. |

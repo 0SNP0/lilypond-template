@@ -63,6 +63,35 @@ runs:
             python3 scorekit/scripts/build.py build
             python3 scorekit/scripts/build.py package
           fi
+      # Keep the complete bundle and a separately named one-PDF artifact.
+      - name: Prepare standalone conductor score
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import shutil
+          import sys
+          from pathlib import Path
+
+          sys.path.insert(0, str(Path("scorekit/scripts").resolve()))
+          from build import PDF, ROOT, current_names
+
+          name = current_names()["score"] + ".pdf"
+          source = PDF / name
+          target = ROOT / "dist" / "standalone" / name
+          if not source.is_file():
+              raise SystemExit(f"Conductor score missing: {source}")
+          target.parent.mkdir(parents=True, exist_ok=True)
+          shutil.copy2(source, target)
+          print(f"Prepared standalone conductor PDF: {target}")
+          PY
+      - name: Upload conductor score separately
+        uses: actions/upload-artifact@v4
+        with:
+          name: conductor-score-${{ github.sha }}
+          path: dist/standalone/*.pdf
+          if-no-files-found: error
+          retention-days: 14
       - uses: actions/upload-artifact@v4
         if: always()
         with:

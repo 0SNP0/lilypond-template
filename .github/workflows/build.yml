@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       viewer:
-        description: "Also render optional SVG interactive score viewer"
+        description: "Viewer is built by default; option retained for compatibility"
         type: boolean
         required: false
         default: false
@@ -37,19 +37,19 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends fluidsynth ffmpeg python3-pypdf fonts-texgyre
-      - name: Download GeneralUser GS orchestra SoundFont
+      - name: Download MuseScore MS Basic SoundFont
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p soundfonts
-          curl --retry 3 -fLsS --output soundfonts/GeneralUser-GS.sf2 \
-            https://raw.githubusercontent.com/mrbumpy409/GeneralUser-GS/97049183643d5fc5a9322a69c5b09efb667c6c3a/GeneralUser-GS.sf2
-          test "$(stat -c %s soundfonts/GeneralUser-GS.sf2)" -gt 30000000
-          echo "GeneralUser GS SoundFont downloaded (revision 9704918)"
+          curl --retry 3 -fLsS --output soundfonts/MS_Basic.sf3 \
+            "https://raw.githubusercontent.com/musescore/MuseScore/0e44d8e1dd7e0cad1fac85915330c5225bd7882e/share/sound/MS%20Basic.sf3"
+          test "$(stat -c %s soundfonts/MS_Basic.sf3)" -gt 50000000
+          echo "MS Basic downloaded from MuseScore (pinned source revision)"
       - name: Build all PDF parts and MP3 tracks
         env:
           SOURCE_TAG: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
-          SOUNDFONT: soundfonts/GeneralUser-GS.sf2
+          SOUNDFONT: soundfonts/MS_Basic.sf3
           LILYPOND_EXPORT_VIEWER: ${{ inputs.viewer && '1' || '0' }}
         run: |
           python3 scripts/build.py build --audio
@@ -66,6 +66,11 @@ jobs:
             dist/packages/*.zip
             dist/print-manifest.json
             dist/timeline.csv
+            dist/timelines/*.csv
+            dist/viewer/index.html
+            dist/viewer/manifest.json
+            dist/viewer/timeline.json
+            dist/viewer/csv/*.csv
             dist/viewer/**/*.svg
             dist/viewer/*.json
           if-no-files-found: warn

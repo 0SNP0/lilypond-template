@@ -1,4 +1,29 @@
 \include "shared.ily"
+% Compact, vertically safe title for individual parts only.
+% Title, subtitle and credits occupy separate rows, with no overlays.
+ensemblePartBookTitle = \markup {
+  \override #'(fonts . ((serif . "TeX Gyre Pagella"))) {
+    \column {
+      \fill-line {
+        \null
+        \center-column {
+          \serif \bold \abs-fontsize #19 \fromproperty #'header:title
+          \vspace #0.08
+          \serif \italic \abs-fontsize #11 \fromproperty #'header:subtitle
+        }
+        \null
+      }
+      \vspace #0.35
+      \fill-line {
+        \null
+        \right-column {
+          \serif \abs-fontsize #9 \fromproperty #'header:composer
+          \serif \abs-fontsize #9 \fromproperty #'header:arranger
+        }
+      }
+    }
+  }
+}
 % The engraving engine may retry dense parts with smaller staves, but
 % default direct Frescobaldi previews keep the full 20 pt staff.
 #(set-global-staff-size
@@ -8,8 +33,8 @@
         20)))
 \paper {
   #(set-paper-size "a4")
-  top-margin = 15\mm
-  bottom-margin = 15\mm
+  top-margin = 11\mm
+  bottom-margin = 12\mm
   left-margin = 15\mm
   right-margin = 15\mm
   indent = 0\mm
@@ -23,12 +48,12 @@
     #'((basic-distance . 12) (minimum-distance . 9)
        (padding . 1) (stretchability . 0))
   markup-system-spacing =
-    #'((basic-distance . 9) (minimum-distance . 6)
+    #'((basic-distance . 7) (minimum-distance . 5)
        (padding . 1) (stretchability . 0))
   oddHeaderMarkup = \ensembleHeader
   evenHeaderMarkup = \ensembleHeader
   oddFooterMarkup = \ensembleFooter
   evenFooterMarkup = \ensembleFooter
-  bookTitleMarkup = \ensembleBookTitle
+  bookTitleMarkup = \ensemblePartBookTitle
 }
 % Set page-count inside a specific part .ly if it must occupy N pages.

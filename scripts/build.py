@@ -245,19 +245,19 @@ def build(*, audio: bool, font: str | None) -> None:
     for source in combined_parts():
         compile_lilypond(source, PDF / part_name(source, naming), rev)
     if audio:
+        validate_midi_programs(parts, naming)
         render_audio(parts, font, naming)
     verify(audio=audio)
     if audio:
-        run([sys.executable, str(ROOT / "scripts" / "timeline_csv.py")])
-    if audio and os.environ.get("LILYPOND_EXPORT_VIEWER") == "1":
         run([sys.executable, str(ROOT / "scripts" / "export.py")])
+        run([sys.executable, str(ROOT / "scripts" / "timeline_csv.py")])
 
 
 def locate_soundfont(override: str | None) -> Path:
     candidates = [
         override, os.environ.get("SOUNDFONT"),
-        str(ROOT / "soundfonts" / "GeneralUser-GS.sf2"),
         str(ROOT / "soundfonts" / "MS_Basic.sf3"),
+        str(ROOT / "soundfonts" / "GeneralUser-GS.sf2"),
         str(ROOT / "soundfonts" / "FluidR3_GM.sf2"),
         "/usr/share/sounds/sf2/FluidR3_GM.sf2",
     ]
@@ -265,6 +265,28 @@ def locate_soundfont(override: str | None) -> Path:
         if candidate and Path(candidate).is_file():
             return Path(candidate).resolve()
     raise RuntimeError("No SoundFont; use --soundfont PATH or SOUNDFONT")
+
+
+def validate_midi_programs(parts: list[Path], naming: dict[str, str]) -> None:
+    """Reject pitched MIDI stems that quietly fall back to GM piano."""
+    import export
+    for part in parts:
+        src = part.read_text(encoding="utf-8")
+        if r"\new DrumStaff" in src:
+            continue
+        instruments = re.findall(r'midiInstrument\s*=\s*"([^"]+)"', src)
+        if not instruments:
+            raise RuntimeError(f"Missing midiInstrument in {part}")
+        midi = BUILD / "midi" / (part_name(part, naming) + ".midi")
+        _division, events = export.midi_events(midi)
+        programs = {payload[1] for _tick, kind, _track, payload in events
+                    if kind == "channel" and (payload[0] & 0xF0) == 0xC0}
+        if not programs:
+            raise RuntimeError(f"No instrument program in MIDI {part}")
+        if 0 in programs and not any("piano" in x.lower() or
+                                      "acoustic grand" in x.lower() for x in instruments):
+            raise RuntimeError(f"Unexpected piano in {part}: {sorted(programs)}")
+        print(f"Checked MIDI {part.stem}: programs {sorted(programs)}")
 
 
 def render_audio(parts: list[Path], soundfont_path: str | None,
@@ -419,6 +441,8 @@ def package() -> None:
             for item in sorted(viewer.rglob("*")):
                 if item.is_file():
                     archive.write(item, str(item.relative_to(ROOT / "dist")))
+            for item in sorted((ROOT / "dist" / "timelines").glob("*.csv")):
+                archive.write(item, str(item.relative_to(ROOT / "dist")))
             archive.write(BUILD / "build-info.json", "build-info.json")
             mix = AUDIO / (naming["mix"] + ".mp3")
             archive.write(mix, f"audio/{mix.name}")

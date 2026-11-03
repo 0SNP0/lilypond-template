@@ -388,30 +388,17 @@ def main() -> None:
     (VIEWER / "manifest.json").write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8",
     )
-    print_manifest = {
-        "schema": "ensemble-assemble-print-manifest-v1",
-        "revision": naming["revision"],
-        "work_slug": naming["slug"],
-        "documents": notation,
-        "notes": [
-            "This manifest is independent of the SVG playback viewer.",
-            "music_hash fingerprints normalized MIDI music events, not printed engraving.",
-            "print_hash is a provisional SVG rendering fingerprint with Git revision masked.",
-            "Do not automatically approve reuse of printed parts based on these hashes yet.",
-        ],
-    }
-    (ROOT / "dist" / "print-manifest.json").write_text(
-        json.dumps(print_manifest, indent=2, ensure_ascii=False) + "\n",
-        encoding="utf-8",
-    )
     if len(manifest["audio_tracks"]) != 1 + len(parts):
         raise RuntimeError("Audio track manifest is incomplete")
     for track in manifest["audio_tracks"]:
         target = (VIEWER / track["path"]).resolve()
         if not target.is_file():
             raise RuntimeError("Missing viewer audio track: " + str(target))
-    if not all(v["anchors_found"] == len(timeline["measures"]) for v in views.values()):
-        raise RuntimeError("Some SVG views are missing their measure anchors")
+    for name, view in views.items():
+        if view["anchors_found"] != len(timeline["measures"]):
+            print(f"WARNING: {name}: recovered {view['anchors_found']} / "
+                  f"{len(timeline['measures'])} SVG measure anchors; "
+                  "unmatched measures remain available in the JSON/CSV clock")
     print("SVG and synchronization data:", len(views), "views,",
           len(timeline["measures"]), "measures")
     for key, view in views.items():

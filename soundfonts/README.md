@@ -1,14 +1,11 @@
-# Audio samples
+# Звуковые библиотеки
 
-CI fetches **GeneralUser GS** (revision `97049183643d5fc5a9322a69c5b09efb667c6c3a`)
-and uses FluidSynth with reverb, chorus, and MIDI articulation from LilyPond
-(`articulate.ly`). The library itself is intentionally not checked in.
+GitHub Actions скачивает официальный **MS Basic.sf3** из исходников
+[MuseScore Studio](https://github.com/musescore/MuseScore/tree/main/share/sound),
+коммит `0e44d8e1dd7e0cad1fac85915330c5225bd7882e`.
+Для локальной сборки положите `MS_Basic.sf3` сюда или задайте `SOUNDFONT`.
 
-For local builds, place `GeneralUser-GS.sf2` in this folder or set
-`SOUNDFONT` to another compatible GM/GS SoundFont.
+MS Basic — General MIDI SoundFont, совместимый с FluidSynth. Он не равен
+MuseSounds: те используют MuseSampler и не загружаются через FluidSynth.
 
-This is an expressive, freely distributable GM synthesizer workflow rather than
-the MuseSounds sampler engine. It does not claim a lifelike MuseSounds orchestral
-render. Refer to the GeneralUser GS licensing and attribution conditions before
-redistributing the sample bank itself:
-https://www.schristiancollins.com/generaluser
+Лицензия: https://github.com/musescore/MuseScore/blob/main/share/sound/MS%20Basic_License.md

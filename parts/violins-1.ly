@@ -5,5 +5,5 @@
 \include "../music/global.ily"
 \include "../layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Violins I" tagline = ##f }
-\score { \compressEmptyMeasures \new Staff \with { midiInstrument = "violin" } << { \global } { \rehearsalMarks } { \violinsOneMusic } >> \partPrintLayout }
+\score { \new Staff \with { midiInstrument = "violin" } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \violinsOneMusic } >> \partPrintLayout }
 \score { \articulate \new Staff \with { midiInstrument = "violin" } << { \globalPlayback } { \rehearsalMarksPlayback } { \violinsOneMusicPlayback } >> \midi { } }

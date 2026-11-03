@@ -9,5 +9,5 @@
 \include "../layout/part.ily"
 \paper { ragged-bottom = ##f ragged-last-bottom = ##f }
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Violins II" tagline = ##f }
-\score { \compressEmptyMeasures \new Staff \with { midiInstrument = "violin" } << { \global } { \rehearsalMarks } { \violinsTwoMusic } >> \partPrintLayout }
+\score { \new Staff \with { midiInstrument = "violin" } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \violinsTwoMusic } >> \partPrintLayout }
 \score { \articulate \new Staff \with { midiInstrument = "violin" } << { \globalPlayback } { \rehearsalMarksPlayback } { \violinsTwoMusicPlayback } >> \midi { } }

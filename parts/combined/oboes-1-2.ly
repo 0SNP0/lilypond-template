@@ -5,5 +5,5 @@
 \include "../../music/global.ily"
 \include "../../layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Oboes I–II" tagline = ##f }
-\score { \new Staff << { \global } { \rehearsalMarks } { \partCombine #'(0 . 0) { \oboeOneMusic } { \oboeTwoMusic } } >> \layout { } }
-\score { \new Staff << { \global } { \rehearsalMarks } { \partCombine #'(0 . 0) { \oboeOneMusic } { \oboeTwoMusic } } >> \midi { } }
+\score { \new Staff \with { printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \partCombine #'(0 . 0) { \oboeOneMusic } { \oboeTwoMusic } } >> \layout { } }
+\score { \new Staff \with { printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \partCombine #'(0 . 0) { \oboeOneMusic } { \oboeTwoMusic } } >> \midi { } }

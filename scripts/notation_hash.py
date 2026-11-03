@@ -47,8 +47,12 @@ def normalize(text: str, *, music_only: bool = False) -> str:
             lines.append(cleaned.strip())
     result = " ".join(" ".join(lines).split())
     if music_only:
-        result = re.sub(r"R2\.\*(\d+)\s*\|",
-                        lambda m: " ".join(["R2. |"] * int(m.group(1))), result)
+        # Rests and silent rehearsal clocks can change textual grouping
+        # without changing even one sounding or expressive event.
+        for symbol in ("R2.", "s2."):
+            result = re.sub(re.escape(symbol) + r"\*(\d+)\s*\|",
+                            lambda m: " ".join([symbol + " |"] * int(m.group(1))),
+                            result)
     return result
 
 def _digest(version: str, fields: list[tuple[str, str]]) -> str:

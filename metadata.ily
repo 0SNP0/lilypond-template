@@ -34,3 +34,10 @@ buildRevision = #(let ((from-build (getenv "SCORE_BUILD_REVISION")))
                        from-build
                        (ea-git-revision)))
 footerLabel = #(string-append orchestraName " · " buildRevision)
+
+% The work's single performance-form rule. Every instrumental Opening/Bridge
+% is passed here; the order is defined once rather than repeated per player.
+% Printed Fine / D.C. and playback-map.json must agree with this form.
+scorePlayback = #(define-music-function (opening bridge)
+  (ly:music? ly:music?)
+  #{ $opening $bridge $opening #})

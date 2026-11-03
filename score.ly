@@ -2,7 +2,7 @@
 % Open THIS file in Frescobaldi or VS Code to preview the full score.
 \include "orchestra.ily"
 \include "music/global.ily"
-\include "layout/score.ily"
+\include "scorekit/lilypond/layout/score.ily"
 \include "articulate.ly"
 
 \header {

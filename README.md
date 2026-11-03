@@ -30,6 +30,16 @@
 | Авторские права | Copyright belongs to the respective rightsholders |
 <!-- SCORE-METADATA:END -->
 
+## Фреймворк сборки
+
+Универсальная часть проекта находится в [ScoreKit](scorekit/): сборка и экспорт, оформление LilyPond, CI/CD-компоненты, просмотрщик и [общие инструкции](scorekit/docs/PROJECT_GUIDE.md). В корне остаются только музыкальное произведение, минимальный workflow GitHub Actions и его документация. Каталог `scorekit/` подготовлен для последующего перевода в Git-сабмодуль без изменения расположения.
+
+```bash
+python3 scorekit/scripts/check_music_structure.py
+python3 scorekit/scripts/build.py build
+python3 scorekit/scripts/build.py package
+```
+
 ## Работа над партитурой
 
 [Транспонированная партитура](score.ly) · [Концертный строй](concert-score.ly) · [Порядок инструментов](orchestra.ily) · [Метаданные](metadata.ily).

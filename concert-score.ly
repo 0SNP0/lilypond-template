@@ -2,7 +2,7 @@
 % Concert pitch edition, sharing exactly the same orchestra.ily source.
 \include "orchestra.ily"
 \include "music/global.ily"
-\include "layout/score.ily"
+\include "scorekit/lilypond/layout/score.ily"
 
 \header {
   title = \workTitle

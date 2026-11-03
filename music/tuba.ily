@@ -199,4 +199,4 @@ tubaBridge = {
 }
 
 tubaMusic = { \tubaOpening \tubaBridge }
-tubaMusicPlayback = { \tubaOpening \tubaBridge \tubaOpening }
+tubaMusicPlayback = \scorePlayback \tubaOpening \tubaBridge

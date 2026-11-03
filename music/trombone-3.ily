@@ -199,4 +199,4 @@ tromboneThreeBridge = {
 }
 
 tromboneThreeMusic = { \tromboneThreeOpening \tromboneThreeBridge }
-tromboneThreeMusicPlayback = { \tromboneThreeOpening \tromboneThreeBridge \tromboneThreeOpening }
+tromboneThreeMusicPlayback = \scorePlayback \tromboneThreeOpening \tromboneThreeBridge

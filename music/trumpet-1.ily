@@ -199,4 +199,4 @@ trumpetOneBridge = {
 }
 
 trumpetOneMusic = { \trumpetOneOpening \trumpetOneBridge }
-trumpetOneMusicPlayback = { \trumpetOneOpening \trumpetOneBridge \trumpetOneOpening }
+trumpetOneMusicPlayback = \scorePlayback \trumpetOneOpening \trumpetOneBridge

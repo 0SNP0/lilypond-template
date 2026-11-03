@@ -201,4 +201,4 @@ violasBridge = {
 }
 
 violasMusic = { \violasOpening \violasBridge }
-violasMusicPlayback = { \violasOpening \violasBridge \violasOpening }
+violasMusicPlayback = \scorePlayback \violasOpening \violasBridge

@@ -200,4 +200,4 @@ violinsOneBridge = {
 }
 
 violinsOneMusic = { \violinsOneOpening \violinsOneBridge }
-violinsOneMusicPlayback = { \violinsOneOpening \violinsOneBridge \violinsOneOpening }
+violinsOneMusicPlayback = \scorePlayback \violinsOneOpening \violinsOneBridge

@@ -200,4 +200,4 @@ trumpetThreeBridge = {
 }
 
 trumpetThreeMusic = { \trumpetThreeOpening \trumpetThreeBridge }
-trumpetThreeMusicPlayback = { \trumpetThreeOpening \trumpetThreeBridge \trumpetThreeOpening }
+trumpetThreeMusicPlayback = \scorePlayback \trumpetThreeOpening \trumpetThreeBridge

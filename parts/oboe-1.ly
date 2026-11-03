@@ -5,5 +5,5 @@
 \include "../music/oboe-1.ily"
 \include "../layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Oboe I" tagline = ##f }
-\score { \new Staff \with { midiInstrument = "oboe" } << { \global } { \rehearsalMarks } { \oboeOneMusic } >> \layout { } }
+\score { \new Staff \with { midiInstrument = "oboe" } << { \global } { \rehearsalMarks } { \oboeOneMusic } >> \partPrintLayout }
 \score { \articulate \new Staff \with { midiInstrument = "oboe" } << { \globalPlayback } { \rehearsalMarksPlayback } { \oboeOneMusicPlayback } >> \midi { } }

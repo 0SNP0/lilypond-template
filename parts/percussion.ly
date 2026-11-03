@@ -11,7 +11,7 @@
           composer = \composerCredit instrument = "Percussion" tagline = ##f }
 \score {
   \new DrumStaff << { \global } { \rehearsalMarks } \percussionKitMusic >>
-  \layout { }
+  \partPrintLayout
 }
 \score {
   \new DrumStaff << { \globalPlayback } { \rehearsalMarksPlayback } \percussionKitPlayback >>

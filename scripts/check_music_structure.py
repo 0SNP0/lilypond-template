@@ -123,6 +123,14 @@ def main() -> None:
     if '\\bar "||"' not in printed_global:
         raise ValueError("Missing double barline at the end of the printed score")
 
+    # Check that the single printed percussion voice still matches the three
+    # canonical editable drum streams.
+    import subprocess
+    import sys
+    if (MUSIC / "percussion.ily").is_file():
+        subprocess.run([sys.executable, str(ROOT / "scripts" / "merge_percussion.py"),
+                        "--check"], check=True)
+
     print(f"Music checked: {len(music_files)} sources, {printed} printed bars, "
           f"{sum(s['end']-s['start']+1 for s in sections)} playback bars")
 

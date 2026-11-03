@@ -16,7 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MUSIC = ROOT / "music"
 OUTPUT = MUSIC / "percussion.ily"
-STROKES = re.compile(r"(<(?:sn|cymc|bd)(?: (?:sn|cymc|bd))*>|\b(?:sn|cymc|bd|r))(2\.|4|8)")
+STROKES = re.compile(r"(<[a-z][a-z0-9]*(?: [a-z][a-z0-9]*)*>|\b[a-z][a-z0-9]*)(2\.|4|8)")
 DURATIONS = {"8": 1, "4": 2, "2.": 6}
 DYNAMICS = re.compile(r"\\(pp|mp|mf|ff|sf|p|f)\b")
 MARKUP = re.compile(r'\\markup\s+\\italic\s+\{\s*"([^"]+)"\s*\}')
@@ -87,17 +87,17 @@ def combine(lines: list[str]) -> str:
         names = list(dict.fromkeys(e[2] for e in voices))
         note = names[0] if len(names) == 1 else "<" + " ".join(names) + ">"
         suffix = ("2." if duration == 6 else "4" if duration == 2 else "8")
-        articulation = ("-^" if any(e[2] == "sn" and "-^" in e[3] for e in voices)
-                        else "-!" if any(e[2] == "cymc" and "-!" in e[3]
-                                         for e in voices) else "")
+        articulation = ("-^" if any("-^" in e[3] for e in voices)
+                        else "-!" if any("-!" in e[3] for e in voices) else "")
         rendered = note + suffix + articulation
         if not any(re.match(r"(?:sn|cymc|bd|<)", n) for n in output):
             if dynamics:
                 rendered += " \\" + min(dynamics)[1]
             if labels:
                 rendered += ' ^\\markup \\italic { "' + "; ".join(labels) + '" }'
-            if r"\acciaccatura" in lines[0]:
-                rendered = r"\acciaccatura { sn16 } " + rendered
+            grace = re.search(r"\\acciaccatura\s*\{[^{}]*\}", " ".join(lines))
+            if grace:
+                rendered = grace.group(0) + " " + rendered
             if r"\<" in lines[0]:
                 rendered += r" \<"
         output.append(rendered)

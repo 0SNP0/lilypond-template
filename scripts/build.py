@@ -261,17 +261,23 @@ def build(*, audio: bool, font: str | None) -> None:
     print("Revision:", rev)
     compile_lilypond(ROOT / "score.ly", PDF / naming["score"], rev, score=True)
     score_midi = PDF / (naming["score"] + ".midi")
-    if not score_midi.is_file():
-        raise RuntimeError("Score did not emit orchestra MIDI")
-    shutil.move(str(score_midi), str(AUDIO / (naming["mix"] + ".midi")))
+    if audio:
+        if not score_midi.is_file():
+            raise RuntimeError("Score did not emit orchestra MIDI")
+        shutil.move(str(score_midi), str(AUDIO / (naming["mix"] + ".midi")))
+    elif score_midi.is_file():
+        score_midi.unlink()  # PDF-only CI must not export MIDI
     compile_lilypond(ROOT / "concert-score.ly", PDF / naming["concert"], rev, score=True)
     for source in parts:
         stem = part_name(source, naming)
         compile_lilypond(source, PDF / stem, rev)
         midi = PDF / (stem + ".midi")
-        if not midi.is_file():
-            raise RuntimeError(f"No concert-pitch MIDI from part {source.name}")
-        shutil.move(str(midi), str(BUILD / "midi" / midi.name))
+        if audio:
+            if not midi.is_file():
+                raise RuntimeError(f"No concert-pitch MIDI from part {source.name}")
+            shutil.move(str(midi), str(BUILD / "midi" / midi.name))
+        elif midi.is_file():
+            midi.unlink()  # Keep PDF-only artifact clean
     # PDF-only paired parts; do not duplicate these voices in the audio mix.
     for source in combined_parts():
         compile_lilypond(source, PDF / part_name(source, naming), rev)
@@ -377,8 +383,9 @@ def verify(*, audio: bool = False) -> None:
         data = (PDF / name).read_bytes()
         if not data.startswith(b"%PDF"):
             raise RuntimeError(f"Invalid PDF {name}")
-    if not (AUDIO / (naming["mix"] + ".midi")).read_bytes().startswith(b"MThd"):
-        raise RuntimeError("Invalid orchestra MIDI")
+    if audio:
+        if not (AUDIO / (naming["mix"] + ".midi")).read_bytes().startswith(b"MThd"):
+            raise RuntimeError("Invalid orchestra MIDI")
     try:
         from pypdf import PdfReader
     except ImportError:

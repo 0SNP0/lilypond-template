@@ -5,5 +5,5 @@
 \include "../../music/global.ily"
 \include "../../layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Horns in F II & IV" tagline = ##f }
-\score { \compressEmptyMeasures \new Staff \with { printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \partCombine #'(0 . 0) { \hornTwoMusic } { \hornFourMusic } } >> \partPrintLayout }
+\score { \new Staff \with { printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \partCombine #'(0 . 0) { \hornTwoMusic } { \hornFourMusic } } >> \partPrintLayout }
 \score { \new Staff \with { printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \partCombine #'(0 . 0) { \hornTwoMusic } { \hornFourMusic } } >> \midi { } }

@@ -1,0 +1,23 @@
+name: ScoreKit publish release
+description: Publish score PDFs and archives for a Git release tag
+inputs:
+  tag:
+    description: Exact tag to publish
+    required: true
+runs:
+  using: composite
+  steps:
+      - name: Publish PDF files and archives
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; upload or replace assets"
+            gh release upload "$TAG" dist/pdf/*.pdf dist/packages/*.zip --clobber
+          else
+            echo "Create release $TAG with compiled assets"
+            gh release create "$TAG" dist/pdf/*.pdf dist/packages/*.zip --verify-tag --generate-notes --title "$TAG"
+          fi

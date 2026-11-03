@@ -1,0 +1,64 @@
+name: ScoreKit build and export
+description: Reusable LilyPond PDF/MIDI/MP3/SVG build steps
+inputs:
+  full_export:
+    description: Whether to build audio and the interactive viewer
+    required: false
+    default: 'false'
+  source_tag:
+    description: Release tag to verify when publishing
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+      - name: Install official latest stable LilyPond
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # Authenticate GitHub API requests to avoid unauthenticated rate limits.
+          version="$(gh api repos/lilypond/lilypond/releases/latest --jq '.tag_name' | sed 's/^v//')"
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Invalid LilyPond release version: $version"; exit 1; }
+          url="https://gitlab.com/lilypond/lilypond/-/releases/v${version}/downloads/lilypond-${version}-linux-x86_64.tar.gz"
+          curl --retry 3 -fLsS "$url" -o "$RUNNER_TEMP/lilypond.tar.gz"
+          tar -xzf "$RUNNER_TEMP/lilypond.tar.gz" -C "$RUNNER_TEMP"
+          test -x "$RUNNER_TEMP/lilypond-${version}/bin/lilypond"
+          echo "$RUNNER_TEMP/lilypond-${version}/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/lilypond-${version}/bin/lilypond" --version | head -n 1
+      - name: Install PDF validation dependencies
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends python3-pypdf fonts-texgyre
+      - name: Install audio dependencies
+        if: ${{ inputs.full_export == 'true' }}
+        run: sudo apt-get install -y --no-install-recommends fluidsynth ffmpeg
+      - name: Download MuseScore MS Basic SoundFont
+        if: ${{ inputs.full_export == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p soundfonts
+          curl --retry 3 -fLsS --output soundfonts/MS_Basic.sf3 \
+            "https://raw.githubusercontent.com/musescore/MuseScore/0e44d8e1dd7e0cad1fac85915330c5225bd7882e/share/sound/MS%20Basic.sf3"
+          test "$(stat -c %s soundfonts/MS_Basic.sf3)" -gt 50000000
+      - name: Validate printed/playback repeat structure
+        shell: bash
+        run: python3 scorekit/scripts/check_music_structure.py
+      - name: Build PDF and package (full export only on request or tag)
+        env:
+          SOURCE_TAG: ${{ inputs.source_tag }}
+          SOUNDFONT: soundfonts/MS_Basic.sf3
+          FULL_EXPORT: ${{ inputs.full_export == 'true' && '1' || '0' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$FULL_EXPORT" == "1" ]]; then
+            python3 scorekit/scripts/build.py build --audio
+            python3 scorekit/scripts/build.py package --full
+          else
+            python3 scorekit/scripts/build.py build
+            python3 scorekit/scripts/build.py package
+          fi

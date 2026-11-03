@@ -199,4 +199,4 @@ fluteTwoBridge = {
 }
 
 fluteTwoMusic = { \fluteTwoOpening \fluteTwoBridge }
-fluteTwoMusicPlayback = { \fluteTwoOpening \fluteTwoBridge \fluteTwoOpening }
+fluteTwoMusicPlayback = \scorePlayback \fluteTwoOpening \fluteTwoBridge

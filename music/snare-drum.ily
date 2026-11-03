@@ -199,4 +199,4 @@ snareDrumBridge = \drummode {
 }
 
 snareDrumMusic = { \snareDrumOpening \snareDrumBridge }
-snareDrumMusicPlayback = { \snareDrumOpening \snareDrumBridge \snareDrumOpening }
+snareDrumMusicPlayback = \scorePlayback \snareDrumOpening \snareDrumBridge

@@ -199,4 +199,4 @@ piccoloBridge = {
 }
 
 piccoloMusic = { \piccoloOpening \piccoloBridge }
-piccoloMusicPlayback = { \piccoloOpening \piccoloBridge \piccoloOpening }
+piccoloMusicPlayback = \scorePlayback \piccoloOpening \piccoloBridge

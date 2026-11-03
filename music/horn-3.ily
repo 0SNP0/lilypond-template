@@ -199,4 +199,4 @@ hornThreeBridge = {
 }
 
 hornThreeMusic = { \hornThreeOpening \hornThreeBridge }
-hornThreeMusicPlayback = { \hornThreeOpening \hornThreeBridge \hornThreeOpening }
+hornThreeMusicPlayback = \scorePlayback \hornThreeOpening \hornThreeBridge

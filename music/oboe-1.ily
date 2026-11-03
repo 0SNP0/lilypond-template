@@ -199,4 +199,4 @@ oboeOneBridge = {
 }
 
 oboeOneMusic = { \oboeOneOpening \oboeOneBridge }
-oboeOneMusicPlayback = { \oboeOneOpening \oboeOneBridge \oboeOneOpening }
+oboeOneMusicPlayback = \scorePlayback \oboeOneOpening \oboeOneBridge

@@ -535,11 +535,9 @@ def package(*, full: bool = False) -> None:
                 for item in sorted(viewer.rglob("*")):
                     if item.is_file():
                         archive.write(item, str(item.relative_to(ROOT / "dist")))
+                # Keep viewer data small: media is distributed in the audio ZIP
+                # and loaded by the browser only after a track is selected.
                 archive.write(BUILD / "build-info.json", "build-info.json")
-                mix = AUDIO / (naming["mix"] + ".mp3")
-                archive.write(mix, f"audio/{mix.name}")
-                for stem in sorted((AUDIO / "stems").glob("*.mp3")):
-                    archive.write(stem, f"audio/stems/{stem.name}")
     print("Ready:", naming["pdf_zip"], *( [naming["audio_zip"]] if full else [] ))
 
 

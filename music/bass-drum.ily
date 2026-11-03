@@ -69,7 +69,7 @@ bassDrumOpening = \drummode {
  R2. |
  R2. |
   % Bars 53–56
- bd4 \mf r4 r4 |
+ bd4 \tweak transparent ##t \mf r4 r4 |
  bd4 r4 r4 |
  bd4 r4 r4 |
  bd4 r4 r4 |
@@ -99,7 +99,7 @@ bassDrumOpening = \drummode {
  bd4 r4 r4 |
  bd4 r4 r4 |
   % Bars 77–80
- bd4 \f r4 r4 |
+ bd4 \tweak transparent ##t \f r4 r4 |
  R2. |
  bd4 r4 r4 |
  R2. |

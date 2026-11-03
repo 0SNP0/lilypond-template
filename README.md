@@ -1,7 +1,7 @@
 # The Snowstorm — Waltz
 
 [![Build](https://github.com/0SNP0/lilypond-template/actions/workflows/build.yml/badge.svg)](https://github.com/0SNP0/lilypond-template/actions/workflows/build.yml)
-[![Releases](https://img.shields.io/github/v/release/0SNP0/lilypond-template?label=latest%20release)](https://github.com/0SNP0/lilypond-template/releases/latest)
+[![Releases](https://img.shields.io/badge/Releases-view%20releases-2f6fbd?logo=github)](https://github.com/0SNP0/lilypond-template/releases)
 
 ## Партитура и партии
 
@@ -13,9 +13,9 @@
 
 ## Сведения о произведении
 
+<!-- SCORE-METADATA:START -->
 | Поле | Значение |
 |---|---|
-<!-- SCORE-METADATA:START -->
 | Произведение | The Snowstorm |
 | Короткое имя файлов | sviridov-snowstorm-waltz |
 | Подзаголовок | Waltz |

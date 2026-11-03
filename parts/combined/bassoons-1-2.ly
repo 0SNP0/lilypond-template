@@ -2,9 +2,8 @@
 \include "../../metadata.ily"
 \include "../../music/bassoon-1.ily"
 \include "../../music/bassoon-2.ily"
-\include "../../music/paired.ily"
 \include "../../music/global.ily"
 \include "../../layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Bassoons I–II" tagline = ##f }
-\score { \new Staff << { \global } { \rehearsalMarks } { \bassoonsTogether } >> \layout { } }
-\score { \new Staff << { \global } { \rehearsalMarks } { \bassoonsTogether } >> \midi { } }
+\score { \new Staff << { \global } { \rehearsalMarks } { \partCombine #'(0 . 0) { \bassoonOneMusic } { \bassoonTwoMusic } } >> \layout { } }
+\score { \new Staff << { \global } { \rehearsalMarks } { \partCombine #'(0 . 0) { \bassoonOneMusic } { \bassoonTwoMusic } } >> \midi { } }

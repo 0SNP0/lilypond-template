@@ -321,18 +321,19 @@ def main() -> None:
         elif kind == "combined":
             # Resolve musical dependencies from the part's own LilyPond
             # include statements, not a hardcoded list of instrument names.
-            includes = re.findall(
-                r'\\include\s+"(?:\\.\\./)+music/([^"]+)"',
-                part.read_text(encoding="utf-8"),
-            )
-            sources = [
-                ROOT / "music" / name for name in includes
-                if name not in ("global.ily", "paired.ily")
-            ]
-            if not sources or any(not path.is_file() for path in sources):
+            # Resolve includes against the actual combined part directory.
+            # Previous regex over-escaped "../.." and never found music files.
+            includes = re.findall(r'\\include\s+"([^"]+)"',
+                                  part.read_text(encoding="utf-8"))
+            music_sources = [(part.parent / relative).resolve()
+                             for relative in includes
+                             if (part.parent / relative).resolve().parent == ROOT / "music"
+                             and Path(relative).name not in ("global.ily", "paired.ily")]
+            if not music_sources or any(not path.is_file() for path in music_sources):
                 raise RuntimeError("Combined part music sources missing: " + str(part))
+
             music_hash = digest(json.dumps(
-                [digest(path.read_bytes()) for path in sources],
+                [digest(path.read_bytes()) for path in music_sources],
                 separators=(",", ":"),
             ).encode())
         else:

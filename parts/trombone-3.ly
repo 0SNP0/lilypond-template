@@ -5,5 +5,5 @@
 \include "../music/trombone-3.ily"
 \include "../layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Trombone III" tagline = ##f }
-\score { \new Staff \with { midiInstrument = "trombone" } << { \global } { \rehearsalMarks } { \tromboneThreeMusic } >> \layout { } }
+\score { \new Staff \with { midiInstrument = "trombone" } << { \global } { \rehearsalMarks } { \tromboneThreeMusic } >> \partPrintLayout }
 \score { \articulate \new Staff \with { midiInstrument = "trombone" } << { \globalPlayback } { \rehearsalMarksPlayback } { \tromboneThreeMusicPlayback } >> \midi { } }

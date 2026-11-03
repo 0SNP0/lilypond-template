@@ -5,5 +5,5 @@
 \include "../music/global.ily"
 \include "../layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Trumpet in B-flat III" tagline = ##f }
-\score { \new Staff \with { midiInstrument = "trumpet" } << { \global } { \rehearsalMarks } { \trumpetThreeMusic } >> \layout { } }
+\score { \new Staff \with { midiInstrument = "trumpet" } << { \global } { \rehearsalMarks } { \trumpetThreeMusic } >> \partPrintLayout }
 \score { \articulate \new Staff \with { midiInstrument = "trumpet" } << { \globalPlayback } { \rehearsalMarksPlayback } { \transpose c bes, \trumpetThreeMusicPlayback } >> \midi { } }

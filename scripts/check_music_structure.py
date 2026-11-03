@@ -123,6 +123,12 @@ def main() -> None:
     if '\\bar "||"' not in printed_global:
         raise ValueError("Missing double barline at the end of the printed score")
 
+    # A printed D.C./Fine mark must define the real MIDI traversal.
+    import subprocess
+    import sys
+    subprocess.run([sys.executable, str(ROOT / "scripts" / "navigation.py"),
+                    "--check"], check=True)
+
     # Check that the single printed percussion voice still matches the three
     # canonical editable drum streams.
     import subprocess

@@ -73,3 +73,14 @@ overflows, the builder can reduce the chosen part size in 0.5 pt steps.
 третья страница или переполнение. Обе страницы растягиваются по высоте,
 а выбранное значение выводится в лог сборки. `page-count` намеренно не
 используется: он скрывал недостаточно заполненную последнюю страницу.
+
+
+## Навигация D.C. / Fine из партитуры
+
+scripts/navigation.py --check сверяет печатные Fine / D.C. al Fine с
+music/playback-map.json, числом тактов MIDI и центральной функцией playback.
+После изменения надписей в music/global.ily выполните
+python3 scripts/navigation.py --write, затем сохраните обновлённые файлы.
+CI автоматически проверяет синхронизацию. Поддержаны линейная форма,
+D.C. и D.C. al Fine. Сложные D.S./Coda/volta требуют отдельных секций
+или нативного LilyPond repeat segno и намеренно не угадываются.

@@ -11,7 +11,11 @@ runs:
         with:
           name: score-pdf-${{ github.sha }}
           path: .
-      - name: Publish PDF files and archives
+      - uses: actions/download-artifact@v4
+        with:
+          name: score-media-${{ github.sha }}
+          path: .
+      - name: Publish PDFs and three release bundles
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -20,8 +24,8 @@ runs:
         run: |
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "Release $TAG already exists; upload or replace assets"
-            gh release upload "$TAG" dist/pdf/*.pdf dist/packages/*-pdf-*.zip --clobber
+            gh release upload "$TAG" dist/pdf/*.pdf dist/packages/*-pdf-*.zip dist/packages/*-audio-*.zip dist/packages/*-viewer-*.zip --clobber
           else
             echo "Create release $TAG with compiled assets"
-            gh release create "$TAG" dist/pdf/*.pdf dist/packages/*-pdf-*.zip --verify-tag --generate-notes --title "$TAG"
+            gh release create "$TAG" dist/pdf/*.pdf dist/packages/*-pdf-*.zip dist/packages/*-audio-*.zip dist/packages/*-viewer-*.zip --verify-tag --generate-notes --title "$TAG"
           fi

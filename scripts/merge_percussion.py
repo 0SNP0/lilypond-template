@@ -145,8 +145,14 @@ def main() -> None:
         raise ValueError("Percussion print is not one drummode voice")
     actual = []
     for line in opening.group(1).splitlines():
-        if line.strip().endswith("|"):
-            actual.append(line.strip())
+        row = line.strip()
+        if not row.endswith("|"):
+            continue
+        group = re.fullmatch(r"R2\.\*(\d+)\s*\|", row)
+        if group:
+            actual.extend(["R2. |"] * int(group.group(1)))
+        else:
+            actual.append(row)
     if args.check:
         if len(actual) != len(expected):
             raise ValueError(f"Expected {len(expected)} print measures, got {len(actual)}")
@@ -159,10 +165,24 @@ def main() -> None:
                 raise ValueError(f"Percussion merged attack mismatch in bar {i}: {a}")
         print(f"Percussion validated: one voice, {len(expected)} measures")
     if args.write:
-        body = "\n".join(
-            f"  % Bars {i+1}–{min(i+4, len(expected))}\n" +
-            "\n".join("  " + b for b in expected[i:i+4])
-            for i in range(0, len(expected), 4))
+        print_rows = []
+        number = 0
+        while number < len(expected):
+            if expected[number] == "R2. |":
+                stop = number
+                while stop < len(expected) and expected[stop] == "R2. |":
+                    stop += 1
+                length = stop - number
+                if length > 1:
+                    print_rows.append(f"  % Bars {number+1}–{stop}")
+                    print_rows.append(f"  R2.*{length} |")
+                    number = stop
+                    continue
+            if number % 4 == 0:
+                print_rows.append(f"  % Bars {number+1}–{min(number+4, len(expected))}")
+            print_rows.append("  " + expected[number])
+            number += 1
+        body = "\n".join(print_rows)
         replacement = (r"percussionKitMusic = \drummode {" +
                        "\n  \\clef percussion\n  \\time 3/4\n" + body + "\n}")
         rebuilt = original[:opening.start()] + replacement + original[opening.end():]

@@ -7,68 +7,7 @@ snareDrumOpening = \drummode {
  sn8-^ \f sn8-^ sn4-^ r4 |
  sn8-^ \f sn8-^ sn4-^ r4 |
  sn8-^ \f sn8-^ sn4-^ r4 |
-  R2. |
-  % Bars 5–8
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 9–12
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 13–16
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 17–20
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 21–24
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 25–28
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 29–32
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 33–36
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 37–40
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 41–44
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 45–48
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 49–52
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 53–56
+ R2.*49 |
  r4 \mf sn4 sn4 |
  r4 sn4 sn4 |
  r4 sn4 sn4 |
@@ -152,50 +91,7 @@ snareDrumOpening = \drummode {
 
 snareDrumBridge = \drummode {
   % Bars 117–120
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 121–124
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 125–128
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 129–132
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 133–136
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 137–140
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 141–144
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 145–148
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 149–152
- R2. |
- R2. |
- R2. |
- R2. |
+ R2.*36 |
 }
 
 snareDrumMusic = { \snareDrumOpening \snareDrumBridge }

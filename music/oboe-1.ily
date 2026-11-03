@@ -4,11 +4,7 @@ oboeOneOpening = {
   \key e \major
   \time 3/4
   % Bars 1-4
- R2. |
- R2. |
- R2. |
-  R2. |
-  % Bars 5-8
+ R2.*4 |
  gis''4-. ^\markup \italic { "I" } \mf e''8-. dis''8-. cis''4~ |
  cis''8 dis''8-. e''8-. fis''8-. gis''8-. cis'''8-. |
  e'''4-. dis'''4-. cis'''4-. |
@@ -24,51 +20,7 @@ oboeOneOpening = {
  e'''4-. dis'''4-. cis'''4-. |
  cis'''4-. r4 r4 |
   % Bars 17-20
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 21-24
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 25-28
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 29-32
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 33-36
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 37-40
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 41-44
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 45-48
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 49-52
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 53-56
+ R2.*36 |
  cis''2. _\markup \italic { "espr." }( \f |
  e''2.) |
  a'2.( |
@@ -107,45 +59,16 @@ oboeOneOpening = {
  gis''4-. r8 fis''8-. e''4-. |
  dis''4-. r8 e''8-. dis''4-. |
  cis''4 r4 r4 |
- R2. |
-  % Bars 85-88
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 89-92
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 93-96
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 97-100
- R2. |
- R2. |
- R2. |
- R2. |
-  % Bars 101-104
+ R2.*17 |
  gis''8( \ff a''8 gis''8 fis''8 dis''8 bis'8 |
  gis'4) r4 \f r4 |
- R2. |
- R2. |
-  % Bars 105-108
+ R2.*2 |
  gis''8( \ff a''8 gis''8 fis''8 dis''8 bis'8 |
  gis'4) r4 r4 |
- R2. |
- R2. |
-  % Bars 109-112
+ R2.*2 |
  cis'''8( \ff d'''8 cis'''8 b''8 gis''8 eis''8 |
  cis''4) r4 r4 |
- R2. |
- R2. |
-  % Bars 113-116
- R2. |
- R2. |
+ R2.*4 |
  e''8( \ff gis''8) gis''4-. fis''4-. |
  e''4-. r4 r4 |
 }
@@ -168,13 +91,9 @@ oboeOneBridge = {
  gis'2~ gis'8 r8 |
   % Bars 129-132
  r4 \mf r4 r4 |
- R2. |
- R2. |
- R2. |
-  % Bars 133-136
+ R2.*3 |
  R2. \p |
- R2. |
- R2. |
+ R2.*2 |
  R2. \> |
   % Bars 137-140
  b'4. _\markup \italic { "espr." }( \mp \pp cis''8 \mp \pp gis'8 cis''8 |
@@ -192,10 +111,7 @@ oboeOneBridge = {
  dis''4-.) \mp dis''4-. dis''4-. |
  dis''4-. r4 r4 |
   % Bars 149-152
- R2. |
- R2. |
- R2. |
- R2. |
+ R2.*4 |
 }
 
 oboeOneMusic = { \oboeOneOpening \oboeOneBridge }

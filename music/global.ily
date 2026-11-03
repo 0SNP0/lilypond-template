@@ -149,7 +149,7 @@ rehearsalMarks = {
   s2. |
   s2. |
   s2. |
-  s2. \mark \markup \box \bold "Fine" |
+  s2. \textEndMark \markup \bold "Fine" |
   % Bars 117–120
   \mark \markup \box \bold \abs-fontsize #14 "19" s2. |
   s2. |
@@ -194,7 +194,7 @@ rehearsalMarks = {
   s2. |
   s2. |
   s2. |
-  s2. \mark \markup \box \bold "D.C. al Fine" |
+  s2. \textEndMark \markup \bold "D.C. al Fine" |
 }
 rehearsalMarksPlayback = {
   \tempo 2. = 66

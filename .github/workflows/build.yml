@@ -23,6 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          submodules: recursive
           fetch-depth: 0
       - name: ScoreKit build
         uses: ./scorekit/actions/build
@@ -37,6 +38,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - name: ScoreKit release
         uses: ./scorekit/actions/release
         with:

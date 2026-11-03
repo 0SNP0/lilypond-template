@@ -16,7 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MUSIC = ROOT / "music"
 OUTPUT = MUSIC / "percussion.ily"
-STROKES = re.compile(r"\b(sn|cymc|bd|r)(2\.|4|8)")
+STROKES = re.compile(r"(<(?:sn|cymc|bd)(?: (?:sn|cymc|bd))*>|\b(?:sn|cymc|bd|r))(2\.|4|8)")
 DURATIONS = {"8": 1, "4": 2, "2.": 6}
 DYNAMICS = re.compile(r"\\(pp|mp|mf|ff|sf|p|f)\b")
 MARKUP = re.compile(r'\\markup\s+\\italic\s+\{\s*"([^"]+)"\s*\}')
@@ -50,8 +50,9 @@ def hits(line: str) -> list[tuple[int, int, str, str]]:
     for m in STROKES.finditer(line):
         duration = DURATIONS[m.group(2)]
         if m.group(1) != "r":
-            result.append((tick, duration, m.group(1),
-                           line[m.end():m.end()+3]))
+            for note in m.group(1).strip("<>").split():
+                result.append((tick, duration, note,
+                               line[m.end():m.end()+3]))
         tick += duration
     if tick != 6 and not line.startswith("R2."):
         raise ValueError(f"Unsupported percussion measure: {line} ({tick}/6)")

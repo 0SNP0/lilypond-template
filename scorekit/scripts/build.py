@@ -265,7 +265,22 @@ def compile_lilypond(source: Path, output: Path, version: str,
         attempts += 1
 
 
-def build(*, audio: bool, font: str | None) -> None:
+def compile_midi(source: Path, output: Path, version: str) -> Path:
+    """Generate MIDI only; the first CI job already engraved the final PDFs."""
+    lilypond = shutil.which("lilypond")
+    if not lilypond:
+        raise RuntimeError("LilyPond executable missing for MIDI-only export")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    run([lilypond, "-dno-print-pages", "-dno-point-and-click",
+         "-o", str(output), str(source)],
+        environment={"SCORE_BUILD_REVISION": version})
+    midi = Path(str(output) + ".midi")
+    if not midi.is_file() or not midi.read_bytes().startswith(b"MThd"):
+        raise RuntimeError(f"No MIDI from {source}")
+    return midi
+
+
+def build(*, audio: bool, font: str | None, reuse_pdf: bool = False) -> None:
     parts = instruments()
     rev, sha = revision()
     source_tag = os.environ.get("SOURCE_TAG", "")
@@ -276,10 +291,15 @@ def build(*, audio: bool, font: str | None) -> None:
             raise RuntimeError("Release tag must point at HEAD")
         if rev != source_tag:
             raise RuntimeError(f"Release must be clean and exactly tagged: {rev}")
-    for path in (PDF, AUDIO, BUILD / "midi"):
+    if reuse_pdf and not audio:
+        raise RuntimeError("--reuse-pdf requires --audio")
+    if not reuse_pdf and PDF.exists():
+        shutil.rmtree(PDF)
+    PDF.mkdir(parents=True, exist_ok=True)
+    for path in (AUDIO, BUILD / "midi", BUILD / "midi-render"):
         if path.exists():
             shutil.rmtree(path)
-        path.mkdir(parents=True)
+        path.mkdir(parents=True, exist_ok=True)
     (BUILD / "build-info.json").write_text(
         json.dumps({"revision": rev, "commit": sha, "work": metadata().get("workTitle"),
                     "orchestra": metadata().get("orchestraName"),
@@ -289,28 +309,39 @@ def build(*, audio: bool, font: str | None) -> None:
         encoding="utf-8")
     naming = names(rev)
     print("Revision:", rev)
-    compile_lilypond(ROOT / "score.ly", PDF / naming["score"], rev, score=True)
-    score_midi = PDF / (naming["score"] + ".midi")
+    if reuse_pdf:
+        # The first job has already produced the final PDF set.
+        verify(audio=False)
+        score_midi = compile_midi(ROOT / "score.ly",
+                                  BUILD / "midi-render" / naming["score"], rev)
+    else:
+        compile_lilypond(ROOT / "score.ly", PDF / naming["score"], rev, score=True)
+        score_midi = PDF / (naming["score"] + ".midi")
     if audio:
         if not score_midi.is_file():
             raise RuntimeError("Score did not emit orchestra MIDI")
         shutil.move(str(score_midi), str(AUDIO / (naming["mix"] + ".midi")))
     elif score_midi.is_file():
-        score_midi.unlink()  # PDF-only CI must not export MIDI
-    compile_lilypond(ROOT / "concert-score.ly", PDF / naming["concert"], rev, score=True)
+        score_midi.unlink()
+    if not reuse_pdf:
+        compile_lilypond(ROOT / "concert-score.ly", PDF / naming["concert"], rev, score=True)
     for source in parts:
         stem = part_name(source, naming)
-        compile_lilypond(source, PDF / stem, rev)
-        midi = PDF / (stem + ".midi")
+        if reuse_pdf:
+            midi = compile_midi(source, BUILD / "midi-render" / stem, rev)
+        else:
+            compile_lilypond(source, PDF / stem, rev)
+            midi = PDF / (stem + ".midi")
         if audio:
             if not midi.is_file():
                 raise RuntimeError(f"No concert-pitch MIDI from part {source.name}")
             shutil.move(str(midi), str(BUILD / "midi" / midi.name))
         elif midi.is_file():
-            midi.unlink()  # Keep PDF-only artifact clean
-    # PDF-only paired parts; do not duplicate these voices in the audio mix.
-    for source in combined_parts():
-        compile_lilypond(source, PDF / part_name(source, naming), rev)
+            midi.unlink()
+    # Combined desks are only printed; MIDI tracks remain individual.
+    if not reuse_pdf:
+        for source in combined_parts():
+            compile_lilypond(source, PDF / part_name(source, naming), rev)
     if audio:
         validate_midi_programs(parts, naming)
         render_audio(parts, font, naming)
@@ -517,6 +548,8 @@ def main() -> None:
     commands = parser.add_subparsers(dest="command", required=True)
     build_command = commands.add_parser("build")
     build_command.add_argument("--audio", action="store_true")
+    build_command.add_argument("--reuse-pdf", action="store_true",
+                               help="reuse PDFs from the first job; generate MIDI/audio only")
     build_command.add_argument("--soundfont")
     commands.add_parser("verify")
     package_command = commands.add_parser("package")
@@ -529,7 +562,8 @@ def main() -> None:
     args = parser.parse_args()
     try:
         if args.command == "build":
-            build(audio=args.audio, font=args.soundfont)
+            build(audio=args.audio, font=args.soundfont,
+                  reuse_pdf=args.reuse_pdf)
         elif args.command == "verify":
             verify()
         elif args.command == "package":

@@ -1,7 +1,7 @@
 "use strict";
 const $ = id => document.getElementById(id);
 let repo="", releases=[], selectedRelease=null, viewerZip=null, audioZip=null;
-let manifest=null, timeline=null, viewerRoot="", token=0, currentAudio=null;
+let manifest=null, timeline=null, viewerRoot="", token=0, currentAudio=null, lastScrolledPage="";
 const pageUrls=[], audioUrls=new Map();
 const status = s => $("status").textContent=s;
 
@@ -20,6 +20,7 @@ function resetMedia(){
   for(const u of pageUrls)URL.revokeObjectURL(u);pageUrls.length=0;
   for(const u of audioUrls.values())URL.revokeObjectURL(u);audioUrls.clear();
   $("pages").replaceChildren();$("view").disabled=$("track").disabled=true;
+  $("seek").disabled=true;lastScrolledPage="";
   viewerZip=null;audioZip=null;manifest=null;timeline=null;viewerRoot="";currentAudio=null;
 }
 function zipEntry(zip,path){
@@ -113,6 +114,7 @@ async function openViewerZip(zip){
   if(manifest.views[params.get("view")])$("view").value=params.get("view");
   options($("track"),[["","Выберите аудиодорожку"],...(manifest.audio_tracks||[]).map(t=>[t.id,t.label])]);
   $("view").disabled=false;$("track").disabled=false;
+  $("seek").max=String(timeline.measures.length-1);$("seek").value="0";$("seek").disabled=false;
   $("heading").textContent=[manifest.work_title,manifest.orchestra_name,manifest.revision].filter(Boolean).join(" · ");
   status("Загружены ноты: "+rows.length+" представлений. Выберите дорожку, чтобы скачать звук.");
   await showView();
@@ -131,7 +133,7 @@ async function showView(){
     if(!entry)throw Error("В архиве отсутствует "+path);
     const blob=new Blob([await entry.async("uint8array")],{type:"image/svg+xml"});
     const src=URL.createObjectURL(blob);pageUrls.push(src);
-    const wrapper=document.createElement("div");wrapper.className="sheet";
+    const wrapper=document.createElement("div");wrapper.className="sheet";wrapper.dataset.page=String(i+1);
     const image=document.createElement("img");image.src=src;image.alt="Страница "+(i+1);
     image.loading=i===0?"eager":"lazy";wrapper.append(image);
     const a=document.createElement("a");a.textContent="SVG · страница "+(i+1);a.href=src;
@@ -175,6 +177,16 @@ function updateClock(){
   let low=0,high=measures.length;
   while(low<high){const mid=(low+high)>>1;if(measures[mid].start_ms<=ms)low=mid+1;else high=mid}
   const bar=measures[Math.max(0,low-1)];
+  $("seek").value=String(Math.max(0,low-1));
+  const currentView=manifest.views[$("view").value];
+  const matching=currentView?.measure_anchors?.find(a=>a.measure_id===bar.printed_measure_id);
+  if(matching && !$("audio").paused){
+    const page=$('pages').querySelector('.sheet[data-page="'+matching.page+'"]');
+    if(page && !page.matches(":hover") && page.dataset.page!==lastScrolledPage){
+      lastScrolledPage=page.dataset.page;
+      page.scrollIntoView({behavior:"smooth",block:"nearest"});
+    }
+  }
   $("position").textContent="Такт "+bar.printed_number+" / "+timeline.printed_measures+
     (bar.number>timeline.printed_measures?" · реприза":"");
 }
@@ -196,6 +208,10 @@ $("audio-file").onchange=()=>{audioZip=null};
 $("view").onchange=()=>showView().catch(e=>status("Ошибка SVG: "+e.message));
 $("track").onchange=chooseTrack;$("audio").ontimeupdate=updateClock;
 $("zoom").onchange=zoom;zoom();
+$("seek").oninput=()=>{
+  const position=timeline?.measures?.[Number($("seek").value)];
+  if(position)$("audio").currentTime=position.start_ms/1000;
+};
 fetch("./catalog.json").then(r=>r.ok?r.json():[]).then(data=>{
   if(!Array.isArray(data))return;
   $("catalog").textContent=data.length?"":"Каталог пока пуст";

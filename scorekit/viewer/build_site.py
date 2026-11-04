@@ -22,9 +22,14 @@ def build_site(project: Path, output: Path) -> Path:
     shutil.copytree(PORTAL, output / "viewer", dirs_exist_ok=True)
     (output / ".nojekyll").touch()
     if not (output / "index.html").exists():
+        # The viewer is the default landing page for every score project.
+        # Projects can still provide their own site/index.html override.
         (output / "index.html").write_text(
             '<!doctype html><html lang="ru"><meta charset="utf-8">'
-            '<title>ScoreKit</title><a href="./viewer/">Просмотрщик партитуры</a></html>\n',
+            '<meta http-equiv="refresh" content="0;url=./viewer/">'
+            '<title>ScoreKit Viewer</title>'
+            '<script>location.replace("./viewer/" + location.search + location.hash)</script>'
+            '<a href="./viewer/">Просмотрщик партитуры</a></html>\n',
             encoding="utf-8",
         )
     print(f"Project website: {output} · Viewer: {output / 'viewer'}")

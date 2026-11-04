@@ -1,10 +1,11 @@
-name: Publish ScoreKit website
+name: Publish this score's latest release
 on:
   push:
     branches: [main]
+    paths: [".github/workflows/pages.yml", "site/**", "scorekit/viewer/**"]
   workflow_dispatch:
-  schedule:
-    - cron: "17 */6 * * *"
+  repository_dispatch:
+    types: [scorekit-release]
 permissions:
   contents: read
 jobs:
@@ -14,12 +15,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Assemble site and independent catalog
-        run: python3 scorekit/viewer/build_site.py --output _site
-      - name: Mirror release assets into this website
+      - run: python3 scorekit/viewer/build_site.py --output _site
+      - name: Publish only latest release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python3 scorekit/viewer/mirror_releases.py --output _site --max-releases 2 --max-site-mib 650
+          GH_REPO: ${{ github.repository }}
+        run: python3 scorekit/viewer/publish_latest.py --output _site
+      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site

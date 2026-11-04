@@ -1,42 +1,48 @@
-# Отдельный сайт на основе ScoreKit
+# Сайт конкретной партитуры на основе ScoreKit
 
-Это шаблон **будущего независимого репозитория сайта**, а не запущенный сайт.
-И проект партитуры, и проект сайта подключают один и тот же Git-сабмодуль
-`scorekit/`. Пока фактического сабмодуля нет: здесь подготовлены шаблоны.
+**Один репозиторий партитуры — один сайт.** Нет центрального каталога
+в ScoreKit и нет выбора чужих репозиториев или архивных версий.
 
-Структура будущего сайта:
+Репозиторий партитуры владеет нотами, `site/index.html` и базовым Pages
+workflow. ScoreKit может подключаться в виде Git-сабмодуля по пути
+`scorekit/` и предоставляет HTML/JS-движок и сборку сайта.
 
 ```text
-scorekit-site/
+score-repository/
 ├── .github/workflows/pages.yml
-├── .gitmodules
-├── scorekit/                  # Git submodule — фреймворк
-├── catalog.json              # [] — хранится в сайте, НЕ в ScoreKit
-└── site/
-    ├── index.html            # главная страница сайта
-    └── docs/                 # будущие дополнительные страницы
+├── site/index.html
+├── scorekit/               # Git submodule, пока может быть папкой
+├── score.ly, metadata.ily, orchestra.ily
+├── music/, parts/
+└── ...
 ```
 
-После выделения фреймворка в репозиторий:
+Сайт собирается из **одного последнего опубликованного GitHub Release**
+командами:
 
 ```bash
-git submodule add https://github.com/OWNER/scorekit.git scorekit
-cp scorekit/site-template/catalog.json .
-mkdir -p site .github/workflows
-cp scorekit/site-template/site/index.html site/index.html
-cp scorekit/site-template/.github/workflows/pages.yml .github/workflows/pages.yml
+python3 scorekit/viewer/build_site.py --output _site
+python3 scorekit/viewer/publish_latest.py --output _site --repo OWNER/REPO
+```
+
+В `_site/viewer/latest.json` содержатся название, версия и URL Release;
+в `_site/viewer/latest/viewer/` — SVG и JSON; в
+`_site/viewer/latest/audio/` — прямые MP3. Все страницы и дорожки
+запрашиваются с того же домена Pages, без CORS и без промежуточных ZIP.
+В предыдущие версии сайт не заглядывает, старые файлы не публикуются.
+Страница Release остаётся источником PDF и архивов для скачивания.
+
+Локальный просмотр из сабмодуля:
+
+```bash
 python3 scorekit/viewer/serve.py
 ```
 
-Результат локального запуска: `http://127.0.0.1:8000/viewer/`,
-а корень сайта доступен по `http://127.0.0.1:8000/`.
-Самостоятельная сборка: `python3 scorekit/viewer/build_site.py --output _site`.
+При наличии `dist/viewer/` и `dist/audio/` используются локально
+собранные ресурсы; иначе можно передать `--from-release` для скачивания
+последнего релиза (установленный GitHub CLI с доступом к репозиторию).
 
-GitHub Pages публикует `_site/`. Для проектного сайта адрес
-`https://OWNER.github.io/REPOSITORY/viewer/`, для персонального
-`https://OWNER.github.io/viewer/`. Относительные пути сохранены.
-В настройках GitHub Pages выбрать **Build and deployment → GitHub Actions**.
-Для приватного сабмодуля потребуется доступ из workflow к его репозиторию.
-
-Обновление только `catalog.json` и `site/` не требует нового коммита
-в ScoreKit. Никакого реального Pages-деплоя здесь пока нет.
+При выпуске тега ScoreKit вызывает `repository_dispatch`, чтобы обновить
+Pages; изменения `site/` и `scorekit/viewer/` тоже переиздают текущий
+последний релиз. Отдельный будущий сайт-каталог содержит **только ссылки
+на эти сайты** и не зависит от внутреннего формата данных ScoreKit.

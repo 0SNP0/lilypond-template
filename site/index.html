@@ -1,38 +1,37 @@
 <!doctype html>
-<html lang="ru">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Тестовая библиотека оркестровых партитур и аудиозаписей на ScoreKit">
-<title>ScoreKit · Библиотека партитур</title>
+<html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Партитура · ScoreKit</title>
 <style>
-:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#1c293c;background:#f5f6f9}
+:root{font:16px system-ui,-apple-system,"Segoe UI",sans-serif;background:#f5f6f9;color:#1d2d43}
 *{box-sizing:border-box}body{margin:0}
-header{padding:16px max(24px,calc((100vw - 960px)/2));background:#fff;border-bottom:1px solid #dfe4ed}
-main{max-width:960px;margin:0 auto;padding:38px 24px 80px}
-h1{font-size:clamp(28px,5vw,42px);letter-spacing:-.03em;margin:0 0 12px}h2{font-size:21px;margin-top:0}
-p{line-height:1.65}.muted{color:#617186}
-.card{border:1px solid #dce2ed;border-radius:14px;background:white;padding:25px;margin:24px 0}
-a{color:#1d5ca2}.primary{display:inline-block;padding:11px 17px;border-radius:7px;background:#2257a2;color:white;font-weight:600;text-decoration:none;margin:8px 8px 8px 0}
-.primary:hover{background:#17427e}.secondary{display:inline-block;margin:8px 0}
-.small{font-size:14px}code{background:#eef1f6;padding:2px 4px;border-radius:3px}
-</style>
-</head>
-<body>
-<header><strong>ScoreKit</strong> <span class="muted">· тестовая библиотека партитур</span></header>
+header{background:#fff;border-bottom:1px solid #dfe4ed;padding:16px max(24px,calc((100vw - 920px)/2))}
+main{max-width:920px;margin:0 auto;padding:40px 24px}h1{font-size:clamp(27px,5vw,43px);line-height:1.2}
+p{line-height:1.6}.muted{color:#63728a}
+.card{border:1px solid #dfe4ec;border-radius:14px;background:#fff;padding:28px;margin:26px 0}
+a{color:#1a5b9d}.primary{display:inline-block;background:#245aa0;color:#fff;padding:12px 18px;border-radius:7px;font-weight:600;text-decoration:none}
+.primary:hover{background:#16457e}
+</style></head>
+<body><header><strong>ScoreKit</strong> · Партитура</header>
 <main>
-<h1>Партитуры и аудио</h1>
-<p class="muted">Тестовый сайт на базе общего фреймворка ScoreKit. Каталог произведений хранится в репозитории сайта отдельно от движка просмотрщика.</p>
 <section class="card">
-<h2>Георгий Свиридов — «Метель», Вальс</h2>
-<p>Откройте партитуру, выберите релиз, индивидуальную или объединённую партию и дорожку оркестра или отдельного инструмента. Можно увеличить любую нотную страницу SVG.</p>
-<a class="primary" href="./viewer/?repo=0SNP0%2Flilypond-template">Смотреть последнюю версию партитуры</a>
-<a class="secondary" href="https://github.com/0SNP0/lilypond-template/releases">Все релизы на GitHub</a>
-<p class="small muted">Версия определяется по опубликованным GitHub Releases. Ноты и аудиодорожки загружаются с этого сайта по мере необходимости.</p>
+<h1 id="title">Партитура</h1>
+<p class="muted" id="version">Загрузка сведений о последнем релизе…</p>
+<p>Просматривайте партитуру в исходном или концертном строе, выбирайте инструментальные партии и слушайте общую либо индивидуальные аудиодорожки.</p>
+<p><a class="primary" href="./viewer/">Открыть ноты и аудио</a></p>
+<p><a id="release" href="https://github.com/0SNP0/lilypond-template/releases/latest">Скачать PDF и другие материалы из GitHub Releases</a></p>
 </section>
-<section class="card">
-<h2>Универсальный просмотрщик</h2>
-<p>Работает не только с этим произведением: можно ввести URL любого поддерживаемого публичного GitHub-репозитория с выпущенными ScoreKit-архивами. Каталог является простым набором ссылок.</p>
-<a href="./viewer/">Открыть просмотрщик без выбранного произведения</a>
-</section>
-</main></body></html>
+</main>
+<script>
+fetch("./viewer/latest.json",{cache:"no-store"})
+ .then(r=>{if(!r.ok)throw Error("Нет опубликованного комплекта");return r.json()})
+ .then(info=>{
+   document.querySelector("#title").textContent=info.title||"Партитура";
+   document.querySelector("#version").textContent=
+     [info.orchestra, "Последняя версия: "+info.tag].filter(Boolean).join(" · ");
+   if(info.release_url)document.querySelector("#release").href=info.release_url;
+   document.title=(info.title||"Партитура")+" · ScoreKit";
+ })
+ .catch(e=>{document.querySelector("#version").textContent="Данные последнего релиза пока недоступны: "+e.message});
+</script>
+</body></html>

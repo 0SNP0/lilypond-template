@@ -1,12 +1,10 @@
-name: Publish ScoreKit website (GitHub Pages)
+name: Publish ScoreKit project website
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - ".github/workflows/pages.yml"
       - "site/**"
-      - "catalog.json"
       - "scorekit/viewer/**"
   workflow_dispatch:
   repository_dispatch:
@@ -14,56 +12,62 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: scorekit-pages-${{ github.ref }}
+  group: scorekit-project-pages-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   build:
-    name: Assemble and verify static website
+    name: Build latest release website
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout score and ScoreKit
+      - name: Checkout this score repository and ScoreKit
         uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Assemble the site exactly as for the future separate repository
+      - name: Build website structure
         run: python3 scorekit/viewer/build_site.py --output _site
-      - name: Mirror release notes and individual audio tracks to Pages
+      - name: Publish only the latest released SVG and MP3
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python3 scorekit/viewer/mirror_releases.py --output _site --max-releases 2 --max-site-mib 650
-      - name: Validate pages and catalog
+          GH_REPO: ${{ github.repository }}
+        run: python3 scorekit/viewer/publish_latest.py --output _site
+      - name: Check published viewer, version, and resources
         shell: bash
         run: |
           set -euo pipefail
           test -s _site/index.html
           test -s _site/viewer/index.html
           test -s _site/viewer/app.js
-          test -s _site/viewer/catalog.json
-          test -s _site/viewer/mirrors.json
+          test -s _site/viewer/latest.json
+          test -s _site/viewer/latest/viewer/manifest.json
+          test -s _site/viewer/latest/viewer/timeline.json
           python3 - <<'PY'
           import json
           from pathlib import Path
-          catalog = json.loads(Path("_site/viewer/catalog.json").read_text())
-          assert catalog == json.loads(Path("catalog.json").read_text())
-          assert len(catalog) == 1 and catalog[0]["url"] == "https://github.com/0SNP0/lilypond-template"
-          assert "viewer/?repo=" in Path("_site/index.html").read_text()
-          print("Site structure and repository catalog: OK")
+          from scorekit.viewer.publish_latest import validate_published
+          root = Path("_site")
+          data = json.loads((root / "viewer/latest.json").read_text())
+          manifest = validate_published(root, data["tag"])
+          assert data["repo"] == "0SNP0/lilypond-template"
+          assert len(manifest["views"]) >= 2
+          assert len(manifest["audio_tracks"]) >= 1
+          print("Verified:", data["tag"], len(manifest["views"]), "views,",
+                len(manifest["audio_tracks"]), "audio tracks")
           PY
-      - name: Upload website preview (Actions artifact)
+      - name: Upload private/test preview artifact
         uses: actions/upload-artifact@v4
         with:
-          name: scorekit-site-preview-${{ github.sha }}
+          name: scorekit-project-preview-${{ github.sha }}
           path: _site/
           retention-days: 14
           if-no-files-found: error
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-      - name: Upload static Pages site
+      - name: Upload website artifact
         uses: actions/upload-pages-artifact@v4
         with:
           path: _site/
   deploy:
-    name: Deploy site from main
+    name: Deploy latest release to Pages
     needs: build
     runs-on: ubuntu-latest
     permissions:

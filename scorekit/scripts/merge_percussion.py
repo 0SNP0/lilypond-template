@@ -16,7 +16,7 @@ from pathlib import Path
 FRAMEWORK = Path(__file__).resolve().parents[1]
 ROOT = FRAMEWORK.parent
 MUSIC = ROOT / "music"
-OUTPUT = MUSIC / "percussion.ily"
+OUTPUT = MUSIC / "drum-kit.ily"
 STROKES = re.compile(r"(<[a-z][a-z0-9]*(?: [a-z][a-z0-9]*)*>|\b[a-z][a-z0-9]*)(2\.|4|8)")
 DURATIONS = {"8": 1, "4": 2, "2.": 6}
 DYNAMICS = re.compile(r"\\(pp|mp|mf|ff|sf|p|f)\b")
@@ -111,7 +111,7 @@ def combine(lines: list[str]) -> str:
 
 
 def input_sources(output_text: str) -> list[Path]:
-    playback = output_text.split("percussionKitPlayback =", 1)[-1]
+    playback = output_text.split("drumKitPlayback =", 1)[-1]
     names = re.findall(r"\\(\w+MusicPlayback)\b", playback)
     if not names:
         raise ValueError("Percussion playback sources not found")
@@ -140,7 +140,7 @@ def main() -> None:
     if len({len(t) for t in tracks}) != 1:
         raise ValueError("Percussion source lengths disagree")
     expected = [combine(bars) for bars in zip(*tracks)]
-    opening = re.search(r"(?ms)^percussionKitMusic = \\drummode \{\s*\n(.*?)^\}",
+    opening = re.search(r"(?ms)^drumKitMusic = \\drummode \{\s*\n(.*?)^\}",
                         original)
     if not opening:
         raise ValueError("Percussion print is not one drummode voice")
@@ -184,7 +184,7 @@ def main() -> None:
             print_rows.append("  " + expected[number])
             number += 1
         body = "\n".join(print_rows)
-        replacement = (r"percussionKitMusic = \drummode {" +
+        replacement = (r"drumKitMusic = \drummode {" +
                        "\n  \\clef percussion\n  \\time 3/4\n" + body + "\n}")
         rebuilt = original[:opening.start()] + replacement + original[opening.end():]
         args.output.write_text(rebuilt, encoding="utf-8")

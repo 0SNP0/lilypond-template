@@ -33,7 +33,7 @@
 \include "music/contrabasses.ily"
 
 \include "music/paired.ily"
-\include "music/percussion.ily"
+\include "music/drum-kit.ily"
 
 orchestraScore = <<
   \new StaffGroup <<
@@ -55,11 +55,11 @@ orchestraScore = <<
   >>
   \new StaffGroup <<
     \new DrumStaff \with {
-      instrumentName = \markup \fontsize #-1 "Percussion (Sn. Dr., Cym., B. Dr.)"
-      shortInstrumentName = "Perc."
+      instrumentName = \markup \fontsize #-1 "Drum Kit"
+      shortInstrumentName = "D. Kit"
     } <<
       { \tag #'written { \global } \tag #'concert { \global } \tag #'playback { \globalPlayback } }
-      { \tag #'written { \percussionKitMusic } \tag #'concert { \percussionKitMusic } \tag #'playback { \percussionKitPlayback } }
+      { \tag #'written { \drumKitMusic } \tag #'concert { \drumKitMusic } \tag #'playback { \drumKitPlayback } }
     >>
   >>
   \new StaffGroup <<

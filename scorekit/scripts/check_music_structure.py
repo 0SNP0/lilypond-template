@@ -41,7 +41,7 @@ def extract(text: str, suffix: str) -> list[str]:
 
 def main() -> None:
     music_files = [p for p in sorted(MUSIC.glob("*.ily"))
-                   if p.name not in ("global.ily", "paired.ily", "percussion.ily")]
+                   if p.name not in ("global.ily", "paired.ily", "drum-kit.ily")]
     if not music_files:
         raise ValueError("No editable music/*.ily instrumental sources")
 
@@ -122,8 +122,8 @@ def main() -> None:
     if spec.get("validate_navigation"):
         subprocess.run([sys.executable, str(FRAMEWORK / "scripts/navigation.py"),
                         "--check"], check=True)
-    percussion = MUSIC / "percussion.ily"
-    if percussion.is_file() and percussion.read_text(
+    drum_kit = MUSIC / "drum-kit.ily"
+    if drum_kit.is_file() and drum_kit.read_text(
             encoding="utf-8").startswith("% AUTO-GENERATED PRINT VIEW"):
         subprocess.run([sys.executable, str(FRAMEWORK / "scripts/merge_percussion.py"),
                         "--check"], check=True)

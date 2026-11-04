@@ -1,6 +1,6 @@
 % AUTO-GENERATED PRINT VIEW — synthesized from the three canonical drum files.
 % The three source voices remain independent only in MIDI playback.
-percussionKitMusic = \drummode {
+drumKitMusic = \drummode {
   \clef percussion
   \time 3/4
   % Bars 1–4
@@ -134,7 +134,7 @@ percussionKitMusic = \drummode {
   cymc4-! r4 r4 |
 }
 
-percussionKitPlayback = <<
+drumKitPlayback = <<
   \new DrumVoice { \voiceOne \snareDrumMusicPlayback }
   \new DrumVoice { \voiceThree \cymbalsMusicPlayback }
   \new DrumVoice { \voiceTwo \bassDrumMusicPlayback }

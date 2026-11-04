@@ -71,7 +71,7 @@ def music_fingerprint(source: Path) -> str:
         # independent sounding sources.
         if path.name == "paired.ily":
             continue
-        if path.name == "percussion.ily" and path.read_text(
+        if path.name == "drum-kit.ily" and path.read_text(
                 encoding="utf-8").startswith("% AUTO-GENERATED PRINT VIEW"):
             continue
         if not path.is_file():

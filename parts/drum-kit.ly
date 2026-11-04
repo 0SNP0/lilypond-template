@@ -5,15 +5,15 @@
 \include "../music/snare-drum.ily"
 \include "../music/cymbals.ily"
 \include "../music/bass-drum.ily"
-\include "../music/percussion.ily"
+\include "../music/drum-kit.ily"
 \include "../scorekit/lilypond/layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle
-          composer = \composerCredit instrument = "Percussion" tagline = ##f }
+          composer = \composerCredit instrument = "Drum Kit" tagline = ##f }
 \score {
-  \new DrumStaff << { \global } { \rehearsalMarks } { \compressEmptyMeasures \percussionKitMusic } >>
+  \new DrumStaff << { \global } { \rehearsalMarks } { \compressEmptyMeasures \drumKitMusic } >>
   \partPrintLayout
 }
 \score {
-  \new DrumStaff << { \globalPlayback } { \rehearsalMarksPlayback } \percussionKitPlayback >>
+  \new DrumStaff << { \globalPlayback } { \rehearsalMarksPlayback } \drumKitPlayback >>
   \midi { }
 }

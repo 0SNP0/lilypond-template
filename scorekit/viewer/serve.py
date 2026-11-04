@@ -7,23 +7,31 @@ import http.server
 import threading
 import webbrowser
 from pathlib import Path
-
-ROOT = Path(__file__).resolve().parent / "portal"
-HOST, PORT = "127.0.0.1", 8000
-
+import argparse
+import tempfile
+from build_site import PROJECT, build_site
 
 def main() -> None:
-    handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(ROOT))
-    with http.server.ThreadingHTTPServer((HOST, PORT), handler) as server:
-        url = f"http://{HOST}:{server.server_port}/"
-        print(f"ScoreKit Viewer: {url}")
-        print("Open SVG/JSON ZIP downloaded from Actions, or choose a public repository.")
-        print("Press Ctrl+C to stop.")
-        threading.Timer(0.5, lambda: webbrowser.open(url)).start()
-        try:
-            server.serve_forever()
-        except KeyboardInterrupt:
-            print("\nStopping viewer.")
+    parser = argparse.ArgumentParser(description="Serve ScoreKit Viewer and parent site")
+    parser.add_argument("--project-root", type=Path, default=PROJECT)
+    parser.add_argument("--port", type=int, default=8000)
+    parser.add_argument("--no-browser", action="store_true")
+    args = parser.parse_args()
+    with tempfile.TemporaryDirectory(prefix="scorekit-viewer-") as directory:
+        root = build_site(args.project_root, Path(directory) / "site")
+        handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(root))
+        with http.server.ThreadingHTTPServer(("127.0.0.1", args.port), handler) as server:
+            url = f"http://127.0.0.1:{server.server_port}/viewer/"
+            print(f"ScoreKit Viewer: {url}", flush=True)
+            print("Press Ctrl+C to stop.", flush=True)
+            if not args.no_browser:
+                timer = threading.Timer(0.5, lambda: webbrowser.open(url))
+                timer.daemon = True
+                timer.start()
+            try:
+                server.serve_forever()
+            except KeyboardInterrupt:
+                print("\\nStopping viewer.")
 
 
 if __name__ == "__main__":

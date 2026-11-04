@@ -2,9 +2,10 @@ name: Build orchestra
 on:
   push:
     branches: ['**']
-    tags: ['v*']
   pull_request:
   workflow_dispatch:
+  release:
+    types: [published]
 concurrency:
   group: orchestra-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/v') }}

@@ -74,7 +74,7 @@ async function boot() {
     $("version").textContent="Актуальная версия: "+info.tag;
     document.title=(info.title||"Партитура")+" — ScoreKit";
     if(info.release_url){$("release").href=info.release_url;$("release").hidden=false;}
-    if(typeof info.repo==="string" && /^[\\w.-]+\\/[\\w.-]+$/.test(info.repo)){
+    if(typeof info.repo==="string" && /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(info.repo)){
       $("repository").href="https://github.com/"+info.repo;
       $("repository").hidden=false;
     }
@@ -90,7 +90,9 @@ async function boot() {
     }else displayMarkdown("README выбранной редакции отсутствует.");
     message("");
     showView();
-  }catch(e){message("Не удалось открыть партитуру: "+e.message);}
+  }catch(e){message("Не удалось открыть партитуру: "+e.message+
+    ". Проверьте наличие опубликованного релиза с архивами audio и viewer.");
+    console.error("ScoreKit viewer:",e);}
 }
 function measureNumber(id) {
   const match=/^measure-(\d+)$/.exec(id||"");
@@ -131,29 +133,29 @@ function seekPrinted(number) {
   const occurrence=timeline?.measures?.find(m=>m.printed_number===number);
   if(!occurrence)return;
   // Seek exactly to the start of the bar. All player updates use the same clock.
-  seekSeconds(occurrence.start_ms/1000);
+  seekSeconds(occurrence.start_ms/1000, true);
 }
-function seekSeconds(seconds) {
+function seekSeconds(seconds, startPlayback=false) {
   if(!Number.isFinite(seconds)||seconds<0)return;
   if(!audio.getAttribute("src")){
     const defaultTrack=manifest?.audio_tracks?.find(t=>t.id==="orchestra") ||
                        manifest?.audio_tracks?.[0];
     if(!defaultTrack)return;
     pendingSeek=seconds;
-    playAfterSeek=true;
+    playAfterSeek=startPlayback;
     $("track").value=defaultTrack.id;
     setTrack();
     return;
   }
   if(audio.readyState < HTMLMediaElement.HAVE_METADATA){
     pendingSeek=seconds;
-    playAfterSeek=true;
+    playAfterSeek=startPlayback;
     return;
   }
   audio.currentTime=Math.min(seconds,Number.isFinite(audio.duration)?
       Math.max(0,audio.duration-.05):seconds);
   updateTime();
-  if(audio.paused) audio.play().catch(()=>{});
+  if(startPlayback && audio.paused)audio.play().catch(()=>{});
 }
 function showView() {
   if(!manifest)return;
@@ -221,6 +223,7 @@ function setTrack() {
   }
   const path=trustedPath(track.path.replace(/^(\.\.\/)+/,""),"audio/",".mp3");
   const previousTime=audio.currentTime||0,playing=!audio.paused;
+  const requestedRate=Number($("speed").value);
   const token=++trackChange;
   audio.src="./latest/"+path;
   audio.load();
@@ -230,6 +233,7 @@ function setTrack() {
     pendingSeek=null;
     audio.currentTime=Math.min(target,Number.isFinite(audio.duration)?
       Math.max(0,audio.duration-.05):target);
+    audio.playbackRate=requestedRate;
     if(playing || playAfterSeek)audio.play().catch(()=>{});
     playAfterSeek=false;
     updateTime();
@@ -269,6 +273,13 @@ function paintWhilePlaying(){
 audio.addEventListener("play",()=>{stopFrames();paintWhilePlaying();});
 audio.addEventListener("pause",()=>{stopFrames();updateTime();});
 $("restart").addEventListener("click",()=>seekSeconds(0));
+$("speed").addEventListener("input",()=>{
+  const rate=Number($("speed").value);
+  audio.playbackRate=rate;
+  $("speedValue").textContent=Math.round(rate*100)+"%";
+});
+// audio.currentTime is in media seconds, independent of playbackRate.
+// MIDI timeline timestamps remain valid when playback speed changes.
 $("sidebarToggle").addEventListener("click",()=>{
   const sidebar=$("sidebar"),opening=sidebar.hidden;
   sidebar.hidden=!opening;

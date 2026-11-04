@@ -1,12 +1,7 @@
 name: Publish ScoreKit project website
+# Pages are rebuilt only after all release assets have been uploaded.
+# A push to main must not update a published site.
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/pages.yml"
-      - "site/**"
-      - "scorekit/viewer/**"
-  workflow_dispatch:
   repository_dispatch:
     types: [scorekit-release]
 permissions:

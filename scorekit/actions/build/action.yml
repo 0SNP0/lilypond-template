@@ -15,6 +15,11 @@ runs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends python3-pypdf fonts-texgyre
+      - name: Validate viewer JavaScript syntax and shared tests
+        shell: bash
+        run: |
+          node --check scorekit/viewer/portal/app.js
+          python3 -m unittest discover -s scorekit/tests -p 'test_*.py'
       - name: Validate printed/playback repeat structure
         shell: bash
         run: python3 scorekit/scripts/check_music_structure.py

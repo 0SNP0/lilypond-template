@@ -512,6 +512,16 @@ def main() -> None:
     for view_id, source, kind, part in sources:
         pages = render_svg(source, view_id, naming)
         anchors, regions, page_boxes = tag_svg(pages, timeline, kind)
+        if kind in ("score", "concert-score"):
+            expected = timeline["printed_measures"]
+            covered = len({a["measure_id"] for a in regions})
+            if covered != expected:
+                raise RuntimeError(
+                    f"Interactive {view_id} has {covered}/{expected} "
+                    "barline regions; refusing an inaccurate viewer export")
+        for page in pages:
+            if naming["revision"] in page.read_text(encoding="utf-8"):
+                raise RuntimeError(f"SVG still contains a Git-version footer: {page}")
         music_hash = music_fingerprint(source)
         print_hash = print_fingerprint(source)
         views[view_id] = {
@@ -582,7 +592,9 @@ def main() -> None:
     print("SVG and synchronization data:", len(views), "views,",
           len(timeline["measures"]), "measures")
     for key, view in views.items():
-        print(f"  {key}: {len(view['pages'])} SVG page(s); {view['anchors_found']} measure anchors")
+        print(f"  {key}: {len(view['pages'])} SVG page(s); "
+              f"{view['anchors_found']} measure anchors, "
+              f"{len(view['measure_areas'])} barline hit regions")
 
 
 if __name__ == "__main__":

@@ -1,33 +1,66 @@
-% CONSERVATIVE paired desks: no automatic single-note unison / "a2".
-% The default \partCombineApart keeps both voices separate even if
-% one individual note happens to match.
-%
-% MANUAL WHOLE-MEASURE UNISON:
-% In music/flute-1.ily, clarinet-1.ily, trumpet-1.ily or trombone-1.ily,
-% insert \partCombineUnisono before the first note of a measure if and
-% only if BOTH players have identical pitches, durations and rests for
-% the ENTIRE measure. At the beginning of the next differing measure,
-% insert \partCombineApart. The first player's original music variable
-% is used for both combined score and solo PDF; the commands do not
-% affect the solo staff, which has no part combiner.
-%
-% Automatic mode can be explicitly re-enabled with
-% \partCombineAutomatic, but it can mark isolated notes "a2" again.
-% For editable examples see docs/PART_COMBINING.md.
-% #'(0 . 0) prevents non-unisons from becoming combined chords.
+% Single source of truth: only music/<instrument>.ily contains note events.
+% Each paired desk is constructed from the two solo music streams.
+% Keep printed and playback forms separate to honor D.C. al Fine.
 
 flutesTogether = \partCombine #'(0 . 0)
-  { \partCombineApart \global \introMark \fluteOneMusic }
-  { \global \fluteTwoMusic }
+  { \fluteOneMusic }
+  { \fluteTwoMusic }
+flutesTogetherPlayback = \partCombine #'(0 . 0)
+  { \fluteOneMusicPlayback }
+  { \fluteTwoMusicPlayback }
 
-clarinetsTogether = \partCombine #'(0 . 0)
-  { \partCombineApart \global \introMark \clarinetOneMusic }
-  { \global \clarinetTwoMusic }
+oboesTogether = \partCombine #'(0 . 0)
+  { \oboeOneMusic }
+  { \oboeTwoMusic }
+oboesTogetherPlayback = \partCombine #'(0 . 0)
+  { \oboeOneMusicPlayback }
+  { \oboeTwoMusicPlayback }
+
+clarinetsInATogether = \partCombine #'(0 . 0)
+  { \clarinetInAOneMusic }
+  { \clarinetInATwoMusic }
+clarinetsInATogetherPlayback = \partCombine #'(0 . 0)
+  { \clarinetInAOneMusicPlayback }
+  { \clarinetInATwoMusicPlayback }
+
+bassoonsTogether = \partCombine #'(0 . 0)
+  { \bassoonOneMusic }
+  { \bassoonTwoMusic }
+bassoonsTogetherPlayback = \partCombine #'(0 . 0)
+  { \bassoonOneMusicPlayback }
+  { \bassoonTwoMusicPlayback }
+
+hornsOneThreeTogether = \partCombine #'(0 . 0)
+  { \hornOneMusic }
+  { \hornThreeMusic }
+hornsOneThreeTogetherPlayback = \partCombine #'(0 . 0)
+  { \hornOneMusicPlayback }
+  { \hornThreeMusicPlayback }
+
+hornsTwoFourTogether = \partCombine #'(0 . 0)
+  { \hornTwoMusic }
+  { \hornFourMusic }
+hornsTwoFourTogetherPlayback = \partCombine #'(0 . 0)
+  { \hornTwoMusicPlayback }
+  { \hornFourMusicPlayback }
 
 trumpetsTogether = \partCombine #'(0 . 0)
-  { \partCombineApart \global \introMark \trumpetOneMusic }
-  { \global \trumpetTwoMusic }
+  { \trumpetOneMusic }
+  { \trumpetTwoMusic }
+trumpetsTogetherPlayback = \partCombine #'(0 . 0)
+  { \trumpetOneMusicPlayback }
+  { \trumpetTwoMusicPlayback }
 
 trombonesTogether = \partCombine #'(0 . 0)
-  { \partCombineApart \global \introMark \tromboneOneMusic }
-  { \global \tromboneTwoMusic }
+  { \tromboneOneMusic }
+  { \tromboneTwoMusic }
+trombonesTogetherPlayback = \partCombine #'(0 . 0)
+  { \tromboneOneMusicPlayback }
+  { \tromboneTwoMusicPlayback }
+
+tromboneThreeTubaTogether = \partCombine #'(0 . 0)
+  { \tromboneThreeMusic }
+  { \tubaMusic }
+tromboneThreeTubaTogetherPlayback = \partCombine #'(0 . 0)
+  { \tromboneThreeMusicPlayback }
+  { \tubaMusicPlayback }

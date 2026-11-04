@@ -1,33 +1,13 @@
-\version "2.24.3"
-% Standalone, directly previewable part; edit music in ../music/violins-2.ily
+\version "2.26.0"
+\include "articulate.ly"
 \include "../metadata.ily"
-\include "../music/global.ily"
 \include "../music/violins-2.ily"
-\include "../layout/part.ily"
-
-\header {
-  title = \workTitle
-  subtitle = \workSubtitle
-  composer = \composerCredit
-  poet = \lyricistCredit
-  translator = \translatorCredit
-  transcriber = \transcriberCredit
-  arranger = \arrangerCredit
-  instrument = "Violins II"
-  copyright = \rightsCredit
-  tagline = ##f
-}
-
-% If necessary: add \paper { page-count = #2 } here, only for this part.
-% No instrumentName: the part is identified in the page header.
-
-\score {
-  \new Staff \with { midiInstrument = "violin" } { \compressMMRests { \global \introMark \violinTwoMusic } }
-  \layout { }
-}
-
-% Separate concert-pitch MIDI for independently rendered rehearsal audio.
-\score {
-  \new Staff \with { midiInstrument = "violin" } { \global \introMark \violinTwoMusic }
-  \midi { }
-}
+\include "../music/global.ily"
+% Start at this size and enlarge until exactly two A4 pages fit.
+#(define partStaffSize 22)
+#(define partTargetPages 2)
+\include "../scorekit/lilypond/layout/part.ily"
+\paper { ragged-bottom = ##f ragged-last-bottom = ##f }
+\header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Violins II" tagline = ##f }
+\score { \new Staff \with { midiInstrument = "violin" } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \violinsTwoMusic } >> \partPrintLayout }
+\score { \articulate \new Staff \with { midiInstrument = "violin" } << { \globalPlayback } { \rehearsalMarksPlayback } { \violinsTwoMusicPlayback } >> \midi { } }

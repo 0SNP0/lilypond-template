@@ -1,33 +1,9 @@
-\version "2.24.3"
-% Standalone, directly previewable part; edit music in ../music/contrabasses.ily
+\version "2.26.0"
+\include "articulate.ly"
 \include "../metadata.ily"
-\include "../music/global.ily"
 \include "../music/contrabasses.ily"
-\include "../layout/part.ily"
-
-\header {
-  title = \workTitle
-  subtitle = \workSubtitle
-  composer = \composerCredit
-  poet = \lyricistCredit
-  translator = \translatorCredit
-  transcriber = \transcriberCredit
-  arranger = \arrangerCredit
-  instrument = "Contrabasses"
-  copyright = \rightsCredit
-  tagline = ##f
-}
-
-% If necessary: add \paper { page-count = #2 } here, only for this part.
-% No instrumentName: the part is identified in the page header.
-
-\score {
-  \new Staff \with { midiInstrument = "contrabass" } { \clef bass \compressMMRests { \transpose c c' { \global \introMark \doubleBassMusic } } }
-  \layout { }
-}
-
-% Separate concert-pitch MIDI for independently rendered rehearsal audio.
-\score {
-  \new Staff \with { midiInstrument = "contrabass" } { \clef bass \global \introMark \doubleBassMusic }
-  \midi { }
-}
+\include "../music/global.ily"
+\include "../scorekit/lilypond/layout/part.ily"
+\header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Contrabasses" tagline = ##f }
+\score { \new Staff \with { midiInstrument = "contrabass" } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \clef bass \contrabassesMusic } >> \partPrintLayout }
+\score { \articulate \new Staff \with { midiInstrument = "contrabass" } << { \globalPlayback } { \rehearsalMarksPlayback } { \transpose c c, \contrabassesMusicPlayback } >> \midi { } }

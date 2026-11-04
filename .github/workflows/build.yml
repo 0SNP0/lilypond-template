@@ -5,76 +5,43 @@ on:
     tags: ['v*']
   pull_request:
   workflow_dispatch:
+concurrency:
+  group: orchestra-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/v') }}
 permissions:
   contents: read
 jobs:
-  build:
+  pdf:
+    name: PDF score and parts
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
         with:
+          submodules: recursive
           fetch-depth: 0
-      - name: Install official latest stable LilyPond
-        shell: bash
-        run: |
-          set -euo pipefail
-          version="$(curl --retry 3 -fsSL https://api.github.com/repos/lilypond/lilypond/releases/latest | python3 -c 'import json,sys; print(json.load(sys.stdin)["tag_name"].removeprefix("v"))')" || version="2.26.0"
-          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Invalid LilyPond release version: $version"; exit 1; }
-          url="https://gitlab.com/lilypond/lilypond/-/releases/v${version}/downloads/lilypond-${version}-linux-x86_64.tar.gz"
-          curl --retry 3 -fLsS "$url" -o "$RUNNER_TEMP/lilypond.tar.gz"
-          tar -xzf "$RUNNER_TEMP/lilypond.tar.gz" -C "$RUNNER_TEMP"
-          test -x "$RUNNER_TEMP/lilypond-${version}/bin/lilypond"
-          echo "$RUNNER_TEMP/lilypond-${version}/bin" >> "$GITHUB_PATH"
-          "$RUNNER_TEMP/lilypond-${version}/bin/lilypond" --version | head -n 1
-      - name: Install audio and validation dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends fluidsynth fluid-soundfont-gm ffmpeg python3-pypdf fonts-texgyre
-      - name: Check README matches score metadata
-        run: python3 scripts/build.py readme-check
-      - name: Build all PDFs and MP3 tracks
-        env:
-          SOURCE_TAG: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
-          SOUNDFONT: /usr/share/sounds/sf2/FluidR3_GM.sf2
-        run: |
-          python3 scripts/build.py build --audio
-          python3 scripts/build.py package
-      - uses: actions/upload-artifact@v4
+      - name: ScoreKit print
+        uses: ./scorekit/actions/build
         with:
-          name: orchestra-${{ github.sha }}
-          path: |
-            dist/pdf/*.pdf
-            dist/audio/*.mp3
-            dist/audio/*.midi
-            dist/audio/stems/*.mp3
-            dist/packages/*.zip
-            dist/viewer/**/*.svg
-            dist/viewer/*.json
-            dist/print-manifest.json
-          if-no-files-found: error
-          retention-days: 14
-  release:
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs: build
+          source_tag: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
+  media:
+    name: MIDI, audio, viewer and packages
+    needs: pdf
     runs-on: ubuntu-24.04
+    timeout-minutes: 120
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v4
         with:
-          name: orchestra-${{ github.sha }}
-          path: dist/
-      - name: Publish PDF files and archives
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          TAG: ${{ github.ref_name }}
-        run: |
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            echo "Release $TAG already exists; upload or replace assets"
-            gh release upload "$TAG" dist/pdf/*.pdf dist/packages/*.zip --clobber
-          else
-            echo "Create release $TAG with compiled assets"
-            gh release create "$TAG" dist/pdf/*.pdf dist/packages/*.zip --verify-tag --generate-notes --title "$TAG"
-          fi
+          submodules: recursive
+          fetch-depth: 0
+      - name: ScoreKit media
+        uses: ./scorekit/actions/media
+        with:
+          source_tag: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
+      - name: Publish musician-facing GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: ./scorekit/actions/release
+        with:
+          tag: ${{ github.ref_name }}

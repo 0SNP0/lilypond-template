@@ -1,0 +1,243 @@
+{
+  "schema": "ensemble-playback-map-v1",
+  "printed_measures": 152,
+  "playback_sections": [
+    {
+      "start": 1,
+      "end": 116
+    },
+    {
+      "start": 117,
+      "end": 152
+    },
+    {
+      "start": 1,
+      "end": 116
+    }
+  ],
+  "navigation": [
+    {
+      "after_measure": 116,
+      "label": "Fine"
+    },
+    {
+      "after_measure": 152,
+      "label": "D.C. al Fine",
+      "jump_to": 1,
+      "stop_after": 116
+    }
+  ],
+  "exclusive_measures": [
+    {
+      "measure": 4,
+      "allowed_music_files": [
+        "tuba.ily"
+      ]
+    }
+  ],
+  "solo_part_rests": {
+    "flute-2": [
+      17,
+      18,
+      19,
+      20,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      111,
+      112,
+      113,
+      114
+    ],
+    "oboe-2": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      140,
+      141,
+      142,
+      143
+    ],
+    "clarinet-in-a-2": [
+      49,
+      50,
+      51,
+      52,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92
+    ],
+    "clarinet-in-a-1": [
+      112,
+      113,
+      114
+    ],
+    "bassoon-2": [
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99
+    ],
+    "horn-3": [
+      47,
+      48,
+      49,
+      51,
+      52
+    ],
+    "trombone-2": [
+      103,
+      104,
+      105,
+      106,
+      107,
+      109
+    ],
+    "trombone-3": [
+      4,
+      5,
+      83,
+      84
+    ],
+    "tuba": [
+      1,
+      2,
+      3
+    ]
+  },
+  "import_text_marks": {
+    "english-horn": {
+      "53": "espr."
+    },
+    "contrabassoon": {
+      "53": "espr."
+    },
+    "trumpet-3": {
+      "1": "marc."
+    },
+    "cymbals": {
+      "77": "secco"
+    },
+    "violins-1": {
+      "21": "espr.",
+      "69": "espr.",
+      "98": "cresc."
+    },
+    "violins-2": {
+      "53": "espr.",
+      "98": "cresc."
+    },
+    "violas": {
+      "53": "espr.",
+      "101": "espr."
+    },
+    "violoncellos": {
+      "53": "espr."
+    },
+    "contrabasses": {
+      "53": "espr."
+    },
+    "flute-1": {
+      "69": "espr."
+    },
+    "oboe-1": {
+      "53": "espr.",
+      "117": "espr.",
+      "137": "espr."
+    },
+    "clarinet-in-a-1": {
+      "69": "espr."
+    },
+    "bassoon-1": {
+      "38": "espr.",
+      "53": "espr."
+    },
+    "horn-1": {
+      "1": "marc."
+    },
+    "horn-2": {
+      "1": "marc."
+    },
+    "trumpet-1": {
+      "1": "marc."
+    },
+    "trombone-3": {
+      "1": "marc."
+    }
+  },
+  "source_section_split": 116,
+  "validate_navigation": true,
+  "required_final_barline": "||",
+  "forbid_duplicate_music_sources": [
+    "flutes-1-2",
+    "oboes-1-2",
+    "clarinets-in-a-1-2",
+    "bassoons-1-2",
+    "horns-1-3",
+    "horns-2-4",
+    "trumpets-1-2",
+    "trombones-1-2",
+    "trombone-3-and-tuba"
+  ]
+}

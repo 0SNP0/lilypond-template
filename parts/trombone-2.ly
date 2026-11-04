@@ -1,33 +1,9 @@
-\version "2.24.3"
-% Standalone, directly previewable part; edit music in ../music/trombone-2.ily
+\version "2.26.0"
+\include "articulate.ly"
 \include "../metadata.ily"
 \include "../music/global.ily"
 \include "../music/trombone-2.ily"
-\include "../layout/part.ily"
-
-\header {
-  title = \workTitle
-  subtitle = \workSubtitle
-  composer = \composerCredit
-  poet = \lyricistCredit
-  translator = \translatorCredit
-  transcriber = \transcriberCredit
-  arranger = \arrangerCredit
-  instrument = "Trombone II"
-  copyright = \rightsCredit
-  tagline = ##f
-}
-
-% If necessary: add \paper { page-count = #2 } here, only for this part.
-% No instrumentName: the part is identified in the page header.
-
-\score {
-  \new Staff \with { midiInstrument = "trombone" } { \clef bass \compressMMRests { \global \introMark \tromboneTwoMusic } }
-  \layout { }
-}
-
-% Separate concert-pitch MIDI for independently rendered rehearsal audio.
-\score {
-  \new Staff \with { midiInstrument = "trombone" } { \clef bass \global \introMark \tromboneTwoMusic }
-  \midi { }
-}
+\include "../scorekit/lilypond/layout/part.ily"
+\header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Trombone II" tagline = ##f }
+\score { \new Staff \with { midiInstrument = "trombone" } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \tromboneTwoMusic } >> \partPrintLayout }
+\score { \articulate \new Staff \with { midiInstrument = "trombone" } << { \globalPlayback } { \rehearsalMarksPlayback } { \tromboneTwoMusicPlayback } >> \midi { } }

@@ -1,35 +1,9 @@
-\version "2.24.3"
-% Combined printed desk for players I and II; individual parts remain
-% in ../flute-1.ly and ../flute-2.ly (analogous for the other pairs).
+\version "2.26.0"
 \include "../../metadata.ily"
-\include "../../music/global.ily"
 \include "../../music/flute-1.ily"
 \include "../../music/flute-2.ily"
-\include "../../music/clarinet-1.ily"
-\include "../../music/clarinet-2.ily"
-\include "../../music/trumpet-1.ily"
-\include "../../music/trumpet-2.ily"
-\include "../../music/trombone-1.ily"
-\include "../../music/trombone-2.ily"
-\include "../../music/paired.ily"
-\include "../../layout/part.ily"
-
-\header {
-  title = \workTitle
-  subtitle = \workSubtitle
-  composer = \composerCredit
-  poet = \lyricistCredit
-  translator = \translatorCredit
-  transcriber = \transcriberCredit
-  arranger = \arrangerCredit
-  instrument = "Flutes I–II"
-  copyright = \rightsCredit
-  tagline = ##f
-}
-
-% One physical staff for both players, marked by opposing stem directions.
-% For independent page control add \paper { page-count = #2 } here.
-\score {
-  \new Staff \with { \consists Merge_rests_engraver midiInstrument = "flute" } { \flutesTogether }
-  \layout { }
-}
+\include "../../music/global.ily"
+\include "../../scorekit/lilypond/layout/part.ily"
+\header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Flutes I–II" tagline = ##f }
+\score { \new Staff \with { printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \partCombine #'(0 . 0) { \fluteOneMusic } { \fluteTwoMusic } } >> \partPrintLayout }
+\score { \new Staff \with { printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \partCombine #'(0 . 0) { \fluteOneMusic } { \fluteTwoMusic } } >> \midi { } }

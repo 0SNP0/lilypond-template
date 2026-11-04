@@ -1,33 +1,9 @@
-\version "2.24.3"
-% Standalone, directly previewable part; edit music in ../music/flute-2.ily
+\version "2.26.0"
+\include "articulate.ly"
 \include "../metadata.ily"
 \include "../music/global.ily"
 \include "../music/flute-2.ily"
-\include "../layout/part.ily"
-
-\header {
-  title = \workTitle
-  subtitle = \workSubtitle
-  composer = \composerCredit
-  poet = \lyricistCredit
-  translator = \translatorCredit
-  transcriber = \transcriberCredit
-  arranger = \arrangerCredit
-  instrument = "Flute II"
-  copyright = \rightsCredit
-  tagline = ##f
-}
-
-% If necessary: add \paper { page-count = #2 } here, only for this part.
-% No instrumentName: the part is identified in the page header.
-
-\score {
-  \new Staff \with { midiInstrument = "flute" } { \compressMMRests { \global \introMark \fluteTwoMusic } }
-  \layout { }
-}
-
-% Separate concert-pitch MIDI for independently rendered rehearsal audio.
-\score {
-  \new Staff \with { midiInstrument = "flute" } { \global \introMark \fluteTwoMusic }
-  \midi { }
-}
+\include "../scorekit/lilypond/layout/part.ily"
+\header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Flute II" tagline = ##f }
+\score { \new Staff \with { midiInstrument = "flute" } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \fluteTwoMusic } >> \partPrintLayout }
+\score { \articulate \new Staff \with { midiInstrument = "flute" } << { \globalPlayback } { \rehearsalMarksPlayback } { \fluteTwoMusicPlayback } >> \midi { } }

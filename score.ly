@@ -1,7 +1,9 @@
-\version "2.24.3"
+\version "2.26.0"
 % Open THIS file in Frescobaldi or VS Code to preview the full score.
 \include "orchestra.ily"
-\include "layout/score.ily"
+\include "music/global.ily"
+\include "scorekit/lilypond/layout/score.ily"
+\include "articulate.ly"
 
 \header {
   title = \workTitle
@@ -17,12 +19,12 @@
 }
 
 \score {
-  \keepWithTag #'written \ensembleScore
+  \keepWithTag #'written \orchestraScore
   \scoreCompactLayout
 }
 
 % Concert pitch MIDI; written transpositions are only for printed score.
 \score {
-  \keepWithTag #'concert \ensembleScore
+  \articulate \keepWithTag #'playback \orchestraScore
   \midi { \context { \Score midiChannelMapping = #'instrument } }
 }

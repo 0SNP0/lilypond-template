@@ -1,7 +1,8 @@
-\version "2.24.3"
+\version "2.26.0"
 % Concert pitch edition, sharing exactly the same orchestra.ily source.
 \include "orchestra.ily"
-\include "layout/score.ily"
+\include "music/global.ily"
+\include "scorekit/lilypond/layout/score.ily"
 
 \header {
   title = \workTitle
@@ -17,6 +18,6 @@
 }
 
 \score {
-  \keepWithTag #'concert \ensembleScore
+  \keepWithTag #'concert \orchestraScore
   \scoreCompactLayout
 }

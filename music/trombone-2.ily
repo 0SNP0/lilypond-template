@@ -1,12 +1,53 @@
-tromboneTwoMusic = \relative c {
-  % Bars 1–4
-  c4 c g c |
-  f4 f c2 |
-  a4 g c2 |
-  g2 r2 |
-  % Bars 5–8
-  c,4 c g' e |
-  f4 e c2 |
-  d4 c g' g, |
-  c1\bar "|."
+% PROVISIONAL solo split of MusicXML trombones-1-2. Review chords and solo/a2 labels.
+tromboneTwoOpening = {
+  \clef bass
+  \key e \major
+  \time 3/4
+  % Bars 1-4
+ R2.*52 |
+ r4 cis'4-. \mf cis'4-. |
+ r4 cis'4-. cis'4-. |
+ r4 a4-. a4-. |
+ r4 gis4-. gis4-. |
+  % Bars 57-60
+ r4 fis4-. fis4-. |
+ r4 fis4-. fis4-. |
+ r4 a4-. a4-. |
+ r4 gis4-. gis4-. |
+  % Bars 61-64
+ r4 a4-. a4-. |
+ r4 gis4-. gis4-. |
+ r4 fis4-. fis4-. |
+ r4 a4-. a4-. |
+  % Bars 65-68
+ r4 fis4-. fis4-. |
+ r4 fis4-. fis4-. |
+ r4 fis4-. fis4-. |
+ r4 fis4-. fis4-. |
+  % Bars 69-72
+ r4 cis'4-. cis'4-. |
+ r4 cis'4-. cis'4-. |
+ r4 a4-. a4-. |
+ r4 gis4-. gis4-. |
+  % Bars 73-76
+ r4 fis4-. fis4-. |
+ r4 fis4-. fis4-. |
+ r4 b4-. b4-. |
+ r4 a4-. a4-. |
+  % Bars 77-80
+ gis4-. \sf r4 r4 |
+ R2.*30 |
+ gis2. |
+  % Bars 109-112
+ R2.*6 |
+ gis4-. \f r4 gis4-. |
+ gis4-. r4 r4 |
 }
+
+tromboneTwoBridge = {
+  % Bars 117-120
+ R2.*36 |
+}
+
+tromboneTwoMusic = { \tromboneTwoOpening \tromboneTwoBridge }
+tromboneTwoMusicPlayback = \scorePlayback \tromboneTwoOpening \tromboneTwoBridge

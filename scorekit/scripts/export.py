@@ -514,6 +514,25 @@ def tag_svg(pages: list[Path], timeline: dict, kind: str,
         regions.extend(found)
         page_boxes[str(page_idx)] = _clean_svg(root, staves, revision)
         doc.write(file, encoding="utf-8", xml_declaration=True)
+    # On the final system there is no following system to receive a
+    # terminal bar number. If it is the final printed measure, use the last
+    # physical barline-to-barline cell instead of losing the final highlight.
+    if (carry_number == timeline["printed_measures"] and staves and
+            not any(a["measure_id"] == f"measure-{carry_number:04d}" for a in regions)):
+        top, bottom, left, right = max(staves, key=lambda row: row[0])
+        boundaries = sorted({round(x, 3) for x, y in barlines
+                             if abs(y-top)<.42 and left-.8<=x<=right+.8}
+                            | {round(left, 3),round(right, 3)})
+        previous = [x for x in boundaries if x < right-.4]
+        if previous:
+            x = max(previous)
+            regions.append({
+                "measure_id": f"measure-{carry_number:04d}",
+                "page": len(pages), "x": round(x,3),
+                "y": round(top-.4,3),
+                "width": round(right-x,3),
+                "height": round(bottom-top+.8,3),
+            })
     if not regions:
         print(f"WARNING: {kind}: no safe barline areas recovered; "
               "click-to-seek remains available through the timeline slider")

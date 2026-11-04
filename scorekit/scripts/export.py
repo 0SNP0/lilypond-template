@@ -258,6 +258,11 @@ def render_svg(source: Path, view_id: str, naming: dict) -> list[Path]:
         "-I", str(ROOT), "-o", str(view_dir / base), str(wrapper),
     ]
     env = {**os.environ, "SCORE_BUILD_REVISION": naming["revision"]}
+    if view_id in ("score", "concert-score"):
+        size = b.natural_score_staff_size(b.score_staff_count())
+        first, later = b.score_instrument_indents(size)
+        env["SCORE_INDENT_MM"] = str(first)
+        env["SCORE_SHORT_INDENT_MM"] = str(later)
     completed = subprocess.run(cmd, cwd=ROOT, env=env, text=True,
                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     if completed.returncode:

@@ -1,8 +1,8 @@
-name: Test ScoreKit website (GitHub Pages)
+name: Publish ScoreKit website (GitHub Pages)
 on:
   push:
     branches:
-      - score/sviridov-snowstorm-waltz
+      - main
     paths:
       - ".github/workflows/pages.yml"
       - "site/**"
@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   build:
-    name: Build website and private preview
+    name: Assemble and verify static website
     runs-on: ubuntu-latest
     steps:
       - name: Checkout score and ScoreKit
@@ -42,25 +42,22 @@ jobs:
           assert "viewer/?repo=" in Path("_site/index.html").read_text()
           print("Site structure and repository catalog: OK")
           PY
-      - name: Private website preview (Actions artifact)
+      - name: Upload website preview (Actions artifact)
         uses: actions/upload-artifact@v4
         with:
           name: scorekit-site-preview-${{ github.sha }}
           path: _site/
           retention-days: 14
           if-no-files-found: error
-      - name: Configure GitHub Pages after repository becomes public
-        if: ${{ github.event.repository.private == false }}
+      - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload static Pages site
-        if: ${{ github.event.repository.private == false }}
         uses: actions/upload-pages-artifact@v4
         with:
           path: _site/
   deploy:
-    name: Deploy public preview after repository visibility change
+    name: Deploy site from main
     needs: build
-    if: ${{ github.event.repository.private == false }}
     runs-on: ubuntu-latest
     permissions:
       pages: write

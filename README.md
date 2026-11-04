@@ -9,7 +9,7 @@
 
 **[Последний опубликованный комплект](https://github.com/0SNP0/lilypond-template/releases/latest)** · [Все релизы](https://github.com/0SNP0/lilypond-template/releases) · [Сборки текущей ветки](https://github.com/0SNP0/lilypond-template/actions/workflows/build.yml).
 
-Обычные коммиты запускают быстрый PDF-билд. Полный экспорт включает MP3, MIDI и интерактивные SVG с общим JSON-таймлайном; он создаётся при релизе или вручную через **Run workflow → full_export**. Git-версия видна на каждой странице.
+Каждый push запускает две последовательные сборки: сначала PDF партитур и партий, затем MP3 и интерактивные SVG с общим JSON-таймлайном. MIDI используется только как промежуточный формат и не распространяется. Git-версия видна на каждой странице.
 
 ## Сведения о произведении
 
@@ -36,13 +36,12 @@
 репозиториев — в [`catalog.json`](catalog.json), а общий движок
 просмотрщика — в [`scorekit/viewer/`](scorekit/viewer/).
 
-- [Сборка тестового сайта в GitHub Actions](https://github.com/0SNP0/lilypond-template/actions/workflows/pages.yml) — в приватном репозитории доступен скачиваемый preview-артефакт.
-- [Адрес сайта после включения GitHub Pages](https://0snp0.github.io/lilypond-template/) и [просмотрщик](https://0snp0.github.io/lilypond-template/viewer/).
+- [Сборка тестового сайта в GitHub Actions](https://github.com/0SNP0/lilypond-template/actions/workflows/pages.yml) — сборка сайта и публикация на GitHub Pages из `main`; preview-артефакт остаётся доступен.
+- [Адрес сайта](https://0snp0.github.io/lilypond-template/) и [просмотрщик](https://0snp0.github.io/lilypond-template/viewer/).
 - [Инструкция по включению и локальному запуску](docs/TEST_SITE.md).
 
-Пока репозиторий **private**, GitHub Pages не публикуется во избежание
-случайного раскрытия материалов. После перехода в **public** нужно
-разрешить GitHub Actions в настройках Pages и повторно запустить workflow.
+Репозиторий теперь **public**, а публикация сайта запускается из **`main`**.
+Для первого развёртывания нужно один раз выбрать **Settings → Pages → Source: GitHub Actions**. Если Pages ещё не активирован, шаг `Configure GitHub Pages` сообщит об этом в логе.
 
 ## Фреймворк сборки
 

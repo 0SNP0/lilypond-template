@@ -30,18 +30,27 @@
 | Авторские права | Copyright belongs to the respective rightsholders |
 <!-- SCORE-METADATA:END -->
 
-## Тестовый сайт и просмотрщик
+## Сайт партитуры и просмотрщик
 
-Страницы тестового сайта находятся в [`site/`](site/), список
-репозиториев — в [`catalog.json`](catalog.json), а общий движок
-просмотрщика — в [`scorekit/viewer/`](scorekit/viewer/).
+Каждый проект партитуры публикует **свой** GitHub Pages-сайт,
+содержащий **только последний опубликованный релиз**. Нотные страницы
+SVG и отдельные MP3 раздаются напрямую с Pages и запрашиваются по мере
+использования. Прошлые версии и файлы для музыкантов хранятся в GitHub
+Releases. Будущий общий каталог произведений будет отдельным сайтом
+со ссылками на такие проектные страницы.
 
-- [Сборка тестового сайта в GitHub Actions](https://github.com/0SNP0/lilypond-template/actions/workflows/pages.yml) — сборка сайта и публикация на GitHub Pages из `main`; preview-артефакт остаётся доступен.
-- [Адрес сайта](https://0snp0.github.io/lilypond-template/) и [просмотрщик](https://0snp0.github.io/lilypond-template/viewer/).
-- [Инструкция по включению и локальному запуску](docs/TEST_SITE.md).
+- [Открыть сайт «Метель. Вальс»](https://0snp0.github.io/lilypond-template/)
+- [Просмотрщик](https://0snp0.github.io/lilypond-template/viewer/)
+- [Workflow публикации Pages](https://github.com/0SNP0/lilypond-template/actions/workflows/pages.yml)
+- [Локальный запуск и архитектура](docs/TEST_SITE.md)
 
-Репозиторий теперь **public**, а публикация сайта запускается из **`main`**.
-Для первого развёртывания нужно один раз выбрать **Settings → Pages → Source: GitHub Actions**. Если Pages ещё не активирован, шаг `Configure GitHub Pages` сообщит об этом в логе.
+Локальный запуск из ScoreKit:
+
+```bash
+python3 scorekit/viewer/serve.py
+```
+Для загрузки последнего опубликованного релиза локально:
+`python3 scorekit/viewer/serve.py --from-release`.
 
 ## Фреймворк сборки
 

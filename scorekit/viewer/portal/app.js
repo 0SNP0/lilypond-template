@@ -48,7 +48,9 @@ async function mirrorIndex(){
 }
 async function mirroredRelease(){
   const data=await mirrorIndex();
-  return data.repositories?.[repo]?.[selectedRelease?.tag_name]||null;
+  const entries=Object.entries(data.repositories||{});
+  const matching=entries.find(([name])=>name.toLowerCase()===repo.toLowerCase());
+  return matching?.[1]?.[selectedRelease?.tag_name]||null;
 }
 function matchingAsset(kind){
   return selectedRelease?.assets?.find(a=>new RegExp("-"+kind+"-[^/]*\\.zip$","i").test(a.name));

@@ -274,18 +274,171 @@ def render_svg(source: Path, view_id: str, naming: dict) -> list[Path]:
     return renamed
 
 
-def tag_svg(pages: list[Path], timeline: dict) -> list[dict]:
-    """Add stable ID tags to the native SVG BarNumber groups.
+def _svg_translation(transform: str) -> tuple[float, float]:
+    match = re.search(r"translate\(\s*(-?[\d.]+)[,\s]+(-?[\d.]+)\s*\)", transform)
+    return (float(match.group(1)), float(match.group(2))) if match else (0., 0.)
 
-    When LilyPond does not expose a recoverable number/coordinate, the
-    missing anchor is reported rather than inventing geometric positions.
+
+def _svg_staff_geometry(root: ET.Element) -> tuple[list[tuple[float, float, float, float]],
+                                                       list[tuple[float, float]]]:
+    """Extract native LilyPond staff-lines and barline rectangles.
+
+    Coordinates are SVG viewBox units, not screenshots or guessed spacing.
+    Staff lines: five consecutive horizontal SVG lines with 1-ish-unit gaps.
+    Bar-lines: tall, narrow rectangles that align to a staff's top line.
     """
+    horizontal: list[tuple[float, float, float]] = []
+    vertical: list[tuple[float, float, float]] = []
+    for group in root:
+        if group.tag.rsplit("}", 1)[-1] != "g":
+            continue
+        gx, gy = _svg_translation(group.get("transform", ""))
+        for element in group:
+            name = element.tag.rsplit("}", 1)[-1]
+            if name == "line":
+                x1 = gx + float(element.get("x1", "0"))
+                x2 = gx + float(element.get("x2", "0"))
+                y1 = gy + float(element.get("y1", "0"))
+                y2 = gy + float(element.get("y2", "0"))
+                if abs(y1 - y2) < 0.02 and x2 - x1 > 15:
+                    horizontal.append((y1, x1, x2))
+            elif name == "rect":
+                width = float(element.get("width", "0"))
+                height = float(element.get("height", "0"))
+                if 0.05 < width < 0.40 and 3.7 < height < 5.4:
+                    vertical.append((gx + float(element.get("x", "0")),
+                                     gy + float(element.get("y", "0")), height))
+    horizontal.sort()
+    staves: list[tuple[float, float, float, float]] = []
+    i = 0
+    while i <= len(horizontal) - 5:
+        group = horizontal[i:i + 5]
+        gaps = [group[k + 1][0] - group[k][0] for k in range(4)]
+        if (all(0.65 < value < 1.36 for value in gaps)
+                and max(x[1] for x in group) - min(x[1] for x in group) < 0.25
+                and max(x[2] for x in group) - min(x[2] for x in group) < 0.25):
+            staves.append((group[0][0], group[-1][0],
+                           min(x[1] for x in group), max(x[2] for x in group)))
+            i += 5
+        else:
+            i += 1
+    return staves, [(x, y) for x, y, _height in vertical]
+
+
+def _svg_measure_regions(
+    staff: list[tuple[float, float, float, float]],
+    bars: list[tuple[float, float]],
+    labels: list[tuple[int, float, float]],
+    kind: str,
+    page_idx: int,
+) -> list[dict]:
+    """Regions follow real LilyPond barlines and staff/system bounds.
+
+    A compressed multi-measure rest is one visible region: that region is
+    associated with its first printed bar. This does not invent geometry
+    for hidden intermediate barlines.
+    """
+    if not staff or not labels:
+        return []
+    if kind in ("score", "concert-score"):
+        systems = {0: (min(s[0] for s in staff),
+                       max(s[1] for s in staff),
+                       min(s[2] for s in staff), max(s[3] for s in staff))}
+        rows = {0: labels}
+    else:
+        systems = dict(enumerate(staff))
+        rows: dict[int, list[tuple[int, float, float]]] = {}
+        for number, x, y in labels:
+            system = min(systems, key=lambda k: abs(y - systems[k][0]))
+            if abs(y - systems[system][0]) < 11:
+                rows.setdefault(system, []).append((number, x, y))
+    areas: list[dict] = []
+    for system, markers in rows.items():
+        top, bottom, left, right = systems[system]
+        boundaries = sorted({round(x, 3) for x, y in bars
+                             if abs(y - top) < .42 and left - .8 <= x <= right + .8}
+                            | {round(left, 3), round(right, 3)})
+        clean: list[float] = []
+        for x in boundaries:
+            if clean and x - clean[-1] < .4:
+                clean[-1] = x
+            else:
+                clean.append(x)
+        if len(clean) < 2:
+            continue
+        for number, x, _y in markers:
+            closest = min(clean, key=lambda value: abs(value - x))
+            if abs(x - closest) < .55:
+                # Ordinary BarNumber sits next to the barline. The first
+                # displayed measure on the system starts at that boundary;
+                # at a terminal barline use the preceding cell.
+                next_values = [value for value in clean if value > closest + .3]
+                if next_values:
+                    start, end = closest, min(next_values)
+                else:
+                    prev = [value for value in clean if value < closest - .3]
+                    if not prev:
+                        continue
+                    start, end = max(prev), closest
+            else:
+                # CenteredBarNumber in a conductor score labels the middle.
+                start = max((v for v in clean if v <= x), default=left)
+                end = min((v for v in clean if v > x), default=right)
+            if end - start < .3:
+                continue
+            areas.append({
+                "measure_id": f"measure-{number:04d}", "page": page_idx,
+                "x": round(start, 3), "y": round(top - .4, 3),
+                "width": round(end - start, 3),
+                "height": round(bottom - top + .8, 3),
+            })
+    return areas
+
+
+def _clean_svg(root: ET.Element, staves: list[tuple[float, float, float, float]]) -> list[float]:
+    """The web viewer supplies its own centered title and release metadata.
+
+    Remove the PDF book-title, running headers and Git-version footer.
+    Keep the notes, rehearsal marks and the SVG-only measure identifiers.
+    """
+    viewbox = [float(n) for n in root.get("viewBox", "0 0 210 297").split()]
+    if not staves:
+        return viewbox
+    top = min(s[0] for s in staves)
+    bottom = max(s[1] for s in staves)
+    for group in list(root):
+        if group.tag.rsplit("}", 1)[-1] != "g":
+            continue
+        if group.get("data-measure-id"):
+            continue
+        text = "".join(group.itertext()).strip()
+        if not text:
+            continue
+        _x, y = _svg_translation(group.get("transform", ""))
+        if y < top - 4 or y > bottom + 9:
+            root.remove(group)
+    # Trim empty title/footer paper without enlarging or distorting staves.
+    first = max(viewbox[1], top - 9)
+    last = min(viewbox[1] + viewbox[3], bottom + 12)
+    if last > first + 10:
+        viewbox[1], viewbox[3] = first, last - first
+        root.set("viewBox", " ".join(f"{x:.4f}" for x in viewbox))
+        old_width = re.match(r"([\d.]+)mm", root.get("width", ""))
+        if old_width and viewbox[2] > 0:
+            root.set("height", f"{float(old_width.group(1))*viewbox[3]/viewbox[2]:.2f}mm")
+    return viewbox
+
+
+def tag_svg(pages: list[Path], timeline: dict, kind: str) -> tuple[list[dict], list[dict], dict]:
+    """Index native SVG measure numbers AND real barline-to-barline regions."""
     anchors: list[dict] = []
+    regions: list[dict] = []
+    page_boxes: dict[str, list[float]] = {}
     allowed = {m["printed_number"] for m in timeline["measures"]}
     for page_idx, file in enumerate(pages, start=1):
         doc = ET.parse(file)
         root = doc.getroot()
-        found = []
+        labels: list[tuple[int, float, float]] = []
         for group in root.iter():
             if group.tag.rsplit("}", 1)[-1] != "g":
                 continue
@@ -293,19 +446,30 @@ def tag_svg(pages: list[Path], timeline: dict) -> list[dict]:
                 continue
             content = "".join(group.itertext()).strip()
             matches = re.findall(r"\d+", content)
-            if matches:
-                number = int(matches[0])
-                if number in allowed:
-                    found.append((number, group))
-        for number, group in found:
+            if not matches:
+                continue
+            number = int(matches[0])
+            if number not in allowed:
+                continue
             identifier = f"measure-{number:04d}"
-            # First annotation only on a page, prevents duplicate IDs.
-            if not any(a["measure_id"] == identifier and a["page"] == page_idx for a in anchors):
-                group.set("id", identifier)
-                group.set("data-measure-id", identifier)
-                anchors.append({"measure_id": identifier, "page": page_idx, "element_id": identifier})
+            if any(a["measure_id"] == identifier and a["page"] == page_idx for a in anchors):
+                continue
+            group.set("id", identifier)
+            group.set("data-measure-id", identifier)
+            anchors.append({"measure_id": identifier, "page": page_idx,
+                            "element_id": identifier})
+            child = next(iter(group), None)
+            if child is not None:
+                x, y = _svg_translation(child.get("transform", ""))
+                labels.append((number, x, y))
+        staves, barlines = _svg_staff_geometry(root)
+        regions.extend(_svg_measure_regions(staves, barlines, labels, kind, page_idx))
+        page_boxes[str(page_idx)] = _clean_svg(root, staves)
         doc.write(file, encoding="utf-8", xml_declaration=True)
-    return anchors
+    if not regions:
+        print(f"WARNING: {kind}: no safe barline areas recovered; "
+              "click-to-seek remains available through the timeline slider")
+    return anchors, regions, page_boxes
 
 
 def print_digest(pages: list[Path], revision: str) -> str:
@@ -347,7 +511,7 @@ def main() -> None:
     notation = {}
     for view_id, source, kind, part in sources:
         pages = render_svg(source, view_id, naming)
-        anchors = tag_svg(pages, timeline)
+        anchors, regions, page_boxes = tag_svg(pages, timeline, kind)
         music_hash = music_fingerprint(source)
         print_hash = print_fingerprint(source)
         views[view_id] = {
@@ -355,6 +519,8 @@ def main() -> None:
             "source": str(source.relative_to(ROOT)),
             "pages": [str(file.relative_to(VIEWER)) for file in pages],
             "measure_anchors": anchors,
+            "measure_areas": regions,
+            "page_viewboxes": page_boxes,
             "anchors_found": len({a["measure_id"] for a in anchors}),
         }
         if kind == "score":

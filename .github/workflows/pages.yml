@@ -9,6 +9,8 @@ on:
       - "catalog.json"
       - "scorekit/viewer/**"
   workflow_dispatch:
+  repository_dispatch:
+    types: [scorekit-release]
 permissions:
   contents: read
 concurrency:
@@ -25,6 +27,10 @@ jobs:
           submodules: recursive
       - name: Assemble the site exactly as for the future separate repository
         run: python3 scorekit/viewer/build_site.py --output _site
+      - name: Mirror release notes and individual audio tracks to Pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scorekit/viewer/mirror_releases.py --output _site --max-releases 2 --max-site-mib 650
       - name: Validate pages and catalog
         shell: bash
         run: |
@@ -33,6 +39,7 @@ jobs:
           test -s _site/viewer/index.html
           test -s _site/viewer/app.js
           test -s _site/viewer/catalog.json
+          test -s _site/viewer/mirrors.json
           python3 - <<'PY'
           import json
           from pathlib import Path

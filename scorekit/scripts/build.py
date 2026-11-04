@@ -184,8 +184,8 @@ def score_instrument_indents(staff_size: float) -> tuple[float, float]:
     """
     source = (ROOT / "orchestra.ily").read_text(encoding="utf-8")
     pattern = re.compile(
-        r'(shortInstrumentName|instrumentName)\\s*=\\s*'
-        r'(?:\\\\markup\\s+\\\\fontsize\\s+#-?\\d+(?:\\.\\d+)?\\s*)?'
+        r'(shortInstrumentName|instrumentName)\s*=\s*'
+        r'(?:\\markup\s+\\fontsize\s+#-?\d+(?:\.\d+)?\s*)?'
         r'"([^"]+)"'
     )
     labels = {"instrumentName": [], "shortInstrumentName": []}

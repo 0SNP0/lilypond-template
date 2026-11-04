@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import re
 import shutil
@@ -437,23 +438,45 @@ def render_audio(parts: list[Path], soundfont_path: str | None,
         ])
         run([
             ffmpeg, "-hide_banner", "-loglevel", "error", "-y",
-            "-i", str(wav), "-c:a", "libmp3lame", "-q:a", "1",
+            "-i", str(wav), "-c:a", "libmp3lame", "-q:a", "0",
             str(mp3_dir / f"{stem}.mp3"),
         ])
-    # No MP3 generation loss: mix PCM files, not already encoded stems.
+    # Mix lossless stems. A single-pass loudnorm can perform dynamic
+    # processing and reduce expressive contrasts, so instead analyze the
+    # uncompressed orchestral mix and apply exactly ONE fixed gain.
+    # The true-peak cap is always honored; no gain riding or compression.
     inputs = [arg for path in wavs for arg in ("-i", str(path))]
-    # The previous amix normalize=1 divided by the number of instruments
-    # (21), leaving a noticeably quieter result than any individual stem.
-    # Sum in floating point and then perform EBU R128 loudness normalization;
-    # loudnorm also imposes a true-peak limit so the mix does not clip.
-    mix = (
+    mixed_pcm = (
         f"amix=inputs={len(wavs)}:duration=longest:"
-        "dropout_transition=0:normalize=0,"
-        "loudnorm=I=-16:TP=-1.5:LRA=11"
+        "dropout_transition=0:normalize=0"
     )
+    measure_filter = mixed_pcm + ",loudnorm=I=-16:TP=-1.5:LRA=50:print_format=json"
+    measure_cmd = [
+        ffmpeg, "-hide_banner", "-nostats", "-y",
+        *inputs, "-filter_complex", measure_filter, "-f", "null", "-",
+    ]
+    print("+", " ".join(measure_cmd), flush=True)
+    measured = subprocess.run(measure_cmd, cwd=ROOT,
+                              stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                              text=True, check=False)
+    if measured.returncode:
+        raise RuntimeError("Audio loudness analysis failed: " + measured.stderr[-3000:])
+    match = re.search(r'\{\s*"input_i"\s*:.*?\}', measured.stderr, re.S)
+    if not match:
+        raise RuntimeError("FFmpeg omitted loudness statistics")
+    stats = json.loads(match.group())
+    integrated = float(stats["input_i"])
+    true_peak = float(stats["input_tp"])
+    if not math.isfinite(integrated) or not math.isfinite(true_peak):
+        raise RuntimeError("Invalid integrated loudness or true peak")
+    static_gain = min(-16.0 - integrated, -1.5 - true_peak)
+    print(f"Orchestra audio: {integrated:.2f} LUFS, {true_peak:.2f} dBTP; "
+          f"constant gain {static_gain:+.2f} dB (no dynamics compression)",
+          flush=True)
     run([
         ffmpeg, "-hide_banner", "-loglevel", "error", "-y",
-        *inputs, "-filter_complex", mix,
+        *inputs,
+        "-filter_complex", mixed_pcm + f",volume={static_gain:.3f}dB",
         "-ar", "48000", "-c:a", "libmp3lame", "-q:a", "0",
         str(AUDIO / (naming["mix"] + ".mp3")),
     ])

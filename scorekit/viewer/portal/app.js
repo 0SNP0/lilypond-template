@@ -7,7 +7,8 @@ const $ = id => document.getElementById(id);
 const SVG_NS = "http://www.w3.org/2000/svg";
 const message = text => $("message").textContent = text;
 let info=null, manifest=null, timeline=null;
-let selectedRegion=null, lastPage="", pendingSeek=null, initialTrack=false;
+let selectedRegion=null, lastPage="", pendingSeek=null, trackChange=0;
+let playbackFrame=null, lastPaintedTime=-1;
 const audio = $("audio");
 
 function choices(select, rows) {
@@ -73,6 +74,10 @@ async function boot() {
     $("version").textContent="Актуальная версия: "+info.tag;
     document.title=(info.title||"Партитура")+" — ScoreKit";
     if(info.release_url){$("release").href=info.release_url;$("release").hidden=false;}
+    if(typeof info.repo==="string" && /^[\\w.-]+\\/[\\w.-]+$/.test(info.repo)){
+      $("repository").href="https://github.com/"+info.repo;
+      $("repository").hidden=false;
+    }
     choices($("view"),Object.entries(manifest.views).map(([id,v])=>[id,viewLabel(id,v)]));
     choices($("track"),[["","Выберите аудиодорожку"],...manifest.audio_tracks.map(t=>[t.id,t.label])]);
     $("view").disabled=$("track").disabled=false;
@@ -83,7 +88,7 @@ async function boot() {
       const response=await fetch("./latest/README.md",{cache:"no-store"});
       displayMarkdown(response.ok ? await response.text() : "README недоступен");
     }else displayMarkdown("README выбранной редакции отсутствует.");
-    message("Ноты готовы. Красная область показывает текущий такт; нажмите на такт для перехода к его первому воспроизведению.");
+    message("");
     showView();
   }catch(e){message("Не удалось открыть партитуру: "+e.message);}
 }
@@ -118,13 +123,14 @@ function markMeasure(measureNumberValue) {
     const page=$("pages").querySelector('.page[data-page="'+area.page+'"]');
     if(page && !page.matches(":hover")){
       lastPage=String(area.page);
-      page.scrollIntoView({behavior:"smooth",block:"nearest"});
+      page.scrollIntoView({behavior:"auto",block:"nearest"});
     }
   }
 }
 function seekPrinted(number) {
   const occurrence=timeline?.measures?.find(m=>m.printed_number===number);
   if(!occurrence)return;
+  // Seek exactly to the start of the bar. All player updates use the same clock.
   seekSeconds(occurrence.start_ms/1000);
 }
 function seekSeconds(seconds) {
@@ -145,14 +151,14 @@ function seekSeconds(seconds) {
   audio.currentTime=Math.min(seconds,Number.isFinite(audio.duration)?
       Math.max(0,audio.duration-.05):seconds);
   updateTime();
+  if(!audio.paused) audio.play().catch(()=>{});
 }
 function showView() {
   if(!manifest)return;
   const id=$("view").value,view=manifest.views[id];if(!view)return;
   $("pages").replaceChildren();
   selectedRegion=null;lastPage="";
-  $("pagehint").textContent=view.pages.length+" стр. · "+
-    (view.anchors_found??0)+" распознанных номеров тактов";
+  $("notation").scrollTop=0;
   const fragment=document.createDocumentFragment();
   for(let i=0;i<view.pages.length;i++){
     const path=trustedPath(view.pages[i],"svg/",".svg");
@@ -205,14 +211,18 @@ function setTrack() {
   if(!manifest)return;
   const track=manifest.audio_tracks.find(t=>t.id===$("track").value);
   if(!track){
+    ++trackChange;
     audio.pause();audio.removeAttribute("src");audio.load();
+    updateTime();
     return;
   }
   const path=trustedPath(track.path.replace(/^(\.\.\/)+/,""),"audio/",".mp3");
   const previousTime=audio.currentTime||0,playing=!audio.paused;
+  const token=++trackChange;
   audio.src="./latest/"+path;
   audio.load();
   audio.addEventListener("loadedmetadata",()=>{
+    if(token!==trackChange)return;
     const target=pendingSeek??previousTime;
     pendingSeek=null;
     audio.currentTime=Math.min(target,Number.isFinite(audio.duration)?
@@ -220,11 +230,11 @@ function setTrack() {
     if(playing)audio.play().catch(()=>{});
     updateTime();
   },{once:true});
-  message("Звучит "+track.label+". Нажмите на выделенный такт для перехода; при репризе выбирается первое прохождение.");
+  message("");
 }
 function updateTime() {
   if(!timeline?.measures?.length || !manifest)return;
-  const ms=audio.currentTime*1000,measures=timeline.measures;
+  const ms=(Number.isFinite(audio.currentTime)?audio.currentTime:0)*1000,measures=timeline.measures;
   let low=0,high=measures.length;
   while(low<high){
     const mid=(low+high)>>1;
@@ -240,6 +250,27 @@ $("view").addEventListener("change",showView);
 $("track").addEventListener("change",setTrack);
 audio.addEventListener("timeupdate",updateTime);
 audio.addEventListener("seeked",updateTime);
+audio.addEventListener("loadedmetadata",updateTime);
+audio.addEventListener("ended",()=>{stopFrames();updateTime();});
+function stopFrames(){
+  if(playbackFrame!==null) cancelAnimationFrame(playbackFrame);
+  playbackFrame=null;
+}
+function paintWhilePlaying(){
+  playbackFrame=null;
+  if(audio.paused)return;
+  updateTime();
+  playbackFrame=requestAnimationFrame(paintWhilePlaying);
+}
+audio.addEventListener("play",()=>{stopFrames();paintWhilePlaying();});
+audio.addEventListener("pause",()=>{stopFrames();updateTime();});
+$("restart").addEventListener("click",()=>seekSeconds(0));
+$("sidebarToggle").addEventListener("click",()=>{
+  const sidebar=$("sidebar"),opening=sidebar.hidden;
+  sidebar.hidden=!opening;
+  $("sidebarToggle").setAttribute("aria-expanded",String(opening));
+  $("sidebarToggle").textContent=opening?"Описание ▸":"Описание ◂";
+});
 $("seek").addEventListener("input",()=>{
   const measure=timeline?.measures?.[Number($("seek").value)];
   if(measure)seekSeconds(measure.start_ms/1000);

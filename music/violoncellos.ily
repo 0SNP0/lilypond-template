@@ -1,6 +1,9 @@
 % Violoncellos: source MusicXML P20, 152 printed measures, 268 playback measures, written pitch
 % One measure per line, numbered blocks for Frescobaldi/VS Code.
 violoncellosOpening = {
+  % Reset the MIDI program on every return to the Opening (D.C. al Fine).
+  % This is playback state only; it does not add a printed arco label.
+  \set Staff.midiInstrument = "cello"
   \clef bass
   \key e \major
   \time 3/4

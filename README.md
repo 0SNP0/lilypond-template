@@ -30,6 +30,20 @@
 | Авторские права | Copyright belongs to the respective rightsholders |
 <!-- SCORE-METADATA:END -->
 
+## Тестовый сайт и просмотрщик
+
+Страницы тестового сайта находятся в [`site/`](site/), список
+репозиториев — в [`catalog.json`](catalog.json), а общий движок
+просмотрщика — в [`scorekit/viewer/`](scorekit/viewer/).
+
+- [Сборка тестового сайта в GitHub Actions](https://github.com/0SNP0/lilypond-template/actions/workflows/pages.yml) — в приватном репозитории доступен скачиваемый preview-артефакт.
+- [Адрес сайта после включения GitHub Pages](https://0snp0.github.io/lilypond-template/) и [просмотрщик](https://0snp0.github.io/lilypond-template/viewer/).
+- [Инструкция по включению и локальному запуску](docs/TEST_SITE.md).
+
+Пока репозиторий **private**, GitHub Pages не публикуется во избежание
+случайного раскрытия материалов. После перехода в **public** нужно
+разрешить GitHub Actions в настройках Pages и повторно запустить workflow.
+
 ## Фреймворк сборки
 
 Универсальная часть проекта находится в [ScoreKit](scorekit/): сборка и экспорт, оформление LilyPond, CI/CD-компоненты, просмотрщик и [общие инструкции](scorekit/docs/PROJECT_GUIDE.md). В корне остаются только музыкальное произведение, минимальный workflow GitHub Actions и его документация. Каталог `scorekit/` подготовлен для последующего перевода в Git-сабмодуль без изменения расположения.

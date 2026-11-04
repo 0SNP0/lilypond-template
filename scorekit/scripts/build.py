@@ -388,7 +388,31 @@ def validate_midi_programs(parts: list[Path], naming: dict[str, str]) -> None:
         if 0 in programs and not any("piano" in x.lower() or
                                       "acoustic grand" in x.lower() for x in instruments):
             raise RuntimeError(f"Unexpected piano in {part}: {sorted(programs)}")
-        print(f"Checked MIDI {part.stem}: programs {sorted(programs)}")
+        # A program change is sticky in MIDI. If a part switches to pizzicato
+        # in its Bridge, the repeated Opening must restore the bowed program.
+        if 'midiInstrument = "pizzicato strings"' in (
+                ROOT / "music" / (part.stem + ".ily")).read_text(encoding="utf-8"):
+            changes = [(tick, payload[1]) for tick, kind, _track, payload in events
+                       if kind == "channel" and (payload[0] & 0xF0) == 0xC0]
+            transitions = []
+            for tick, program in changes:
+                if not transitions or transitions[-1][1] != program:
+                    transitions.append((tick, program))
+            if len(transitions) < 3 or transitions[0][1] != transitions[-1][1]:
+                raise RuntimeError(
+                    f"Missing bowed/pizzicato/bowed MIDI program restoration "
+                    f"in {part.stem}: {transitions}")
+            print(f"MIDI bowing {part.stem}: {transitions}")
+        note_velocities = sorted({payload[2]
+                                  for _tick, kind, _track, payload in events
+                                  if kind == "channel" and (payload[0] & 0xF0) == 0x90
+                                  and len(payload) >= 3 and payload[2] > 0})
+        controllers = sorted({(payload[1], payload[2])
+                              for _tick, kind, _track, payload in events
+                              if kind == "channel" and (payload[0] & 0xF0) == 0xB0
+                              and len(payload) >= 3 and payload[1] in (7, 11)})
+        print(f"Checked MIDI {part.stem}: programs {sorted(programs)}, "
+              f"note velocities {note_velocities}, volume/expression CC {controllers[:20]}")
 
 
 def render_audio(parts: list[Path], soundfont_path: str | None,

@@ -2,6 +2,7 @@
 const $ = id => document.getElementById(id);
 let repo="", releases=[], selectedRelease=null, viewerZip=null, audioZip=null;
 let manifest=null, timeline=null, viewerRoot="", token=0, currentAudio=null, lastScrolledPage="";
+let mirrorsPromise=null;
 const pageUrls=[], audioUrls=new Map();
 const status = s => $("status").textContent=s;
 
@@ -32,9 +33,22 @@ function zipEntry(zip,path){
 async function getZip(source){
   if(typeof JSZip==="undefined")throw Error("JSZip не загрузился. Для локального просмотра необходимо подключение к CDN.");
   if(source instanceof File)return JSZip.loadAsync(source);
-  const response=await fetch(source.browser_download_url);
-  if(!response.ok)throw Error("Не удалось скачать "+source.name+" (HTTP "+response.status+")");
+  const url=source.local_url||source.browser_download_url;
+  const response=await fetch(url);
+  if(!response.ok)throw Error("Не удалось скачать "+(source.name||url)+" (HTTP "+response.status+")");
   return JSZip.loadAsync(await response.arrayBuffer());
+}
+async function mirrorIndex(){
+  if(!mirrorsPromise){
+    mirrorsPromise=fetch("./mirrors.json",{cache:"no-store"})
+      .then(r=>r.ok?r.json():{repositories:{}})
+      .catch(()=>({repositories:{}}));
+  }
+  return mirrorsPromise;
+}
+async function mirroredRelease(){
+  const data=await mirrorIndex();
+  return data.repositories?.[repo]?.[selectedRelease?.tag_name]||null;
 }
 function matchingAsset(kind){
   return selectedRelease?.assets?.find(a=>new RegExp("-"+kind+"-[^/]*\\.zip$","i").test(a.name));
@@ -79,12 +93,15 @@ async function chooseRelease(){
   loadReadme();
   const asset=matchingAsset("viewer");
   if(!asset){status("В релизе нет архива SVG/JSON просмотрщика");return}
+  const mirror=await mirroredRelease();
+  const source=mirror?.viewer?{name:asset.name,local_url:mirror.viewer}:asset;
   status("Получаю SVG/JSON: "+asset.name+" ("+(asset.size/1048576).toFixed(1)+" МиБ)…");
   try{
-    await openViewerZip(await getZip(asset));
+    await openViewerZip(await getZip(source));
   }catch(e){
     status("Не удалось открыть архив браузером: "+e.message+
-      ". Если GitHub Releases блокирует cross-origin fetch, скачайте ZIP и выберите его в поле локального файла.");
+      (mirror?" (проверьте сборку Pages и зеркальные файлы).":
+       ". Для этой версии ещё нет копии на сайте. Скачайте ZIP из Releases и выберите локально."));
   }
 }
 async function loadReadme(){
@@ -147,28 +164,38 @@ async function chooseTrack(){
   if(!track)return;
   const requested=track.id,n=token;
   try{
-    if(!audioZip){
-      const file=$("audio-file").files[0];
-      const asset=matchingAsset("audio");
-      if(!file&&!asset)throw Error("Для локального комплекта укажите аудио ZIP");
-      status("Загружаю MP3 ZIP, первый раз для этой версии…");
-      audioZip=await getZip(file||asset);
-    }
     const target=track.path.replace(/^(\.\.\/)+/,"");
-    const entry=zipEntry(audioZip,target);
-    if(!entry)throw Error("В аудиоархиве нет "+target);
-    if(!audioUrls.has(target)){
-      const blob=new Blob([await entry.async("uint8array")],{type:"audio/mpeg"});
-      audioUrls.set(target,URL.createObjectURL(blob));
+    const mirror=selectedRelease?await mirroredRelease():null;
+    const localAudio=$("audio-file").files[0];
+    let chosenSource=null;
+    if(!localAudio && mirror?.audio_base){
+      chosenSource=new URL(mirror.audio_base+target,location.href).href;
+      // Individual MP3s are served by Pages and streamed directly by the
+      // media element; no full audio ZIP or blob download is required.
+    }else{
+      if(!audioZip){
+        const asset=matchingAsset("audio");
+        if(!localAudio&&!asset)throw Error("Для локального комплекта укажите аудио ZIP");
+        status("Загружаю MP3 ZIP, первый раз для этой версии…");
+        audioZip=await getZip(localAudio||asset);
+      }
+      const entry=zipEntry(audioZip,target);
+      if(!entry)throw Error("В аудиоархиве нет "+target);
+      if(!audioUrls.has(target)){
+        const blob=new Blob([await entry.async("uint8array")],{type:"audio/mpeg"});
+        audioUrls.set(target,URL.createObjectURL(blob));
+      }
+      chosenSource=audioUrls.get(target);
     }
     if(n!==token||requested!==$("track").value)return;
     const player=$("audio"),time=player.currentTime,wasPlaying=!player.paused;
-    player.src=audioUrls.get(target);player.load();
+    player.src=chosenSource;player.load();
     player.addEventListener("loadedmetadata",()=>{
       player.currentTime=Math.min(time,Number.isFinite(player.duration)?player.duration:time);
       if(wasPlaying)player.play().catch(()=>{});
     },{once:true});
-    status("Дорожка готова: "+track.label+". ZIP аудио остаётся в памяти для следующего выбора.");
+    status("Дорожка готова: "+track.label+
+      (mirror?.audio_base&&!localAudio?". MP3 передаётся напрямую с сайта.":". ZIP аудио остаётся в памяти."));
   }catch(e){status("Ошибка звука: "+e.message)}
 }
 function updateClock(){

@@ -472,19 +472,6 @@ def tag_svg(pages: list[Path], timeline: dict, kind: str) -> tuple[list[dict], l
     return anchors, regions, page_boxes
 
 
-def print_digest(pages: list[Path], revision: str) -> str:
-    """Provisional render fingerprint, masking the displayed Git revision.
-
-    A comparison across releases must still be treated as a candidate for
-    reprinting, not as proof that a musician's paper is interchangeable.
-    """
-    sha = hashlib.sha256()
-    for path in pages:
-        data = path.read_bytes().replace(revision.encode(), b"<git-revision>")
-        sha.update(struct.pack(">I", len(data)))
-        sha.update(data)
-    return sha.hexdigest()
-
 
 def main() -> None:
     naming = b.current_names()

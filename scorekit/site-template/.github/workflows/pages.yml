@@ -3,6 +3,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
 permissions:
   contents: read
 jobs:
@@ -14,6 +16,10 @@ jobs:
           submodules: recursive
       - name: Assemble site and independent catalog
         run: python3 scorekit/viewer/build_site.py --output _site
+      - name: Mirror release assets into this website
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scorekit/viewer/mirror_releases.py --output _site --max-releases 2 --max-site-mib 650
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site

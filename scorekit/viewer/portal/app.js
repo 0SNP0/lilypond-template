@@ -8,7 +8,7 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 const message = text => $("message").textContent = text;
 let info=null, manifest=null, timeline=null;
 let selectedRegion=null, lastPage="", pendingSeek=null, trackChange=0;
-let playbackFrame=null, lastPaintedTime=-1;
+let playbackFrame=null, playAfterSeek=false;
 const audio = $("audio");
 
 function choices(select, rows) {
@@ -140,12 +140,14 @@ function seekSeconds(seconds) {
                        manifest?.audio_tracks?.[0];
     if(!defaultTrack)return;
     pendingSeek=seconds;
+    playAfterSeek=true;
     $("track").value=defaultTrack.id;
     setTrack();
     return;
   }
   if(audio.readyState < HTMLMediaElement.HAVE_METADATA){
     pendingSeek=seconds;
+    playAfterSeek=true;
     return;
   }
   audio.currentTime=Math.min(seconds,Number.isFinite(audio.duration)?
@@ -212,6 +214,7 @@ function setTrack() {
   const track=manifest.audio_tracks.find(t=>t.id===$("track").value);
   if(!track){
     ++trackChange;
+    playAfterSeek=false;
     audio.pause();audio.removeAttribute("src");audio.load();
     updateTime();
     return;
@@ -227,7 +230,8 @@ function setTrack() {
     pendingSeek=null;
     audio.currentTime=Math.min(target,Number.isFinite(audio.duration)?
       Math.max(0,audio.duration-.05):target);
-    if(playing)audio.play().catch(()=>{});
+    if(playing || playAfterSeek)audio.play().catch(()=>{});
+    playAfterSeek=false;
     updateTime();
   },{once:true});
   message("");

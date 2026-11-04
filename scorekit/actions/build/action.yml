@@ -31,6 +31,23 @@ runs:
       - name: Validate printed/playback repeat structure
         shell: bash
         run: python3 scorekit/scripts/check_music_structure.py
+      - name: Check print and music hashes ignore the Git revision
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path("scorekit/scripts").resolve()))
+          from notation_hash import print_fingerprint, music_fingerprint
+          source = Path("score.ly").resolve()
+          checks = []
+          for version in ("v0.0.1-1-g00000000", "v9.9.9-999-gffffffff"):
+              os.environ["SCORE_BUILD_REVISION"] = version
+              checks.append((print_fingerprint(source), music_fingerprint(source)))
+          assert checks[0] == checks[1], "Hashes depend on the Git version"
+          print("print_hash and music_hash are independent of SCORE_BUILD_REVISION")
+          PY
       - name: Build and package printable PDFs
         shell: bash
         env:

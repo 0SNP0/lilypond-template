@@ -1,0 +1,74 @@
+name: Test ScoreKit website (GitHub Pages)
+on:
+  push:
+    branches:
+      - score/sviridov-snowstorm-waltz
+    paths:
+      - ".github/workflows/pages.yml"
+      - "site/**"
+      - "catalog.json"
+      - "scorekit/viewer/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: scorekit-pages-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    name: Build website and private preview
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout score and ScoreKit
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Assemble the site exactly as for the future separate repository
+        run: python3 scorekit/viewer/build_site.py --output _site
+      - name: Validate pages and catalog
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s _site/index.html
+          test -s _site/viewer/index.html
+          test -s _site/viewer/app.js
+          test -s _site/viewer/catalog.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          catalog = json.loads(Path("_site/viewer/catalog.json").read_text())
+          assert catalog == json.loads(Path("catalog.json").read_text())
+          assert len(catalog) == 1 and catalog[0]["url"] == "https://github.com/0SNP0/lilypond-template"
+          assert "viewer/?repo=" in Path("_site/index.html").read_text()
+          print("Site structure and repository catalog: OK")
+          PY
+      - name: Private website preview (Actions artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: scorekit-site-preview-${{ github.sha }}
+          path: _site/
+          retention-days: 14
+          if-no-files-found: error
+      - name: Configure GitHub Pages after repository becomes public
+        if: ${{ github.event.repository.private == false }}
+        uses: actions/configure-pages@v5
+      - name: Upload static Pages site
+        if: ${{ github.event.repository.private == false }}
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site/
+  deploy:
+    name: Deploy public preview after repository visibility change
+    needs: build
+    if: ${{ github.event.repository.private == false }}
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

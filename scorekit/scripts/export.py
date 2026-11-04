@@ -604,6 +604,7 @@ def main() -> None:
         "revision": naming["revision"],
         "work_slug": naming["slug"],
         "work_title": b.metadata().get("workTitle", naming["slug"]),
+        "work_subtitle": b.metadata().get("workSubtitle", ""),
         "orchestra_name": b.metadata().get("orchestraName", ""),
         "audio": "../audio/" + naming["mix"] + ".mp3",
         "audio_tracks": [

@@ -61,7 +61,19 @@ function displayMarkdown(text) {
 }
 async function boot() {
   try {
-    info=await getJSON("./latest.json");
+    const [loadedInfo,configuration]=await Promise.all([
+      getJSON("./latest.json"),
+      getJSON("./config.json").catch(()=>({}))
+    ]);
+    info=loadedInfo;
+    const catalog=configuration?.catalog_url;
+    if(typeof catalog==="string" && /^https?:\/\//.test(catalog)){
+      const link=$("catalogLink");
+      link.href=catalog;
+      link.removeAttribute("aria-disabled");
+      link.removeAttribute("tabindex");
+      link.title="Каталог партитур";
+    }
     if(info.schema!=="scorekit-project-site-v1")throw Error("Неподдерживаемый формат сайта");
     [manifest,timeline]=await Promise.all([
       getJSON("./latest/viewer/manifest.json"),
@@ -70,9 +82,12 @@ async function boot() {
     if(!manifest?.views || !Object.keys(manifest.views).length ||
        !Array.isArray(timeline?.measures) || !timeline.measures.length)
       throw Error("Нет данных нот и времени воспроизведения");
-    $("heading").textContent=[info.title,info.orchestra].filter(Boolean).join(" · ");
+    const fullTitle=[info.title,info.subtitle].filter(Boolean).join(" — ")||"Партитура";
+    $("heading").textContent=fullTitle;
+    $("orchestraLine").textContent=info.orchestra ? "Оркестр: "+info.orchestra : "";
+    $("orchestraLine").hidden=!info.orchestra;
     $("version").textContent="Актуальная версия: "+info.tag;
-    document.title=(info.title||"Партитура")+" — ScoreKit";
+    document.title=fullTitle+" — ScoreKit";
     if(info.release_url){$("release").href=info.release_url;$("release").hidden=false;}
     if(typeof info.repo==="string" && /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(info.repo)){
       $("repository").href="https://github.com/"+info.repo;
@@ -305,6 +320,12 @@ function paintWhilePlaying(){
 audio.addEventListener("play",()=>{stopFrames();paintWhilePlaying();});
 audio.addEventListener("pause",()=>{stopFrames();updateTime();});
 $("restart").addEventListener("click",()=>seekSeconds(0));
+$("sidebarToggle").addEventListener("click",()=>{
+  const panel=$("sidebar");
+  const isCollapsed=panel.classList.toggle("is-collapsed");
+  $("sidebarToggle").setAttribute("aria-expanded",String(!isCollapsed));
+  $("sidebarToggle").title=isCollapsed?"Показать описание":"Скрыть описание";
+});
 $("speed").addEventListener("input",()=>{
   const rate=Number($("speed").value);
   audio.playbackRate=rate;

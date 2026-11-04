@@ -1,7 +1,7 @@
 # The Snowstorm — Waltz
 
 [![Build](https://github.com/0SNP0/lilypond-template/actions/workflows/build.yml/badge.svg)](https://github.com/0SNP0/lilypond-template/actions/workflows/build.yml)
-[![Releases](https://img.shields.io/badge/Releases-view%20releases-2f6fbd?logo=github)](https://github.com/0SNP0/lilypond-template/releases)
+[![Текущий релиз](https://img.shields.io/github/v/release/0SNP0/lilypond-template?label=release&logo=github)](https://github.com/0SNP0/lilypond-template/releases/latest)
 
 ## Партитура и партии
 

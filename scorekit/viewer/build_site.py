@@ -2,7 +2,9 @@
 """Build the current score project's own website using the ScoreKit engine."""
 from __future__ import annotations
 import argparse
+import json
 import shutil
+from urllib.parse import urlsplit
 from pathlib import Path
 
 FRAMEWORK = Path(__file__).resolve().parents[1]
@@ -20,6 +22,25 @@ def build_site(project: Path, output: Path) -> Path:
     if pages.is_dir():
         shutil.copytree(pages, output, dirs_exist_ok=True)
     shutil.copytree(PORTAL, output / "viewer", dirs_exist_ok=True)
+    # ScoreKit's default catalog URL may be overridden by this score's site.
+    # Leave unset for now: the navigation control is displayed but disabled.
+    default_catalog = FRAMEWORK / "config" / "catalog-url.txt"
+    project_catalog = pages / "catalog-url.txt"
+    selection = project_catalog if project_catalog.is_file() else default_catalog
+    catalog_url = ""
+    if selection.is_file():
+        catalog_url = next((line.strip() for line in selection.read_text(
+            encoding="utf-8").splitlines() if line.strip() and
+            not line.lstrip().startswith("#")), "")
+    if catalog_url:
+        parsed = urlsplit(catalog_url)
+        if parsed.scheme not in ("https", "http") or not parsed.netloc or (
+                parsed.username or parsed.password):
+            raise ValueError("Catalog URL must be an absolute HTTP(S) URL")
+    (output / "viewer" / "config.json").write_text(
+        json.dumps({"catalog_url": catalog_url}, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
     (output / ".nojekyll").touch()
     if not (output / "index.html").exists():
         # The viewer is the default landing page for every score project.

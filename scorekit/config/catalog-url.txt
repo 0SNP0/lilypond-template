@@ -1,0 +1,2 @@
+# Shared catalog URL. Leave blank until the external catalog exists.
+# A score project can override this in site/catalog-url.txt.

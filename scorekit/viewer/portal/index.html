@@ -7,25 +7,39 @@
 :root{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#203044;background:#f4f5f9}
 *{box-sizing:border-box}
 body{margin:0;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
-header{padding:10px 16px;background:#fff;border-bottom:1px solid #dce1ea;flex:none;z-index:5}
-h1{font-size:19px;margin:0 0 5px;text-align:center}
+header{padding:8px 12px;background:#fff;border-bottom:1px solid #dce1ea;flex:none;z-index:5}
 button,select,input{font:inherit}
-select,button{padding:7px 10px;border-radius:6px;border:1px solid #a9b3c2;background:#fff}
+select,button{padding:7px 9px;border-radius:6px;border:1px solid #a9b3c2;background:#fff}
 button{cursor:pointer}button:disabled,select:disabled{opacity:.5;cursor:default}
-.row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding-top:6px}
-.picker,.measure-seek{display:flex;align-items:center;gap:6px}
-#audio-cluster{display:flex;align-items:center;gap:4px;min-width:0}
-audio{width:min(380px,100%);height:38px;min-width:0}
+.titlebar{display:grid;grid-template-columns:34px minmax(0,1fr) 34px;gap:8px;align-items:center;margin-bottom:6px}
+#headingGroup{text-align:center;min-width:0}
+h1{font-size:18px;line-height:1.25;margin:0;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#orchestraLine{font-size:11px;color:#64748b;margin:2px 0 0}
+.catalog-link{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;color:#1760a1;text-decoration:none}
+.catalog-link:hover:not([aria-disabled="true"]),.side-toggle:hover{background:#ecf2f8}
+.catalog-link[aria-disabled="true"]{opacity:.45;cursor:default}
+.catalog-link svg,.side-toggle svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.side-toggle{width:34px;height:34px;padding:6px;border:0;display:flex;align-items:center;justify-content:center;color:#40546a}
+.row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:nowrap;min-width:0}
+.picker,.measure-seek{display:flex;align-items:center;gap:5px;min-width:0;font-size:13px;white-space:nowrap}
+.picker{flex:1 1 160px;min-width:94px}
+.picker select{min-width:0;width:100%;height:36px;font-size:13px}
+#audio-cluster{display:flex;align-items:center;gap:3px;flex:2.5 1 330px;min-width:285px}
+audio{display:block;flex:1 1 230px;width:100%;height:38px;min-width:190px}
 #restart{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;flex:none;border:0;border-radius:50%;background:#f1f3f4;color:#263648;padding:6px}
-#restart:hover{background:#e0e5eb}#restart:focus-visible{outline:2px solid #1760a1;outline-offset:2px}
+#restart:hover{background:#e0e5eb}
+#restart:focus-visible,.catalog-link:focus-visible,.side-toggle:focus-visible{outline:2px solid #1760a1;outline-offset:2px}
 #restart svg{width:19px;height:19px;fill:currentColor}
 #speedDetails{position:relative;flex:none}
-#speedDetails summary{padding:8px 7px;cursor:pointer;border-radius:6px;list-style:none;white-space:nowrap;font-variant-numeric:tabular-nums;font-size:13px}
+#speedDetails summary{padding:7px 5px;cursor:pointer;border-radius:6px;list-style:none;white-space:nowrap;font-variant-numeric:tabular-nums;font-size:12px}
 #speedDetails summary::-webkit-details-marker{display:none}
 #speedDetails[open] summary,#speedDetails summary:hover{background:#eaf0f8}
 #speedPopover{position:absolute;bottom:calc(100% + 7px);right:0;z-index:20;background:white;border:1px solid #dce1ea;box-shadow:0 5px 18px #14203633;border-radius:9px;padding:12px;min-width:205px}
 #speedPopover label{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;font-size:13px}
 #speedPopover input{grid-column:1 / -1;width:100%;accent-color:#1760a1}
+.measure-seek{flex:0 1 132px}
+.measure-seek input{width:100%;min-width:55px;accent-color:#1678dc}
+#position{flex:none;font-size:12px;white-space:nowrap}
 a{color:#1760a1}
 main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
 #notation{flex:1;min-width:0;overflow:auto;overscroll-behavior:contain;padding:14px}
@@ -35,9 +49,11 @@ main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
 .measure-layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .measure-region{fill:transparent;cursor:pointer}
 .measure-region.active{fill:#cf4242;fill-opacity:.22;stroke:#b53636;stroke-opacity:.35;stroke-width:.13;pointer-events:all}
-.measure-region:focus{outline:none}.measure-region:focus-visible{stroke:#1669b2;stroke-width:.22;stroke-opacity:1}
+.measure-region:focus{outline:none}
+.measure-region:focus-visible{stroke:#1669b2;stroke-width:.22;stroke-opacity:1}
 #sidebar{width:360px;max-width:35vw;min-width:0;flex:none;border-left:1px solid #dce1ea;background:#fff;display:flex;flex-direction:column;overflow:hidden}
-#sidebar-head{padding:14px 16px;border-bottom:1px solid #e1e6ef;display:grid;gap:6px}
+#sidebar.is-collapsed{display:none}
+#sidebar-head{padding:12px 16px;border-bottom:1px solid #e1e6ef;display:grid;gap:6px}
 #sidebar-head p{margin:0;font-size:13px}
 #sidebar-body{overflow:auto;overscroll-behavior:contain;padding:4px 16px 24px;flex:1}
 #readme{font-size:14px;line-height:1.6;overflow-wrap:anywhere}
@@ -48,34 +64,54 @@ main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
 #readme img{max-width:100%;height:auto}
 #readme h1,#readme h2,#readme h3{margin-top:1.3em;border-bottom:1px solid #e1e6ef;padding-bottom:.25em}
 #readme blockquote{border-left:3px solid #b0bac9;margin-left:0;padding-left:14px;color:#5c6c7f}
-.muted{color:#66768b;font-size:13px}#seek{width:155px}
+.muted{color:#66768b;font-size:13px}
 #message{padding:14px;margin:0 auto;max-width:1140px}#message:empty{display:none}
+@media(min-width:801px) and (max-width:1060px){
+  header{padding:6px 8px}.row{gap:5px}
+  .picker{flex-basis:130px}.picker select{padding:5px}
+  #audio-cluster{min-width:275px}
+  .measure-seek{flex-basis:90px}
+  #position{font-size:11px}
+}
 @media(max-width:800px){
- body{height:auto;min-height:100dvh;display:block;overflow:visible;padding-bottom:56px}
- header{position:sticky;top:0;padding:7px 9px 6px;z-index:12}
- h1{font-size:14px;line-height:21px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:85px;margin:0 0 3px}
- .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:5px;padding:0}
- .picker{display:flex;align-items:center;gap:4px;min-width:0;font-size:12px}
- .picker select{width:100%;min-width:0;padding:6px 22px 6px 6px;font-size:13px;height:35px}
- .measure-seek{display:none}
- #position{position:absolute;top:8px;right:9px;font-size:11px;max-width:82px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
- #audio-cluster{position:fixed;bottom:0;left:0;right:0;z-index:25;background:#fff;border-top:1px solid #dce1ea;padding:5px 7px 6px;height:56px;gap:4px;box-shadow:0 -2px 12px #14203618}
- #audio-cluster audio{flex:1;width:100%;min-width:0;height:38px}
- #restart{height:38px;width:38px}
- #speedDetails summary{min-width:47px;text-align:center}
- main{display:block;width:100%;overflow:visible}
- #notation{height:calc(100dvh - 155px);min-height:55dvh;overflow:auto;overscroll-behavior:auto;padding:7px;background:#eef0f4}
- #pages{min-width:700px;max-width:none;gap:10px}
- #notation[data-kind="score"] #pages,#notation[data-kind="concert-score"] #pages{min-width:1020px}
- #sidebar{width:100%;max-width:none;height:auto;overflow:visible;border:0;border-top:1px solid #dce1ea}
- #sidebar-head{padding:12px;border:0}
- #sidebar-body{padding:0 12px 20px;overflow:visible}
- #readme{font-size:14px}
+  body{height:auto;min-height:100dvh;display:block;overflow:visible;padding-bottom:56px}
+  header{position:sticky;top:0;padding:6px 8px;z-index:12}
+  .titlebar{grid-template-columns:28px minmax(0,1fr) 1px;gap:6px;margin-bottom:6px}
+  h1{font-size:14px;line-height:23px;text-align:left}
+  #headingGroup{text-align:left}
+  #orchestraLine{display:none}
+  .catalog-link{width:28px;height:28px}
+  .side-toggle{display:none}
+  .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px}
+  .picker{display:flex;align-items:center;gap:4px;min-width:0;font-size:12px}
+  .picker select{width:100%;min-width:0;padding:6px 20px 6px 6px;font-size:13px;height:35px}
+  .measure-seek{display:none}
+  #position{display:none}
+  #audio-cluster{position:fixed;bottom:0;left:0;right:0;z-index:25;background:#fff;border-top:1px solid #dce1ea;padding:5px 7px 6px;height:56px;gap:4px;min-width:0;box-shadow:0 -2px 12px #14203618}
+  #audio-cluster audio{flex:1;width:100%;min-width:0;height:38px}
+  #restart{height:38px;width:38px}
+  #speedDetails summary{min-width:47px;text-align:center}
+  main{display:block;width:100%;overflow:visible}
+  #notation{height:calc(100dvh - 148px);min-height:54dvh;overflow:auto;overscroll-behavior:contain;padding:6px;background:#eef0f4}
+  #pages,#notation[data-kind="score"] #pages,#notation[data-kind="concert-score"] #pages{min-width:0;width:100%;max-width:100%;gap:10px}
+  .page{width:100%;max-width:100%}
+  #sidebar,#sidebar.is-collapsed{display:block;width:100%;max-width:none;height:auto;overflow:visible;border:0;border-top:1px solid #dce1ea}
+  #sidebar-head{padding:12px;border:0}
+  #sidebar-body{padding:0 12px 20px;overflow:visible}
+  #readme{font-size:14px}
 }
 </style></head>
 <body>
 <header>
-<h1 id="heading">Партитура</h1>
+<div class="titlebar">
+  <a id="catalogLink" class="catalog-link" aria-disabled="true" title="Каталог партитур ещё не настроен" aria-label="Каталог партитур" tabindex="-1">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7M7 12h14"/></svg>
+  </a>
+  <div id="headingGroup"><h1 id="heading">Партитура</h1><p id="orchestraLine" hidden></p></div>
+  <button id="sidebarToggle" class="side-toggle" type="button" title="Скрыть описание" aria-controls="sidebar" aria-expanded="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/></svg>
+  </button>
+</div>
 <div class="row">
 <label class="picker">Ноты <select id="view" disabled><option>Загрузка…</option></select></label>
 <label class="picker">Звук <select id="track" disabled><option>Загрузка…</option></select></label>
@@ -101,7 +137,6 @@ main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
 </div>
 <aside id="sidebar" aria-label="Информация о партитуре">
  <div id="sidebar-head">
-  <strong>О произведении</strong>
   <p id="version" class="muted">Загрузка актуального релиза…</p>
   <p><a id="repository" href="#" target="_blank" rel="noopener" hidden>Репозиторий</a> · <a id="release" href="#" target="_blank" rel="noopener" hidden>Релизы и PDF</a></p>
  </div>

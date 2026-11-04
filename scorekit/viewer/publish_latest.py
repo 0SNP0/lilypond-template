@@ -144,6 +144,7 @@ def publish(output: Path, repo: str, max_site_mib: int = 650) -> dict:
         "tag": tag,
         "release_url": release["html_url"],
         "title": manifest.get("work_title") or manifest.get("work_slug") or repo,
+        "subtitle": manifest.get("work_subtitle", ""),
         "orchestra": manifest.get("orchestra_name", ""),
         "data_base": "./latest/",
         "readme_available": (latest / "README.md").exists(),

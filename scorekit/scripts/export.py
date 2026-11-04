@@ -336,20 +336,24 @@ def _svg_measure_regions(
     labels: list[tuple[int, float, float]],
     kind: str,
     page_idx: int,
-) -> list[dict]:
-    """Regions follow real LilyPond barlines and staff/system bounds.
+    carry_number: int | None = None,
+) -> tuple[list[dict], int | None]:
+    """Attach LilyPond's end-of-system bar number to the NEXT system.
 
-    A compressed multi-measure rest is one visible region: that region is
-    associated with its first printed bar. This does not invent geometry
-    for hidden intermediate barlines.
+    A BarNumber at the far right of a system names the *following* measure.
+    That measure is printed at the far left of the next system, where LilyPond
+    may omit a duplicate number. This applies to ordinary notes and compressed
+    multimeasure rests alike, including across a page break.
     """
-    if not staff or not labels:
-        return []
+    if not staff:
+        return [], carry_number
+
     if kind in ("score", "concert-score"):
         systems = {0: (min(s[0] for s in staff),
                        max(s[1] for s in staff),
                        min(s[2] for s in staff), max(s[3] for s in staff))}
         rows = {0: labels}
+        carry_number = None
     else:
         systems = dict(enumerate(staff))
         rows: dict[int, list[tuple[int, float, float]]] = {}
@@ -357,9 +361,23 @@ def _svg_measure_regions(
             system = min(systems, key=lambda k: abs(y - systems[k][0]))
             if abs(y - systems[system][0]) < 11:
                 rows.setdefault(system, []).append((number, x, y))
+
     areas: list[dict] = []
-    for system, markers in rows.items():
+
+    def add(number: int, left: float, right: float,
+            top: float, bottom: float) -> None:
+        if right - left < .3:
+            return
+        areas.append({
+            "measure_id": f"measure-{number:04d}", "page": page_idx,
+            "x": round(left, 3), "y": round(top - .4, 3),
+            "width": round(right - left, 3),
+            "height": round(bottom - top + .8, 3),
+        })
+
+    for system in sorted(systems, key=lambda key: systems[key][0]):
         top, bottom, left, right = systems[system]
+        markers = sorted(rows.get(system, []), key=lambda value: value[1])
         boundaries = sorted({round(x, 3) for x, y in bars
                              if abs(y - top) < .42 and left - .8 <= x <= right + .8}
                             | {round(left, 3), round(right, 3)})
@@ -371,41 +389,44 @@ def _svg_measure_regions(
                 clean.append(x)
         if len(clean) < 2:
             continue
+
+        if kind not in ("score", "concert-score") and carry_number is not None:
+            # A page break can explicitly repeat the measure number at the
+            # system start. Do not produce a second copy in that case.
+            labeled_at_start = any(
+                number == carry_number and x <= left + 1.5
+                for number, x, _y in markers
+            )
+            if not labeled_at_start:
+                end = min((x for x in clean if x > left + .3), default=right)
+                add(carry_number, left, end, top, bottom)
+            carry_number = None
+
         for number, x, _y in markers:
             closest = min(clean, key=lambda value: abs(value - x))
             if x <= left + 1.5:
-                # A system-opening BarNumber may sit slightly to the left
-                # of the left staff edge; include its first real bar.
-                start = left
                 following = [value for value in clean if value > left + .3]
-                if not following:
-                    continue
-                end = min(following)
+                if following:
+                    add(number, left, min(following), top, bottom)
             elif abs(x - closest) < .55:
-                # Ordinary BarNumber sits next to the barline. The first
-                # displayed measure on the system starts at that boundary;
-                # at a terminal barline use the preceding cell.
                 next_values = [value for value in clean if value > closest + .3]
                 if next_values:
-                    start, end = closest, min(next_values)
+                    add(number, closest, min(next_values), top, bottom)
+                elif kind not in ("score", "concert-score"):
+                    # This BarNumber belongs to the first physical measure
+                    # of the NEXT system, not the last of this one.
+                    carry_number = number
                 else:
                     prev = [value for value in clean if value < closest - .3]
-                    if not prev:
-                        continue
-                    start, end = max(prev), closest
+                    if prev:
+                        add(number, max(prev), closest, top, bottom)
             else:
-                # CenteredBarNumber in a conductor score labels the middle.
-                start = max((v for v in clean if v <= x), default=left)
-                end = min((v for v in clean if v > x), default=right)
-            if end - start < .3:
-                continue
-            areas.append({
-                "measure_id": f"measure-{number:04d}", "page": page_idx,
-                "x": round(start, 3), "y": round(top - .4, 3),
-                "width": round(end - start, 3),
-                "height": round(bottom - top + .8, 3),
-            })
-    return areas
+                # CenteredBarNumber labels a real measure inside a system.
+                begin = max((v for v in clean if v <= x), default=left)
+                finish = min((v for v in clean if v > x), default=right)
+                add(number, begin, finish, top, bottom)
+
+    return areas, carry_number
 
 
 def _clean_svg(root: ET.Element, staves: list[tuple[float, float, float, float]],
@@ -458,6 +479,7 @@ def tag_svg(pages: list[Path], timeline: dict, kind: str,
     regions: list[dict] = []
     page_boxes: dict[str, list[float]] = {}
     allowed = {m["printed_number"] for m in timeline["measures"]}
+    carry_number: int | None = None
     for page_idx, file in enumerate(pages, start=1):
         doc = ET.parse(file)
         root = doc.getroot()
@@ -486,7 +508,10 @@ def tag_svg(pages: list[Path], timeline: dict, kind: str,
                 x, y = _svg_translation(child.get("transform", ""))
                 labels.append((number, x, y))
         staves, barlines = _svg_staff_geometry(root)
-        regions.extend(_svg_measure_regions(staves, barlines, labels, kind, page_idx))
+        found, carry_number = _svg_measure_regions(
+            staves, barlines, labels, kind, page_idx, carry_number
+        )
+        regions.extend(found)
         page_boxes[str(page_idx)] = _clean_svg(root, staves, revision)
         doc.write(file, encoding="utf-8", xml_declaration=True)
     if not regions:

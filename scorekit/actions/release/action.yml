@@ -15,6 +15,15 @@ runs:
         with:
           name: score-media-${{ github.sha }}
           path: .
+      - name: Prepare standalone orchestra audio file
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist/release
+          shopt -s nullglob
+          mixes=(dist/audio/*.mp3)
+          test "${#mixes[@]}" -eq 1
+          cp "${mixes[0]}" "dist/release/89-$(basename "${mixes[0]}")"
       - name: Publish PDFs and three release bundles
         shell: bash
         env:
@@ -24,8 +33,8 @@ runs:
         run: |
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "Release $TAG already exists; upload or replace assets"
-            gh release upload "$TAG" dist/pdf/*.pdf dist/packages/*-pdf-*.zip dist/packages/*-audio-*.zip dist/packages/*-viewer-*.zip --clobber
+            gh release upload "$TAG" dist/pdf/*.pdf dist/packages/*-pdf-*.zip dist/packages/*-audio-*.zip dist/packages/*-viewer-*.zip dist/release/89-*.mp3 --clobber
           else
             echo "Create release $TAG with compiled assets"
-            gh release create "$TAG" dist/pdf/*.pdf dist/packages/*-pdf-*.zip dist/packages/*-audio-*.zip dist/packages/*-viewer-*.zip --verify-tag --generate-notes --title "$TAG"
+            gh release create "$TAG" dist/pdf/*.pdf dist/packages/*-pdf-*.zip dist/packages/*-audio-*.zip dist/packages/*-viewer-*.zip dist/release/89-*.mp3 --verify-tag --generate-notes --title "$TAG"
           fi

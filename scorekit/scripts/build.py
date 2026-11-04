@@ -326,7 +326,7 @@ def build(*, audio: bool, font: str | None, reuse_pdf: bool = False) -> None:
     if audio:
         if not score_midi.is_file():
             raise RuntimeError("Score did not emit orchestra MIDI")
-        shutil.move(str(score_midi), str(AUDIO / (naming["mix"] + ".midi")))
+        shutil.move(str(score_midi), str(BUILD / "midi" / (naming["mix"] + ".midi")))
     elif score_midi.is_file():
         score_midi.unlink()
     if not reuse_pdf:
@@ -497,7 +497,7 @@ def verify(*, audio: bool = False) -> None:
         if not data.startswith(b"%PDF"):
             raise RuntimeError(f"Invalid PDF {name}")
     if audio:
-        if not (AUDIO / (naming["mix"] + ".midi")).read_bytes().startswith(b"MThd"):
+        if not (BUILD / "midi" / (naming["mix"] + ".midi")).read_bytes().startswith(b"MThd"):
             raise RuntimeError("Invalid orchestra MIDI")
     try:
         from pypdf import PdfReader
@@ -537,9 +537,9 @@ def package(*, full: bool = False) -> None:
     for pdf in sorted(PDF.glob("*.pdf")):
         stem = pdf.stem
         if stem == naming["score"]:
-            midi = AUDIO / (naming["mix"] + ".midi")
+            midi = BUILD / "midi" / (naming["mix"] + ".midi")
         elif stem == naming["concert"]:
-            midi = AUDIO / (naming["mix"] + ".midi")
+            midi = BUILD / "midi" / (naming["mix"] + ".midi")
         else:
             midi = BUILD / "midi" / (stem + ".midi")
         if stem == naming["score"] or stem == naming["concert"]:
@@ -574,9 +574,8 @@ def package(*, full: bool = False) -> None:
             archive.write(manifest_file, "print-manifest.json")
     if full:
         with zipfile.ZipFile(PACKAGES / naming["audio_zip"], "w", zipfile.ZIP_DEFLATED) as archive:
-            for ext in (".mp3", ".midi"):
-                item = AUDIO / (naming["mix"] + ext)
-                archive.write(item, f"audio/{item.name}")
+            item = AUDIO / (naming["mix"] + ".mp3")
+            archive.write(item, f"audio/{item.name}")
             for item in sorted((AUDIO / "stems").glob("*.mp3")):
                 archive.write(item, f"audio/stems/{item.name}")
             archive.write(BUILD / "build-info.json", "build-info.json")

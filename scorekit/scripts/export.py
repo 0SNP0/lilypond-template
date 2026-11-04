@@ -330,7 +330,7 @@ def main() -> None:
         shutil.rmtree(VIEWER)
     VIEWER.mkdir(parents=True)
     shutil.copy2(b.FRAMEWORK / "viewer" / "index.html", VIEWER / "index.html")
-    timeline = make_timeline(b.AUDIO / (naming["mix"] + ".midi"))
+    timeline = make_timeline(b.BUILD / "midi" / (naming["mix"] + ".midi"))
     (VIEWER / "timeline.json").write_text(
         json.dumps(timeline, indent=2, ensure_ascii=False) + "\n", encoding="utf-8",
     )

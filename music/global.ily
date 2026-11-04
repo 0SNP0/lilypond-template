@@ -4,7 +4,7 @@ global = { \time 3/4 s2.*152 \bar "||" }
 globalPlayback = { \time 3/4 s2.*268 }
 
 rehearsalMarks = {
-  \tempo 2. = 66
+  \tempo \markup { \italic "Tempo di valse allegro" } 2. = 66
   % Bars 1–4
   s2.*4 |
   % Bars 5–20

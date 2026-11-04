@@ -5,42 +5,75 @@
 <title>ScoreKit — Просмотр партитуры</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#203044;background:#f4f5f9}
-*{box-sizing:border-box}body{margin:0}header{padding:14px 18px;background:#fff;border-bottom:1px solid #dce1ea;position:sticky;top:0;z-index:5}
-h1{font-size:20px;margin:0 0 6px;text-align:center}h2{font-size:17px;margin:0}button,select,input{font:inherit}select,button{padding:7px 10px;border-radius:6px;border:1px solid #a9b3c2;background:#fff}
+*{box-sizing:border-box}body{margin:0;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+header{padding:10px 16px;background:#fff;border-bottom:1px solid #dce1ea;flex:none;z-index:5}
+h1{font-size:19px;margin:0 0 5px;text-align:center}button,select,input{font:inherit}
+select,button{padding:7px 10px;border-radius:6px;border:1px solid #a9b3c2;background:#fff}
 button{cursor:pointer}button:disabled,select:disabled{opacity:.5;cursor:default}
-.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-top:6px}
+.row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding-top:6px}
 .row label{display:flex;gap:6px;align-items:center}audio{width:min(380px,100%);height:38px}
-a{color:#1760a1}main{max-width:1250px;margin:auto;padding:14px}
-section{margin-bottom:15px;background:#fff;padding:15px 18px;border:1px solid #e0e4eb;border-radius:9px}
+a{color:#1760a1}
+main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
+#notation{flex:1;min-width:0;overflow:auto;overscroll-behavior:contain;padding:14px}
 #pages{display:flex;flex-direction:column;gap:18px;align-items:stretch;max-width:1140px;margin:0 auto}
 .page{position:relative;padding:0;background:white;box-shadow:0 2px 12px #14203629;text-align:center}
-.page img{width:100%;height:auto;display:block;user-select:none}.measure-layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible}.measure-region{fill:transparent;cursor:pointer;transition:fill .12s}.measure-region:hover{fill:#d45a5a;fill-opacity:.13}.measure-region.active{fill:#cf4242;fill-opacity:.25;stroke:#b53636;stroke-opacity:.45;stroke-width:.13;pointer-events:all}.measure-region:focus{outline:none;fill:#d45a5a;fill-opacity:.2}
-#message{color:#4b5d73;white-space:pre-wrap}#readme{font-size:14px;line-height:1.6;overflow-wrap:anywhere;max-width:900px;margin:auto}#readme table{display:block;overflow-x:auto;border-collapse:collapse}#readme th,#readme td{border:1px solid #d4dce5;padding:6px 12px}#readme th{background:#f4f6f9}#readme pre{overflow-x:auto;padding:12px;background:#f2f5f9;border-radius:6px}#readme code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}#readme img{max-width:100%;height:auto}#readme h1,#readme h2,#readme h3{margin-top:1.3em;border-bottom:1px solid #e1e6ef;padding-bottom:.25em}#readme blockquote{border-left:3px solid #b0bac9;margin-left:0;padding-left:14px;color:#5c6c7f}
+.page img{width:100%;height:auto;display:block;user-select:none}
+.measure-layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.measure-region{fill:transparent;cursor:pointer}
+.measure-region:hover{fill:#d45a5a;fill-opacity:.09}
+.measure-region.active{fill:#cf4242;fill-opacity:.22;stroke:#b53636;stroke-opacity:.35;stroke-width:.13;pointer-events:all}
+.measure-region:focus{outline:none}
+.measure-region:focus-visible{stroke:#1669b2;stroke-width:.22;stroke-opacity:1}
+#sidebar{width:360px;max-width:35vw;min-width:0;flex:none;border-left:1px solid #dce1ea;background:#fff;display:flex;flex-direction:column;overflow:hidden}
+#sidebar[hidden]{display:none}
+#sidebar-head{padding:14px 16px;border-bottom:1px solid #e1e6ef;display:grid;gap:6px}
+#sidebar-head p{margin:0;font-size:13px}
+#sidebar-body{overflow:auto;overscroll-behavior:contain;padding:4px 16px 24px;flex:1}
+#readme{font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+#readme table{display:block;overflow-x:auto;border-collapse:collapse}
+#readme th,#readme td{border:1px solid #d4dce5;padding:6px 12px}
+#readme th{background:#f4f6f9}#readme pre{overflow-x:auto;padding:12px;background:#f2f5f9;border-radius:6px}
+#readme code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+#readme img{max-width:100%;height:auto}
+#readme h1,#readme h2,#readme h3{margin-top:1.3em;border-bottom:1px solid #e1e6ef;padding-bottom:.25em}
+#readme blockquote{border-left:3px solid #b0bac9;margin-left:0;padding-left:14px;color:#5c6c7f}
 .muted{color:#66768b;font-size:13px}#seek{width:160px}
-@media(max-width:700px){header{position:static}.row{gap:9px}select{max-width:210px}audio{width:100%}}
+#message{padding:14px;margin:0 auto;max-width:1140px}
+#message:empty{display:none}#sidebarToggle[aria-expanded="false"]{background:#eaf0f8}
+@media(max-width:700px){
+ header{padding:8px}h1{font-size:16px}.row{gap:6px}select{max-width:190px}audio{width:100%}
+ main{flex-direction:column}
+ #notation{flex:1;min-height:90px;padding:8px}
+ #sidebar{max-width:none;width:100%;height:32dvh;min-height:145px;border-left:0;border-top:1px solid #dce1ea}
+ #sidebar-head{padding:7px 12px}#sidebar-body{padding:0 12px 15px}
+}
 </style></head>
 <body>
 <header>
 <h1 id="heading">Партитура</h1>
-<div class="muted"><span id="version">Загрузка актуального релиза…</span> · <a href="../">На главную</a> · <a id="release" href="#" target="_blank" rel="noopener" hidden>GitHub Release</a></div>
 <div class="row">
 <label>Ноты <select id="view" disabled><option>Загрузка…</option></select></label>
 <label>Звук <select id="track" disabled><option>Загрузка…</option></select></label>
 <audio id="audio" controls preload="none"></audio>
+<button id="restart" type="button" title="Вернуться к началу" aria-label="К началу">⏮ К началу</button>
 <label>Такт <input id="seek" type="range" min="0" value="0" max="0" disabled></label>
 <span id="position" class="muted"></span>
+<button id="sidebarToggle" type="button" aria-controls="sidebar" aria-expanded="true">Описание ▸</button>
 </div>
 </header>
 <main>
-<section><div id="message" role="status">Загружаются ноты последнего релиза.</div></section>
-<section>
-<div class="row" style="justify-content:space-between">
-<h2>Нотные страницы</h2>
-<span id="pagehint" class="muted"></span>
+<div id="notation" aria-label="Нотные страницы" tabindex="0">
+ <div id="message" role="status"></div>
+ <div id="pages"></div>
 </div>
-<div id="pages"></div>
-</section>
-<section><details><summary>README произведения</summary><article id="readme">Загрузка…</article></details></section>
+<aside id="sidebar" aria-label="Информация о партитуре">
+ <div id="sidebar-head">
+  <strong>О произведении</strong>
+  <p id="version" class="muted">Загрузка актуального релиза…</p>
+  <p><a id="repository" href="#" target="_blank" rel="noopener" hidden>Репозиторий</a> · <a id="release" href="#" target="_blank" rel="noopener" hidden>Релизы и PDF</a></p>
+ </div>
+ <div id="sidebar-body"><article id="readme">Загрузка…</article></div>
+</aside>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" defer></script>

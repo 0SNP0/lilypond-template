@@ -4,7 +4,7 @@ piccoloOpening = {
   \key e \major
   \time 3/4
   % Bars 1–4
- R2. ^\markup \italic { "Tempo di valse allegro" } |
+ R2. |
  R2.*75 |
  gis''4-. \ff r8 cis'''8-. e'''4-. |
  gis'''4-. r8 fis'''8-. e'''4-. |

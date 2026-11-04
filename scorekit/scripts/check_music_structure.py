@@ -8,8 +8,6 @@ from __future__ import annotations
 
 import json
 import re
-import subprocess
-import sys
 from pathlib import Path
 
 FRAMEWORK = Path(__file__).resolve().parents[1]
@@ -37,6 +35,46 @@ def extract(text: str, suffix: str) -> list[str]:
     if not match:
         raise ValueError(f"Missing {suffix} music section")
     return bars(match.group(1))
+
+
+
+def validate_navigation_map(spec: dict, printed: int, sections: list[dict]) -> None:
+    """Check a work-defined playback route without interpreting LilyPond syntax."""
+    marks = spec.get("navigation") or []
+    for mark in marks:
+        if not 1 <= mark["after_measure"] <= printed:
+            raise ValueError(f"Invalid navigation location: {mark}")
+        for field in ("jump_to", "stop_after"):
+            if field in mark and not 1 <= mark[field] <= printed:
+                raise ValueError(f"Invalid navigation destination: {mark}")
+        if "stop_after" in mark and "jump_to" not in mark:
+            raise ValueError("stop_after requires jump_to")
+    jumps = [(index, mark) for index, mark in enumerate(marks)
+             if "jump_to" in mark]
+    expected = [bar for section in sections
+                for bar in range(section["start"], section["end"] + 1)]
+    actual, executed = [], set()
+    current, stop_after = 1, None
+    while 1 <= current <= printed:
+        actual.append(current)
+        if len(actual) > len(expected):
+            raise ValueError("Navigation exceeds declared playback map")
+        if current == stop_after:
+            break
+        action = next(((index, mark) for index, mark in jumps
+                       if mark["after_measure"] == current and index not in executed),
+                      None)
+        if action:
+            index, mark = action
+            executed.add(index)
+            current = mark["jump_to"]
+            stop_after = mark.get("stop_after")
+        else:
+            current += 1
+    if actual != expected:
+        mismatch = next((index for index, (a, b) in enumerate(zip(actual, expected), 1)
+                         if a != b), min(len(actual), len(expected)) + 1)
+        raise ValueError(f"Playback route differs from navigation at playback bar {mismatch}")
 
 
 def main() -> None:
@@ -119,14 +157,7 @@ def main() -> None:
         if fr'\bar "{barline}"' not in global_text:
             raise ValueError(f"Expected final barline {barline}")
 
-    if spec.get("validate_navigation"):
-        subprocess.run([sys.executable, str(FRAMEWORK / "scripts/navigation.py"),
-                        "--check"], check=True)
-    drum_kit = MUSIC / "drum-kit.ily"
-    if drum_kit.is_file() and drum_kit.read_text(
-            encoding="utf-8").startswith("% AUTO-GENERATED PRINT VIEW"):
-        subprocess.run([sys.executable, str(FRAMEWORK / "scripts/merge_percussion.py"),
-                        "--check"], check=True)
+    validate_navigation_map(spec, printed, sections)
     print(f"Music checked: {len(music_files)} sources, "
           f"{printed} printed bars, {visits} playback bars")
 

@@ -8,11 +8,12 @@ on:
     types: [published]
 concurrency:
   group: orchestra-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+  cancel-in-progress: ${{ github.event_name != 'release' }}
 permissions:
   contents: read
 jobs:
   pdf:
+    if: github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v')
     name: PDF score and parts
     runs-on: ubuntu-24.04
     timeout-minutes: 120
@@ -24,7 +25,7 @@ jobs:
       - name: ScoreKit print
         uses: ./scorekit/actions/build
         with:
-          source_tag: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
+          source_tag: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
   media:
     name: MIDI, audio, viewer and packages
     needs: pdf
@@ -40,9 +41,9 @@ jobs:
       - name: ScoreKit media
         uses: ./scorekit/actions/media
         with:
-          source_tag: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
+          source_tag: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
       - name: Publish musician-facing GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: github.event_name == 'release' && startsWith(github.event.release.tag_name, 'v')
         uses: ./scorekit/actions/release
         with:
-          tag: ${{ github.ref_name }}
+          tag: ${{ github.event.release.tag_name }}

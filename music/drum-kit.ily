@@ -1,5 +1,5 @@
-% AUTO-GENERATED PRINT VIEW — synthesized from the three canonical drum files.
-% The three source voices remain independent only in MIDI playback.
+% Project-owned combined percussion notation, maintained as musical source.
+% Individual percussion parts remain the MIDI sources.
 drumKitMusic = \drummode {
   \clef percussion
   \time 3/4

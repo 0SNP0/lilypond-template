@@ -405,48 +405,90 @@ def locate_soundfont(override: str | None) -> Path:
     raise RuntimeError("No SoundFont; use --soundfont PATH or SOUNDFONT")
 
 
-def validate_midi_programs(parts: list[Path], naming: dict[str, str]) -> None:
-    """Reject pitched MIDI stems that quietly fall back to GM piano."""
-    import export
-    for part in parts:
-        src = part.read_text(encoding="utf-8")
-        if r"\new DrumStaff" in src:
+def validate_repeat_timbres(events: list[tuple], division: int,
+                            timeline: dict, part: str) -> None:
+    """Detect MIDI program leakage when a printed passage is replayed.
+
+    Compare effective program numbers at actual note-on events for each
+    occurrence of a printed measure. This works for strings, organs, synths,
+    and arbitrary repeat maps without instrument-name assumptions.
+    """
+    from bisect import bisect_right
+    from collections import defaultdict
+
+    bars = timeline["measures"]
+    if len({m["printed_number"] for m in bars}) == len(bars):
+        return
+    factor = division / timeline["ticks_per_quarter"]
+    starts = [round(m["start_tick"] * factor) for m in bars]
+    ends = [round(m["end_tick"] * factor) for m in bars]
+    programs = defaultdict(list)
+    notes = []
+    for tick, kind, track, data in events:
+        if kind != "channel":
             continue
-        instruments = re.findall(r'midiInstrument\s*=\s*"([^"]+)"', src)
+        status = data[0] & 0xF0
+        key = (track, data[0] & 0x0F)
+        if status == 0xC0 and len(data) > 1:
+            programs[key].append((tick, data[1]))
+        elif status == 0x90 and len(data) > 2 and data[2] > 0:
+            notes.append((tick, key, data[1]))
+    program_ticks = {}
+    program_values = {}
+    for key, entries in programs.items():
+        entries.sort()
+        program_ticks[key] = [t for t, _ in entries]
+        program_values[key] = [value for _, value in entries]
+    played = defaultdict(list)
+    for tick, key, pitch in notes:
+        bar = bisect_right(starts, tick) - 1
+        if bar < 0 or tick >= ends[bar]:
+            continue
+        times = program_ticks.get(key, [])
+        idx = bisect_right(times, tick) - 1
+        program = program_values[key][idx] if idx >= 0 else 0
+        played[bar].append((tick - starts[bar], pitch, program))
+    first = {}
+    for idx, bar in enumerate(bars):
+        number = bar["printed_number"]
+        signature = sorted(played[idx])
+        if number in first and signature != first[number]:
+            raise RuntimeError(
+                f"Repeated MIDI bar {number} differs in {part} "
+                f"(playback bar {bar['number']}). "
+                "Check instrument resets at repeated section starts; "
+                "MIDI instrument programs persist after jumps."
+            )
+        first.setdefault(number, signature)
+
+
+def validate_midi_programs(parts: list[Path], naming: dict[str, str]) -> None:
+    """Reject unintended piano and compare actual timbres across all repeats."""
+    import export
+    timeline = export.make_timeline(BUILD / "midi" / (naming["mix"] + ".midi"))
+    for part in parts:
+        source = part.read_text(encoding="utf-8")
+        if r"\new DrumStaff" in source:
+            continue
+        instruments = re.findall(r'midiInstrument\s*=\s*"([^"]+)"', source)
         if not instruments:
             raise RuntimeError(f"Missing midiInstrument in {part}")
         midi = BUILD / "midi" / (part_name(part, naming) + ".midi")
-        _division, events = export.midi_events(midi)
-        programs = {payload[1] for _tick, kind, _track, payload in events
-                    if kind == "channel" and (payload[0] & 0xF0) == 0xC0}
+        division, events = export.midi_events(midi)
+        programs = {data[1] for _, kind, _, data in events
+                    if kind == "channel" and (data[0] & 0xF0) == 0xC0}
         if not programs:
             raise RuntimeError(f"No instrument program in MIDI {part}")
         if 0 in programs and not any("piano" in x.lower() or
                                       "acoustic grand" in x.lower() for x in instruments):
             raise RuntimeError(f"Unexpected piano in {part}: {sorted(programs)}")
-        # A program change is sticky in MIDI. If a part switches to pizzicato
-        # in its Bridge, the repeated Opening must restore the bowed program.
-        if 'midiInstrument = "pizzicato strings"' in (
-                ROOT / "music" / (part.stem + ".ily")).read_text(encoding="utf-8"):
-            changes = [(tick, payload[1]) for tick, kind, _track, payload in events
-                       if kind == "channel" and (payload[0] & 0xF0) == 0xC0]
-            transitions = []
-            for tick, program in changes:
-                if not transitions or transitions[-1][1] != program:
-                    transitions.append((tick, program))
-            if len(transitions) < 3 or transitions[0][1] != transitions[-1][1]:
-                raise RuntimeError(
-                    f"Missing bowed/pizzicato/bowed MIDI program restoration "
-                    f"in {part.stem}: {transitions}")
-            print(f"MIDI bowing {part.stem}: {transitions}")
-        note_velocities = sorted({payload[2]
-                                  for _tick, kind, _track, payload in events
-                                  if kind == "channel" and (payload[0] & 0xF0) == 0x90
-                                  and len(payload) >= 3 and payload[2] > 0})
-        controllers = sorted({(payload[1], payload[2])
-                              for _tick, kind, _track, payload in events
-                              if kind == "channel" and (payload[0] & 0xF0) == 0xB0
-                              and len(payload) >= 3 and payload[1] in (7, 11)})
+        validate_repeat_timbres(events, division, timeline, part.stem)
+        note_velocities = sorted({data[2] for _, kind, _, data in events
+                                  if kind == "channel" and (data[0] & 0xF0) == 0x90
+                                  and len(data) >= 3 and data[2] > 0})
+        controllers = sorted({(data[1], data[2]) for _, kind, _, data in events
+                              if kind == "channel" and (data[0] & 0xF0) == 0xB0
+                              and len(data) >= 3 and data[1] in (7, 11)})
         print(f"Checked MIDI {part.stem}: programs {sorted(programs)}, "
               f"note velocities {note_velocities}, volume/expression CC {controllers[:20]}")
 

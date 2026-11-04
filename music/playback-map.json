@@ -227,7 +227,6 @@
     }
   },
   "source_section_split": 116,
-  "validate_navigation": true,
   "required_final_barline": "||",
   "forbid_duplicate_music_sources": [
     "flutes-1-2",

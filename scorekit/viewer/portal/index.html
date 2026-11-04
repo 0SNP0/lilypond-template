@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ScoreKit · партитуры</title>
+<style>
+:root{font-family:system-ui,Arial,sans-serif;color:#203040;background:#f4f6f9}*{box-sizing:border-box}
+body{margin:0}header{background:#fff;border-bottom:1px solid #dae0e9;padding:14px 18px}
+main{max-width:1220px;margin:auto;padding:16px}h1{font-size:22px;margin:0 0 12px}h2{font-size:17px}
+section{background:#fff;border:1px solid #dbe1ea;border-radius:10px;padding:16px;margin-bottom:16px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:9px 0}
+input,select,button{font:inherit;padding:8px 10px;border:1px solid #a9b5c6;border-radius:6px;background:white}
+button{cursor:pointer}button:disabled,select:disabled{opacity:.5;cursor:default}
+input[type=text]{flex:1;min-width:230px}input[type=file]{max-width:100%}
+select{max-width:390px}label{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+audio{max-width:100%;width:370px}a{color:#16599a}
+.small{font-size:13px;color:#566779}#status{white-space:pre-wrap}
+#pages{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,470px),1fr));gap:14px}
+.sheet{background:#fff;box-shadow:0 2px 14px #101a2530;padding:6px;text-align:center}
+.sheet img{width:100%;height:auto;display:block}.sheet a{font-size:12px}
+#readme{white-space:pre-wrap;max-height:400px;overflow:auto;overflow-wrap:anywhere;font-size:13px}
+#catalog button{margin:4px}#pagehint{font-size:13px;color:#596779}
+@media(max-width:650px){.row{align-items:stretch}audio{width:100%}}
+</style></head><body>
+<header><h1>ScoreKit — партитуры и исполнение</h1>
+<div class="row"><input id="repo" type="text" placeholder="owner/repository или https://github.com/owner/repository">
+<button id="find">Открыть репозиторий</button>
+<label>Релиз <select id="release" disabled><option>Не выбран</option></select></label></div>
+<div class="row"><label>Ноты <select id="view" disabled></select></label>
+<label>Звук <select id="track" disabled></select></label>
+<audio id="audio" controls preload="none"></audio><span id="position" class="small"></span></div>
+</header><main>
+<section><details><summary>Каталог репозиториев</summary><div id="catalog"></div>
+<p class="small">Начальный каталог пустой. Репозиторий можно указать вручную.</p></details></section>
+<section><h2>Локальная проверка SVG и звука</h2>
+<p class="small">Скачайте артефакт или архив из Release, затем выберите ZIP с данными просмотрщика. Аудиоархив необязателен; он загружается только после выбора дорожки. Для приватного репозитория достаточно локальных файлов, без GitHub API.</p>
+<div class="row"><label>SVG/JSON ZIP <input id="viewer-file" type="file" accept=".zip"></label>
+<label>MP3 ZIP <input id="audio-file" type="file" accept=".zip"></label></div>
+</section>
+<section><div id="status">Выберите локальный ZIP просмотрщика или публичный GitHub-репозиторий с релизами.</div>
+<div class="row" id="downloads"></div></section>
+<section><div class="row"><h2 id="heading">Нотные страницы SVG</h2>
+<label>Масштаб <select id="zoom"><option value="470">Обычный</option><option value="760">Крупный</option><option value="1200">Очень крупный</option></select></label>
+<span id="pagehint"></span></div><div id="pages"></div></section>
+<section><details><summary>README выбранного репозитория и тега</summary><pre id="readme">README не загружен.</pre></details></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="./app.js"></script>
+</body></html>

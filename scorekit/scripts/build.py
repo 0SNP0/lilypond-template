@@ -99,9 +99,14 @@ def names(rev: str) -> dict[str, str]:
         raise RuntimeError("Invalid workFileSlug in metadata.ily")
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._+-]*", rev):
         raise RuntimeError(f"Invalid revision for filename: {rev}")
-    return dict(slug=slug, revision=rev, score=f"{slug}-score-{rev}",
-                concert=f"{slug}-concert-score-{rev}", mix=f"{slug}-orchestra-{rev}",
-                pdf_zip=f"{slug}-pdf-{rev}.zip", audio_zip=f"{slug}-audio-{rev}.zip")
+    # Stable lexicographic release order: scores, players, archives.
+    # Prefixes are independent of a particular work or orchestra.
+    return dict(slug=slug, revision=rev, score=f"00-{slug}-score-{rev}",
+                concert=f"01-{slug}-concert-score-{rev}",
+                mix=f"{slug}-orchestra-{rev}",
+                pdf_zip=f"90-{slug}-pdf-{rev}.zip",
+                audio_zip=f"91-{slug}-audio-{rev}.zip",
+                viewer_zip=f"92-{slug}-viewer-{rev}.zip")
 
 
 def current_names() -> dict[str, str]:
@@ -109,7 +114,7 @@ def current_names() -> dict[str, str]:
 
 
 def part_name(part: Path, naming: dict[str, str]) -> str:
-    return f"{naming['slug']}-{part.stem}-{naming['revision']}"
+    return f"10-{naming['slug']}-{part.stem}-{naming['revision']}"
 
 
 def combined_parts() -> list[Path]:
@@ -530,7 +535,7 @@ def package(*, full: bool = False) -> None:
             archive.write(BUILD / "build-info.json", "build-info.json")
         viewer = ROOT / "dist" / "viewer"
         if (viewer / "manifest.json").is_file() and (viewer / "timeline.json").is_file():
-            archive_name = naming["slug"] + "-viewer-" + naming["revision"] + ".zip"
+            archive_name = naming["viewer_zip"]
             with zipfile.ZipFile(PACKAGES / archive_name, "w", zipfile.ZIP_DEFLATED) as archive:
                 for item in sorted(viewer.rglob("*")):
                     if item.is_file():

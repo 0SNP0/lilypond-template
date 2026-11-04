@@ -403,13 +403,22 @@ def _svg_measure_regions(
     return areas
 
 
-def _clean_svg(root: ET.Element, staves: list[tuple[float, float, float, float]]) -> list[float]:
+def _clean_svg(root: ET.Element, staves: list[tuple[float, float, float, float]],
+               revision: str) -> list[float]:
     """The web viewer supplies its own centered title and release metadata.
 
     Remove the PDF book-title, running headers and Git-version footer.
     Keep the notes, rehearsal marks and the SVG-only measure identifiers.
     """
     viewbox = [float(n) for n in root.get("viewBox", "0 0 210 297").split()]
+    # A footer can be only a few millimeters below the final stave (in
+    # dense single-page percussion parts), so geometry alone is insufficient.
+    # Discard the actual Git-revision text before applying margin trimming.
+    for group in list(root):
+        if group.tag.rsplit("}", 1)[-1] != "g":
+            continue
+        if revision and revision in "".join(group.itertext()):
+            root.remove(group)
     if not staves:
         return viewbox
     top = min(s[0] for s in staves)
@@ -437,7 +446,8 @@ def _clean_svg(root: ET.Element, staves: list[tuple[float, float, float, float]]
     return viewbox
 
 
-def tag_svg(pages: list[Path], timeline: dict, kind: str) -> tuple[list[dict], list[dict], dict]:
+def tag_svg(pages: list[Path], timeline: dict, kind: str,
+            revision: str) -> tuple[list[dict], list[dict], dict]:
     """Index native SVG measure numbers AND real barline-to-barline regions."""
     anchors: list[dict] = []
     regions: list[dict] = []
@@ -472,7 +482,7 @@ def tag_svg(pages: list[Path], timeline: dict, kind: str) -> tuple[list[dict], l
                 labels.append((number, x, y))
         staves, barlines = _svg_staff_geometry(root)
         regions.extend(_svg_measure_regions(staves, barlines, labels, kind, page_idx))
-        page_boxes[str(page_idx)] = _clean_svg(root, staves)
+        page_boxes[str(page_idx)] = _clean_svg(root, staves, revision)
         doc.write(file, encoding="utf-8", xml_declaration=True)
     if not regions:
         print(f"WARNING: {kind}: no safe barline areas recovered; "
@@ -506,7 +516,7 @@ def main() -> None:
     notation = {}
     for view_id, source, kind, part in sources:
         pages = render_svg(source, view_id, naming)
-        anchors, regions, page_boxes = tag_svg(pages, timeline, kind)
+        anchors, regions, page_boxes = tag_svg(pages, timeline, kind, naming["revision"])
         if kind in ("score", "concert-score"):
             expected = timeline["printed_measures"]
             covered = len({a["measure_id"] for a in regions})

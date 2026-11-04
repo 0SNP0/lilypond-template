@@ -368,7 +368,15 @@ def _svg_measure_regions(
             continue
         for number, x, _y in markers:
             closest = min(clean, key=lambda value: abs(value - x))
-            if abs(x - closest) < .55:
+            if x <= left + 1.5:
+                # A system-opening BarNumber may sit slightly to the left
+                # of the left staff edge; include its first real bar.
+                start = left
+                following = [value for value in clean if value > left + .3]
+                if not following:
+                    continue
+                end = min(following)
+            elif abs(x - closest) < .55:
                 # Ordinary BarNumber sits next to the barline. The first
                 # displayed measure on the system starts at that boundary;
                 # at a terminal barline use the preceding cell.

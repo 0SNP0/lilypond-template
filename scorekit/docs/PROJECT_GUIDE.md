@@ -111,3 +111,14 @@ SVG-линеек/тактовых черт (`measure_areas`, `page_viewboxes`),
 `music_hash` и `print_hash` рассчитываются по исходникам, не по
 SVG или PDF. Они не зависят от значения Git-версии в колонтитулах;
 байтовый `pdf_sha256` зависит. В CI это проверяется отдельно.
+
+
+## Зафиксированная версия LilyPond
+
+Все этапы CI (PDF, MIDI, MP3 и SVG) устанавливают **строго одну версию**
+LilyPond из [`scorekit/config/lilypond-version.txt`](../config/lilypond-version.txt).
+Сейчас это **2.26.0**. Чтобы обновить LilyPond во всех задачах,
+достаточно изменить **одну строку** в этом конфиге. Установка выполняется
+универсальным composite action `scorekit/actions/install-lilypond`, который
+проверяет, что установленная программа соответствует конфигу. Релиз
+`latest` в GitHub API не запрашивается.

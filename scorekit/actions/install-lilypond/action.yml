@@ -1,0 +1,28 @@
+name: Install pinned LilyPond
+description: Install the single LilyPond version specified in ScoreKit configuration
+runs:
+  using: composite
+  steps:
+    - name: Read and install ScoreKit LilyPond version
+      shell: bash
+      run: |
+        set -euo pipefail
+        config="scorekit/config/lilypond-version.txt"
+        test -f "$config"
+        version="$(tr -d '\r\n' < "$config")"
+        if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "::error file=$config::Expected LilyPond version like 2.26.0, got: $version"
+          exit 1
+        fi
+        url="https://gitlab.com/lilypond/lilypond/-/releases/v${version}/downloads/lilypond-${version}-linux-x86_64.tar.gz"
+        curl --retry 3 -fLsS "$url" -o "$RUNNER_TEMP/lilypond-${version}.tar.gz"
+        tar -xzf "$RUNNER_TEMP/lilypond-${version}.tar.gz" -C "$RUNNER_TEMP"
+        executable="$RUNNER_TEMP/lilypond-${version}/bin/lilypond"
+        test -x "$executable"
+        actual="$("$executable" --version | head -n 1)"
+        echo "Pinned LilyPond: $actual"
+        [[ "$actual" == "GNU LilyPond $version"* ]] || {
+          echo "::error::Downloaded LilyPond version differs from $config: $actual"
+          exit 1
+        }
+        echo "$RUNNER_TEMP/lilypond-${version}/bin" >> "$GITHUB_PATH"

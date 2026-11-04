@@ -59,7 +59,7 @@ def main() -> None:
                       "Use --from-release for the latest GitHub Release or build audio locally.")
         handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(site))
         with http.server.ThreadingHTTPServer(("127.0.0.1", args.port), handler) as http:
-            url = f"http://127.0.0.1:{http.server_port}/viewer/"
+            url = f"http://127.0.0.1:{http.server_port}/"
             print(f"ScoreKit project viewer: {url}", flush=True)
             if not args.no_browser:
                 timer = threading.Timer(0.5, lambda: webbrowser.open(url))

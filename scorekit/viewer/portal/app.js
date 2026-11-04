@@ -23,7 +23,7 @@ function choices(select, rows) {
 function viewLabel(id, view) {
   const types = {"score":"Партитура","concert-score":"Концертный строй",
                  "individual":"Партия","combined":"Объединённая партия"};
-  const name = id === "drum-kit" ? "Drum Kit" : id.replaceAll("-", " ");
+  const name = view.label || id.replaceAll("-", " ");
   return (types[view.kind] || "Ноты") + " · " + name;
 }
 function trustedPath(path, prefix, suffix) {
@@ -151,7 +151,7 @@ function seekSeconds(seconds) {
   audio.currentTime=Math.min(seconds,Number.isFinite(audio.duration)?
       Math.max(0,audio.duration-.05):seconds);
   updateTime();
-  if(!audio.paused) audio.play().catch(()=>{});
+  if(audio.paused) audio.play().catch(()=>{});
 }
 function showView() {
   if(!manifest)return;
@@ -244,7 +244,7 @@ function updateTime() {
   $("seek").value=String(index);
   $("position").textContent="Такт "+measure.printed_number+" / "+timeline.printed_measures+
     (measure.number>timeline.printed_measures?" · реприза":"");
-  markMeasure(measure.printed_number);
+  markMeasure(audio.paused ? null : measure.printed_number);
 }
 $("view").addEventListener("change",showView);
 $("track").addEventListener("change",setTrack);

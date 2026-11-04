@@ -515,7 +515,7 @@ def render_audio(parts: list[Path], soundfont_path: str | None,
         ])
         run([
             ffmpeg, "-hide_banner", "-loglevel", "error", "-y",
-            "-i", str(wav), "-c:a", "libmp3lame", "-q:a", "0",
+            "-i", str(wav), "-c:a", "libmp3lame", "-b:a", "192k", "-write_xing", "1",
             str(mp3_dir / f"{stem}.mp3"),
         ])
     # Mix lossless stems. A single-pass loudnorm can perform dynamic
@@ -554,7 +554,7 @@ def render_audio(parts: list[Path], soundfont_path: str | None,
         ffmpeg, "-hide_banner", "-loglevel", "error", "-y",
         *inputs,
         "-filter_complex", mixed_pcm + f",volume={static_gain:.3f}dB",
-        "-ar", "48000", "-c:a", "libmp3lame", "-q:a", "0",
+        "-ar", "48000", "-c:a", "libmp3lame", "-b:a", "192k", "-write_xing", "1",
         str(AUDIO / (naming["mix"] + ".mp3")),
     ])
     shutil.rmtree(wav_dir)

@@ -5,19 +5,27 @@
 <title>ScoreKit — Просмотр партитуры</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#203044;background:#f4f5f9}
-*{box-sizing:border-box}body{margin:0;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+*{box-sizing:border-box}
+body{margin:0;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 header{padding:10px 16px;background:#fff;border-bottom:1px solid #dce1ea;flex:none;z-index:5}
-h1{font-size:19px;margin:0 0 5px;text-align:center}button,select,input{font:inherit}
+h1{font-size:19px;margin:0 0 5px;text-align:center}
+button,select,input{font:inherit}
 select,button{padding:7px 10px;border-radius:6px;border:1px solid #a9b3c2;background:#fff}
 button{cursor:pointer}button:disabled,select:disabled{opacity:.5;cursor:default}
 .row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding-top:6px}
-.row label{display:flex;gap:6px;align-items:center}audio{width:min(380px,100%);height:38px}
+.picker,.measure-seek{display:flex;align-items:center;gap:6px}
 #audio-cluster{display:flex;align-items:center;gap:4px;min-width:0}
+audio{width:min(380px,100%);height:38px;min-width:0}
 #restart{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;flex:none;border:0;border-radius:50%;background:#f1f3f4;color:#263648;padding:6px}
 #restart:hover{background:#e0e5eb}#restart:focus-visible{outline:2px solid #1760a1;outline-offset:2px}
 #restart svg{width:19px;height:19px;fill:currentColor}
-.speed-label{white-space:nowrap}.speed-label input{width:90px;accent-color:#1760a1}
-.speed-label output{min-width:44px;text-align:right;font-variant-numeric:tabular-nums}
+#speedDetails{position:relative;flex:none}
+#speedDetails summary{padding:8px 7px;cursor:pointer;border-radius:6px;list-style:none;white-space:nowrap;font-variant-numeric:tabular-nums;font-size:13px}
+#speedDetails summary::-webkit-details-marker{display:none}
+#speedDetails[open] summary,#speedDetails summary:hover{background:#eaf0f8}
+#speedPopover{position:absolute;bottom:calc(100% + 7px);right:0;z-index:20;background:white;border:1px solid #dce1ea;box-shadow:0 5px 18px #14203633;border-radius:9px;padding:12px;min-width:205px}
+#speedPopover label{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;font-size:13px}
+#speedPopover input{grid-column:1 / -1;width:100%;accent-color:#1760a1}
 a{color:#1760a1}
 main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
 #notation{flex:1;min-width:0;overflow:auto;overscroll-behavior:contain;padding:14px}
@@ -26,12 +34,9 @@ main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
 .page img{width:100%;height:auto;display:block;user-select:none}
 .measure-layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .measure-region{fill:transparent;cursor:pointer}
-
 .measure-region.active{fill:#cf4242;fill-opacity:.22;stroke:#b53636;stroke-opacity:.35;stroke-width:.13;pointer-events:all}
-.measure-region:focus{outline:none}
-.measure-region:focus-visible{stroke:#1669b2;stroke-width:.22;stroke-opacity:1}
+.measure-region:focus{outline:none}.measure-region:focus-visible{stroke:#1669b2;stroke-width:.22;stroke-opacity:1}
 #sidebar{width:360px;max-width:35vw;min-width:0;flex:none;border-left:1px solid #dce1ea;background:#fff;display:flex;flex-direction:column;overflow:hidden}
-#sidebar[hidden]{display:none}
 #sidebar-head{padding:14px 16px;border-bottom:1px solid #e1e6ef;display:grid;gap:6px}
 #sidebar-head p{margin:0;font-size:13px}
 #sidebar-body{overflow:auto;overscroll-behavior:contain;padding:4px 16px 24px;flex:1}
@@ -43,33 +48,50 @@ main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
 #readme img{max-width:100%;height:auto}
 #readme h1,#readme h2,#readme h3{margin-top:1.3em;border-bottom:1px solid #e1e6ef;padding-bottom:.25em}
 #readme blockquote{border-left:3px solid #b0bac9;margin-left:0;padding-left:14px;color:#5c6c7f}
-.muted{color:#66768b;font-size:13px}#seek{width:160px}
-#message{padding:14px;margin:0 auto;max-width:1140px}
-#message:empty{display:none}#sidebarToggle[aria-expanded="false"]{background:#eaf0f8}
-@media(max-width:700px){
- header{padding:8px}h1{font-size:16px}.row{gap:6px}select{max-width:190px}#audio-cluster{width:100%}#audio-cluster audio{width:100%;flex:1}.speed-label input{width:80px}
- main{flex-direction:column}
- #notation{flex:1;min-height:90px;padding:8px}
- #sidebar{max-width:none;width:100%;height:32dvh;min-height:145px;border-left:0;border-top:1px solid #dce1ea}
- #sidebar-head{padding:7px 12px}#sidebar-body{padding:0 12px 15px}
+.muted{color:#66768b;font-size:13px}#seek{width:155px}
+#message{padding:14px;margin:0 auto;max-width:1140px}#message:empty{display:none}
+@media(max-width:800px){
+ body{height:auto;min-height:100dvh;display:block;overflow:visible;padding-bottom:56px}
+ header{position:sticky;top:0;padding:7px 9px 6px;z-index:12}
+ h1{font-size:14px;line-height:21px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:85px;margin:0 0 3px}
+ .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:5px;padding:0}
+ .picker{display:flex;align-items:center;gap:4px;min-width:0;font-size:12px}
+ .picker select{width:100%;min-width:0;padding:6px 22px 6px 6px;font-size:13px;height:35px}
+ .measure-seek{display:none}
+ #position{position:absolute;top:8px;right:9px;font-size:11px;max-width:82px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ #audio-cluster{position:fixed;bottom:0;left:0;right:0;z-index:25;background:#fff;border-top:1px solid #dce1ea;padding:5px 7px 6px;height:56px;gap:4px;box-shadow:0 -2px 12px #14203618}
+ #audio-cluster audio{flex:1;width:100%;min-width:0;height:38px}
+ #restart{height:38px;width:38px}
+ #speedDetails summary{min-width:47px;text-align:center}
+ main{display:block;width:100%;overflow:visible}
+ #notation{height:calc(100dvh - 155px);min-height:55dvh;overflow:auto;overscroll-behavior:auto;padding:7px;background:#eef0f4}
+ #pages{min-width:700px;max-width:none;gap:10px}
+ #notation[data-kind="score"] #pages,#notation[data-kind="concert-score"] #pages{min-width:1020px}
+ #sidebar{width:100%;max-width:none;height:auto;overflow:visible;border:0;border-top:1px solid #dce1ea}
+ #sidebar-head{padding:12px;border:0}
+ #sidebar-body{padding:0 12px 20px;overflow:visible}
+ #readme{font-size:14px}
 }
 </style></head>
 <body>
 <header>
 <h1 id="heading">Партитура</h1>
 <div class="row">
-<label>Ноты <select id="view" disabled><option>Загрузка…</option></select></label>
-<label>Звук <select id="track" disabled><option>Загрузка…</option></select></label>
+<label class="picker">Ноты <select id="view" disabled><option>Загрузка…</option></select></label>
+<label class="picker">Звук <select id="track" disabled><option>Загрузка…</option></select></label>
 <div id="audio-cluster">
 <button id="restart" type="button" title="К началу" aria-label="К началу">
 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 5h2v14H5zM19 5v14L8 12z"/></svg>
 </button>
 <audio id="audio" controls preload="none"></audio>
+<details id="speedDetails"><summary id="speedSummary" title="Скорость воспроизведения">100%</summary>
+<div id="speedPopover"><label>Скорость <output id="speedValue" for="speed">100%</output>
+<input id="speed" type="range" min="0.5" max="2" step="0.05" value="1" aria-label="Скорость воспроизведения"></label></div>
+</details>
 </div>
-<label class="speed-label">Скорость <input id="speed" type="range" min="0.5" max="1.5" step="0.05" value="1" aria-label="Скорость воспроизведения"><output id="speedValue" for="speed">100%</output></label>
-<label>Такт <input id="seek" type="range" min="0" value="0" max="0" disabled></label>
+<label class="measure-seek">Такт <input id="seek" type="range" min="0" value="0" max="0" disabled></label>
 <span id="position" class="muted"></span>
-<button id="sidebarToggle" type="button" aria-controls="sidebar" aria-expanded="true">Описание ▸</button>
+
 </div>
 </header>
 <main>

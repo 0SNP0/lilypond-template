@@ -8,7 +8,7 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 const message = text => $("message").textContent = text;
 let info=null, manifest=null, timeline=null;
 let selectedRegion=null, lastPage="", pendingSeek=null, trackChange=0;
-let playbackFrame=null, playAfterSeek=false;
+let playbackFrame=null, playAfterSeek=false, seekGeneration=0;
 const audio = $("audio");
 
 function choices(select, rows) {
@@ -79,7 +79,7 @@ async function boot() {
       $("repository").hidden=false;
     }
     choices($("view"),Object.entries(manifest.views).map(([id,v])=>[id,viewLabel(id,v)]));
-    choices($("track"),[["","Выберите аудиодорожку"],...manifest.audio_tracks.map(t=>[t.id,t.label])]);
+    choices($("track"),[["","Без звука"],...manifest.audio_tracks.map(t=>[t.id,t.label])]);
     $("view").disabled=$("track").disabled=false;
     $("seek").max=String(timeline.measures.length-1);$("seek").disabled=false;
     const param=new URL(location.href).searchParams.get("view");
@@ -109,7 +109,9 @@ function regionForPrinted(measureNumberValue, view) {
     .sort((a,b)=>measureNumber(b.measure_id)-measureNumber(a.measure_id))[0];
   const next=areas.filter(a=>measureNumber(a.measure_id)>measureNumberValue)
     .sort((a,b)=>measureNumber(a.measure_id)-measureNumber(b.measure_id))[0];
-  return prior && next && prior.page===next.page ? prior : null;
+  // Never extend a rest across a system break: a physical barline is missing.
+  return prior && next && prior.page===next.page &&
+    Math.abs(prior.y-next.y)<0.8 ? prior : null;
 }
 function markMeasure(measureNumberValue) {
   const view=manifest?.views?.[$("view").value];
@@ -152,10 +154,33 @@ function seekSeconds(seconds, startPlayback=false) {
     playAfterSeek=startPlayback;
     return;
   }
-  audio.currentTime=Math.min(seconds,Number.isFinite(audio.duration)?
+  const target=Math.min(seconds,Number.isFinite(audio.duration)?
       Math.max(0,audio.duration-.05):seconds);
+  const resume=startPlayback || !audio.paused;
+  const token=++seekGeneration;
+  if(Math.abs(audio.currentTime-target)<0.012 && !audio.seeking){
+    updateTime();
+    if(resume && audio.paused)audio.play().catch(()=>{});
+    return;
+  }
+  // Let the media decoder complete a random seek before resuming.
+  // This prevents the old buffered position from playing briefly on mobile.
+  audio.pause();
+  audio.addEventListener("seeked",()=>{
+    if(token!==seekGeneration)return;
+    updateTime();
+    if(resume)audio.play().catch(()=>{});
+  },{once:true});
+  audio.currentTime=target;
   updateTime();
-  if(startPlayback && audio.paused)audio.play().catch(()=>{});
+}
+function preferredTrackForView(id,view){
+  if(view.kind==="score" || view.kind==="concert-score")
+    return manifest.audio_tracks.find(t=>t.id==="orchestra")?.id || manifest.audio_tracks[0]?.id || "";
+  if(manifest.audio_tracks.some(t=>t.id===id))return id;
+  // A combined desk has multiple musicians. Until true multi-track mixing
+  // is available, use the complete orchestra rather than an arbitrary stem.
+  return manifest.audio_tracks.find(t=>t.id==="orchestra")?.id || manifest.audio_tracks[0]?.id || "";
 }
 function showView() {
   if(!manifest)return;
@@ -163,6 +188,8 @@ function showView() {
   $("pages").replaceChildren();
   selectedRegion=null;lastPage="";
   $("notation").scrollTop=0;
+  $("notation").scrollLeft=0;
+  $("notation").dataset.kind=view.kind;
   const fragment=document.createDocumentFragment();
   for(let i=0;i<view.pages.length;i++){
     const path=trustedPath(view.pages[i],"svg/",".svg");
@@ -210,12 +237,18 @@ function showView() {
   const url=new URL(location.href);url.searchParams.set("view",id);
   history.replaceState(null,"",url);
   updateTime();
+  const preferred=preferredTrackForView(id,view);
+  if($("track").value!==preferred){
+    $("track").value=preferred;
+    setTrack();
+  }
 }
 function setTrack() {
   if(!manifest)return;
   const track=manifest.audio_tracks.find(t=>t.id===$("track").value);
   if(!track){
     ++trackChange;
+    ++seekGeneration;
     playAfterSeek=false;
     audio.pause();audio.removeAttribute("src");audio.load();
     updateTime();
@@ -224,19 +257,18 @@ function setTrack() {
   const path=trustedPath(track.path.replace(/^(\.\.\/)+/,""),"audio/",".mp3");
   const previousTime=audio.currentTime||0,playing=!audio.paused;
   const requestedRate=Number($("speed").value);
+  ++seekGeneration;
   const token=++trackChange;
   audio.src="./latest/"+path;
   audio.load();
   audio.addEventListener("loadedmetadata",()=>{
     if(token!==trackChange)return;
     const target=pendingSeek??previousTime;
+    const resume=playing || playAfterSeek;
     pendingSeek=null;
-    audio.currentTime=Math.min(target,Number.isFinite(audio.duration)?
-      Math.max(0,audio.duration-.05):target);
-    audio.playbackRate=requestedRate;
-    if(playing || playAfterSeek)audio.play().catch(()=>{});
     playAfterSeek=false;
-    updateTime();
+    audio.playbackRate=requestedRate;
+    seekSeconds(target,resume);
   },{once:true});
   message("");
 }
@@ -277,15 +309,11 @@ $("speed").addEventListener("input",()=>{
   const rate=Number($("speed").value);
   audio.playbackRate=rate;
   $("speedValue").textContent=Math.round(rate*100)+"%";
+  $("speedSummary").textContent=Math.round(rate*100)+"%";
 });
 // audio.currentTime is in media seconds, independent of playbackRate.
 // MIDI timeline timestamps remain valid when playback speed changes.
-$("sidebarToggle").addEventListener("click",()=>{
-  const sidebar=$("sidebar"),opening=sidebar.hidden;
-  sidebar.hidden=!opening;
-  $("sidebarToggle").setAttribute("aria-expanded",String(opening));
-  $("sidebarToggle").textContent=opening?"Описание ▸":"Описание ◂";
-});
+
 $("seek").addEventListener("input",()=>{
   const measure=timeline?.measures?.[Number($("seek").value)];
   if(measure)seekSeconds(measure.start_ms/1000);

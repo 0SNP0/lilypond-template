@@ -1,47 +1,47 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ScoreKit · партитуры</title>
+<html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>ScoreKit — Просмотр партитуры</title>
 <style>
-:root{font-family:system-ui,Arial,sans-serif;color:#203040;background:#f4f6f9}*{box-sizing:border-box}
-body{margin:0}header{background:#fff;border-bottom:1px solid #dae0e9;padding:14px 18px}
-main{max-width:1220px;margin:auto;padding:16px}h1{font-size:22px;margin:0 0 12px}h2{font-size:17px}
-section{background:#fff;border:1px solid #dbe1ea;border-radius:10px;padding:16px;margin-bottom:16px}
-.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:9px 0}
-input,select,button{font:inherit;padding:8px 10px;border:1px solid #a9b5c6;border-radius:6px;background:white}
+:root{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#203044;background:#f4f5f9}
+*{box-sizing:border-box}body{margin:0}header{padding:14px 18px;background:#fff;border-bottom:1px solid #dce1ea;position:sticky;top:0;z-index:5}
+h1{font-size:20px;margin:0 0 6px}h2{font-size:17px;margin:0}button,select,input{font:inherit}select,button{padding:7px 10px;border-radius:6px;border:1px solid #a9b3c2;background:#fff}
 button{cursor:pointer}button:disabled,select:disabled{opacity:.5;cursor:default}
-input[type=text]{flex:1;min-width:230px}input[type=file]{max-width:100%}
-select{max-width:390px}label{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-audio{max-width:100%;width:370px}a{color:#16599a}
-.small{font-size:13px;color:#566779}#status{white-space:pre-wrap}
-#pages{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,470px),1fr));gap:14px}
-.sheet{background:#fff;box-shadow:0 2px 14px #101a2530;padding:6px;text-align:center}
-.sheet img{width:100%;height:auto;display:block}.sheet a{font-size:12px}
-#readme{white-space:pre-wrap;max-height:400px;overflow:auto;overflow-wrap:anywhere;font-size:13px}
-#catalog button{margin:4px}#pagehint{font-size:13px;color:#596779}
-@media(max-width:650px){.row{align-items:stretch}audio{width:100%}}
-</style></head><body>
-<header><h1>ScoreKit — партитуры и исполнение</h1>
-<div class="row"><input id="repo" type="text" placeholder="owner/repository или https://github.com/owner/repository">
-<button id="find">Открыть репозиторий</button>
-<label>Релиз <select id="release" disabled><option>Не выбран</option></select></label></div>
-<div class="row"><label>Ноты <select id="view" disabled></select></label>
-<label>Звук <select id="track" disabled></select></label>
-<audio id="audio" controls preload="none"></audio><label>Такт <input id="seek" type="range" min="0" max="0" value="0" step="1" disabled style="width:150px"></label><span id="position" class="small"></span></div>
-</header><main>
-<section><details><summary>Каталог репозиториев</summary><div id="catalog"></div>
-<p class="small">Начальный каталог пустой. Репозиторий можно указать вручную.</p></details></section>
-<section><h2>Локальная проверка SVG и звука</h2>
-<p class="small">Скачайте артефакт или архив из Release, затем выберите ZIP с данными просмотрщика. Аудиоархив необязателен; он загружается только после выбора дорожки. Для приватного репозитория достаточно локальных файлов, без GitHub API.</p>
-<div class="row"><label>SVG/JSON ZIP <input id="viewer-file" type="file" accept=".zip"></label>
-<label>MP3 ZIP <input id="audio-file" type="file" accept=".zip"></label></div>
+.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-top:6px}
+.row label{display:flex;gap:6px;align-items:center}audio{width:min(380px,100%);height:38px}
+a{color:#1760a1}main{max-width:1250px;margin:auto;padding:14px}
+section{margin-bottom:15px;background:#fff;padding:15px 18px;border:1px solid #e0e4eb;border-radius:9px}
+#pages{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,560px),1fr));gap:14px;align-items:start}
+.page{padding:8px 4px 6px;background:white;box-shadow:0 2px 12px #14203629;text-align:center}
+.page img{width:100%;height:auto;display:block}.page a{font-size:12px}
+#message{color:#4b5d73;white-space:pre-wrap}#readme{white-space:pre-wrap;font-size:13px;line-height:1.5;max-height:560px;overflow:auto;overflow-wrap:anywhere}
+.muted{color:#66768b;font-size:13px}#seek{width:160px}
+@media(max-width:700px){header{position:static}.row{gap:9px}select{max-width:210px}audio{width:100%}}
+</style></head>
+<body>
+<header>
+<h1 id="heading">Партитура</h1>
+<div class="muted"><span id="version">Загрузка актуального релиза…</span> · <a href="../">На главную</a> · <a id="release" href="#" target="_blank" rel="noopener" hidden>GitHub Release</a></div>
+<div class="row">
+<label>Ноты <select id="view" disabled><option>Загрузка…</option></select></label>
+<label>Звук <select id="track" disabled><option>Загрузка…</option></select></label>
+<audio id="audio" controls preload="none"></audio>
+<label>Такт <input id="seek" type="range" min="0" value="0" max="0" disabled></label>
+<span id="position" class="muted"></span>
+</div>
+</header>
+<main>
+<section><div id="message" role="status">Загружаются ноты последнего релиза.</div></section>
+<section>
+<div class="row" style="justify-content:space-between">
+<h2>Нотные страницы</h2>
+<label>Масштаб <select id="zoom"><option value="560">Стандартный</option><option value="820">Крупный</option><option value="1300">Максимальный</option></select></label>
+<span id="pagehint" class="muted"></span>
+</div>
+<div id="pages"></div>
 </section>
-<section><div id="status">Выберите локальный ZIP просмотрщика или публичный GitHub-репозиторий с релизами.</div>
-<div class="row" id="downloads"></div></section>
-<section><div class="row"><h2 id="heading">Нотные страницы SVG</h2>
-<label>Масштаб <select id="zoom"><option value="470">Обычный</option><option value="760">Крупный</option><option value="1200">Очень крупный</option></select></label>
-<span id="pagehint"></span></div><div id="pages"></div></section>
-<section><details><summary>README выбранного репозитория и тега</summary><pre id="readme">README не загружен.</pre></details></section>
+<section><details><summary>README произведения</summary><pre id="readme">Загрузка…</pre></details></section>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-<script src="./app.js"></script>
+<script src="./app.js" defer></script>
 </body></html>

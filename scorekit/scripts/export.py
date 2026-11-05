@@ -449,6 +449,24 @@ def _clean_svg(root: ET.Element, staves: list[tuple[float, float, float, float]]
         return viewbox
     top = min(s[0] for s in staves)
     bottom = max(s[1] for s in staves)
+
+    # A framed rehearsal mark is emitted as separate SVG <g> groups:
+    # one group for the numeral and others for the four rectangular strokes.
+    # The numeral can lie above the first staff by more than four units;
+    # the old text trimming removed "10" and "11" but left their frames.
+    # Match the text to the *actual* box strokes at the same origin rather
+    # than preserving arbitrary titles near the top of the page.
+    boxed_locations: list[tuple[float, float]] = []
+    for group in root:
+        if group.tag.rsplit("}", 1)[-1] != "g":
+            continue
+        rects = [e for e in group
+                 if e.tag.rsplit("}", 1)[-1] == "rect"]
+        if any(0.05 <= float(e.get("width", "0")) <= 0.4 and
+               float(e.get("height", "0")) >= 2.0
+               for e in rects):
+            boxed_locations.append(_svg_translation(group.get("transform", "")))
+    preserved_mark_y: list[float] = []
     for group in list(root):
         if group.tag.rsplit("}", 1)[-1] != "g":
             continue
@@ -457,11 +475,20 @@ def _clean_svg(root: ET.Element, staves: list[tuple[float, float, float, float]]
         text = "".join(group.itertext()).strip()
         if not text:
             continue
-        _x, y = _svg_translation(group.get("transform", ""))
-        if y < top - 4 or y > bottom + 9:
+        x, y = _svg_translation(group.get("transform", ""))
+        boxed_rehearsal = (
+            text.isdecimal() and
+            any(abs(x - bx) < .02 and abs(y - by) < .02
+                for bx, by in boxed_locations)
+        )
+        if boxed_rehearsal:
+            preserved_mark_y.append(y)
+        elif y < top - 4 or y > bottom + 9:
             root.remove(group)
-    # Trim empty title/footer paper without enlarging or distorting staves.
-    first = max(viewbox[1], top - 9)
+    # Preserve the upper portion of boxed numbers as well as their frames,
+    # even when rehearsal marks are spaced unusually high above the staff.
+    first = max(viewbox[1], min(top - 9, *(y - 5 for y in preserved_mark_y))
+                if preserved_mark_y else top - 9)
     last = min(viewbox[1] + viewbox[3], bottom + 12)
     if last > first + 10:
         viewbox[1], viewbox[3] = first, last - first

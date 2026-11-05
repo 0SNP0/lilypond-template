@@ -8,7 +8,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from build import validate_repeat_timbres
 from check_music_structure import validate_navigation_map
-from export import _svg_measure_regions
+from export import _svg_measure_regions, _clean_svg
+import xml.etree.ElementTree as ET
 
 
 class RepeatTimbreTests(unittest.TestCase):
@@ -86,6 +87,40 @@ class MeasureGeometryTests(unittest.TestCase):
         self.assertIsNone(carry)
         self.assertEqual([(x["page"],x["x"],x["width"]) for x in b
                           if x["measure_id"]=="measure-0003"],[(2,20.,40.)])
+
+
+class SvgRehearsalMarksTests(unittest.TestCase):
+    """Keep boxed numeric rehearsal marks while stripping page title text."""
+
+    def test_high_boxed_rehearsal_number_survives(self):
+        ns = "http://www.w3.org/2000/svg"
+        def element(name, parent, **attrs):
+            return ET.SubElement(parent, f"{{{ns}}}{name}", attrs)
+        root=ET.Element(f"{{{ns}}}svg", {"viewBox":"0 0 120 180",
+                                           "width":"210.00mm","height":"297.00mm"})
+        box=element("g",root,transform="translate(25, 22)")
+        element("rect",box,width="0.1",height="2.8",y="-1.4")
+        label=element("g",root,transform="translate(25, 22)")
+        element("text",label).text="10"
+        headline=element("g",root,transform="translate(20, 2)")
+        element("text",headline).text="Book title to remove"
+        distant=element("g",root,transform="translate(60, 20)")
+        element("text",distant).text="Heading to remove"
+        _clean_svg(root,[(30.,34.,10.,105.)],"v1.2.3")
+        labels=["".join(x.itertext()).strip() for x in root]
+        self.assertIn("10",labels)
+        self.assertNotIn("Book title to remove",labels)
+        self.assertNotIn("Heading to remove",labels)
+        viewbox=list(map(float,root.get("viewBox").split()))
+        self.assertLess(viewbox[1],22)
+
+    def test_rehearsal_number_unboxed_remains_subject_to_trim(self):
+        ns="http://www.w3.org/2000/svg"
+        root=ET.Element(f"{{{ns}}}svg",{"viewBox":"0 0 120 180"})
+        text=ET.SubElement(root,f"{{{ns}}}g",{"transform":"translate(25, 22)"})
+        ET.SubElement(text,f"{{{ns}}}text").text="10"
+        _clean_svg(root,[(30.,34.,10.,105.)],"v1.2.3")
+        self.assertEqual([x for x in root if x.tag.endswith("g")],[])
 
 
 if __name__ == "__main__":

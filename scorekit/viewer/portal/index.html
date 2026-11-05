@@ -31,7 +31,13 @@ audio{display:none}
 .media-button:hover{background:#dfe5ed}
 #mediaSeek{flex:1;min-width:30px;width:60px;accent-color:#1760a1}
 #mediaTime{white-space:nowrap;font-size:12px;font-variant-numeric:tabular-nums;color:#263648}
-#volume{width:48px;max-width:48px;accent-color:#1760a1}
+#notationPane{position:relative;flex:1;min-width:0;min-height:0}
+#zoomControls{position:absolute;right:20px;top:10px;z-index:8;display:flex;align-items:center;gap:3px;background:rgba(255,255,255,.96);border:1px solid #d9e0eb;border-radius:9px;padding:4px 6px;box-shadow:0 2px 12px #14203624}
+#zoomControls button{width:28px;height:28px;border:0;border-radius:5px;background:transparent;padding:3px;font-weight:600}
+#zoomControls button:hover{background:#eaf0f8}
+#zoomSlider{width:78px;accent-color:#1760a1}
+#zoomValue{min-width:37px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums;color:#425269}
+#zoomFit{font-size:17px}
 #restart{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;flex:none;border:0;border-radius:50%;background:#f1f3f4;color:#263648;padding:6px}
 #restart:hover{background:#e0e5eb}
 #restart:focus-visible,.catalog-link:focus-visible,.side-toggle:focus-visible{outline:2px solid #1760a1;outline-offset:2px}
@@ -44,10 +50,17 @@ audio{display:none}
 #mixerDetails>summary::-webkit-details-marker{display:none}
 #mixerDetails[open]>summary,#mixerDetails>summary:hover{background:#e8eef7}
 #mixerPanel{position:fixed;left:var(--mixer-left,8px);right:auto;top:var(--mixer-top,76px);z-index:40;width:min(340px,calc(100vw - 16px));max-height:min(550px,calc(100dvh - var(--mixer-top,76px) - 8px));overflow:auto;overscroll-behavior:contain;background:#fff;border:1px solid #c8d1df;border-radius:12px;box-shadow:0 8px 26px #14203638;padding:12px}
-#mixerPanel h2{font-size:15px;margin:0 0 6px}
-#mixerPanel p{font-size:12px;color:#6b7689;margin:0 0 10px}
-#mixerActions{display:flex;gap:6px;margin:0 0 10px}
-#mixerActions button{padding:5px 9px;font-size:12px}
+#mixerToolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+#mixerToolbar strong{font-size:14px}
+#mixerClear{width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;padding:4px;border:1px solid #d7dfe8;border-radius:6px;color:#40546a}
+#mixerClear svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#mixerClear:hover{background:#f0f3f8}
+#mixerMaster{display:grid;grid-template-columns:minmax(0,1fr) 142px;align-items:center;gap:10px;margin-bottom:12px;padding:9px 6px;background:#f2f6fc;border-radius:8px}
+#mixerMaster label{font-size:13px;font-weight:600}
+.gain-control{position:relative;min-width:0;display:flex;align-items:center}
+.gain-control input[type="range"]{width:100%;min-width:0;accent-color:#1760a1}
+.gain-value{position:absolute;bottom:calc(100% + 7px);left:clamp(18px,var(--gain-position,50%),calc(100% - 18px));transform:translateX(-50%);background:#24334d;color:#fff;border-radius:5px;padding:4px 5px;font-size:11px;line-height:1.15;font-variant-numeric:tabular-nums;opacity:0;visibility:hidden;pointer-events:none;white-space:nowrap}
+.gain-control:hover .gain-value,.gain-control:focus-within .gain-value,.gain-control.is-adjusting .gain-value{opacity:1;visibility:visible}
 #mixerTracks{display:grid;gap:4px}
 .mixer-track{display:grid;grid-template-columns:22px minmax(0,1fr) 80px;gap:8px;align-items:center;padding:6px 3px;border-bottom:1px solid #eef0f5}
 .mixer-track span{font-size:13px;overflow-wrap:anywhere}
@@ -66,9 +79,9 @@ audio{display:none}
 #position{flex:none;font-size:12px;white-space:nowrap}
 a{color:#1760a1}
 main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
-#notation{flex:1;min-width:0;overflow:auto;overscroll-behavior:contain;padding:14px}
-#pages{display:flex;flex-direction:column;gap:18px;align-items:stretch;max-width:1140px;margin:0 auto}
-.page{position:relative;padding:0;background:white;box-shadow:0 2px 12px #14203629;text-align:center}
+#notation{height:100%;min-width:0;overflow:auto;overscroll-behavior:contain;padding:14px}
+#pages{display:flex;flex-direction:column;gap:18px;align-items:center;min-width:100%;width:max-content;margin:0 auto}
+.page{position:relative;flex:none;padding:0;background:white;box-shadow:0 2px 12px #14203629;text-align:center}
 .page img{width:100%;height:auto;display:block;user-select:none}
 .measure-layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .measure-region{fill:transparent;cursor:pointer}
@@ -113,7 +126,6 @@ main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
   #position{display:none}
   #audio-cluster{position:fixed;bottom:0;left:0;right:0;z-index:25;background:#fff;border-top:1px solid #dce1ea;padding:5px 7px 6px;height:56px;gap:4px;min-width:0;box-shadow:0 -2px 12px #14203618}
   #mediaControls{flex:1;width:100%;min-width:0;height:38px}
-  #volume{display:none}
   #mediaTime{font-size:11px}
   #mediaSeek{width:45px}
   #restart{height:38px;width:38px}
@@ -122,7 +134,9 @@ main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
   #mixerDetails>summary{width:36px;height:35px;padding:6px}
   #mixerPanel{position:fixed;top:auto;bottom:60px;left:8px;right:8px;width:auto;max-height:55dvh}
   main{display:block;width:100%;overflow:visible}
-  #notation{height:calc(100dvh - 148px);min-height:54dvh;overflow:auto;overscroll-behavior:contain;padding:6px;background:#eef0f4}
+  #notationPane{height:calc(100dvh - 148px);min-height:54dvh}
+  #zoomControls{display:none}
+  #notation{height:100%;overflow:auto;overscroll-behavior:contain;padding:6px;background:#eef0f4}
   #pages,#notation[data-kind="score"] #pages,#notation[data-kind="concert-score"] #pages{min-width:0;width:100%;max-width:100%;gap:10px}
   .page{width:100%;max-width:100%}
   #sidebar,#sidebar.is-collapsed{display:block;width:100%;max-width:none;height:auto;overflow:visible;border:0;border-top:1px solid #dce1ea}
@@ -156,11 +170,18 @@ main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
   <span id="mixerCount" hidden></span>
  </summary>
  <div id="mixerPanel" aria-label="Микшер звуков">
-   <h2>Микшер дорожек</h2>
-   <p>Отметьте партии и настройте громкость каждой. Общий звук заменяет все отдельные дорожки.</p>
-   <div id="mixerActions">
-     <button id="mixerAll" type="button">Все партии</button>
-     <button id="mixerClear" type="button">Без звука</button>
+   <div id="mixerToolbar">
+     <strong>Микшер</strong>
+     <button id="mixerClear" type="button" title="Отключить все дорожки" aria-label="Отключить все дорожки">
+       <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 9l8 6M16 9l-8 6"/></svg>
+     </button>
+   </div>
+   <div id="mixerMaster">
+     <label for="masterVolume">Общая громкость</label>
+     <div class="gain-control">
+       <input id="masterVolume" type="range" min="0" max="1" step="0.01" value="1" aria-label="Общая громкость">
+       <output id="masterGainValue" class="gain-value" for="masterVolume">100%</output>
+     </div>
    </div>
    <div id="mixerTracks"></div>
  </div>
@@ -174,8 +195,6 @@ main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
   <button id="playPause" class="media-button" type="button" aria-label="Воспроизвести" title="Воспроизвести" disabled>▶</button>
   <span id="mediaTime">0:00 / 0:00</span>
   <input id="mediaSeek" type="range" min="0" max="0" step="0.05" value="0" aria-label="Положение аудиозаписи" disabled>
-  <button id="muteButton" class="media-button" type="button" aria-label="Выключить звук" title="Звук">🔊</button>
-  <input id="volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="Громкость">
 </div>
 <details id="speedDetails"><summary id="speedSummary" title="Скорость воспроизведения">100%</summary>
 <div id="speedPopover"><label>Скорость <output id="speedValue" for="speed">100%</output>
@@ -188,10 +207,19 @@ main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
 </div>
 </header>
 <main>
+<section id="notationPane" aria-label="Просмотр нот">
+<div id="zoomControls" role="group" aria-label="Масштаб нот">
+  <button id="zoomOut" type="button" title="Уменьшить" aria-label="Уменьшить масштаб">−</button>
+  <input id="zoomSlider" type="range" min="50" max="250" step="10" value="100" aria-label="Масштаб относительно высоты экрана">
+  <button id="zoomIn" type="button" title="Увеличить" aria-label="Увеличить масштаб">+</button>
+  <button id="zoomFit" type="button" title="Подогнать страницу по высоте" aria-label="По высоте">⤢</button>
+  <output id="zoomValue" for="zoomSlider">100%</output>
+</div>
 <div id="notation" aria-label="Нотные страницы" tabindex="0">
  <div id="message" role="status"></div>
  <div id="pages"></div>
 </div>
+</section>
 <aside id="sidebar" aria-label="Информация о партитуре">
  <div id="sidebar-head">
   <p id="version" class="muted">Загрузка актуального релиза…</p>
@@ -204,5 +232,6 @@ main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js" defer></script>
 <script src="./readme-links.js" defer></script>
 <script src="./mixer-selection.js" defer></script>
+<script src="./page-zoom.js" defer></script>
 <script src="./app.js" defer></script>
 </body></html>

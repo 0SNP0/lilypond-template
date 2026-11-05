@@ -1,0 +1,10 @@
+"use strict";
+const assert=require("node:assert/strict");
+const {pageWidthForViewport}=require("../viewer/portal/page-zoom.js");
+assert.equal(pageWidthForViewport(900,600,0.7,100),420);
+assert.equal(pageWidthForViewport(400,900,0.7,100),400);
+assert.equal(pageWidthForViewport(900,600,0.7,150),630);
+assert.equal(pageWidthForViewport(400,900,0.7,50),200);
+assert.equal(pageWidthForViewport(400,900,0,100),0);
+assert.equal(pageWidthForViewport(400,900,NaN,100),0);
+console.log("Default viewport-height fit and manual zoom: OK");

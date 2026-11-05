@@ -6,6 +6,10 @@ function isCompleteAudioTrack(track) {
   return Boolean(track && (track.is_full_mix===true ||
     track.id==="mix" || track.id==="orchestra"));
 }
+function effectiveTrackVolume(master, stem) {
+  const clamp=value=>Math.max(0,Math.min(1,Number.isFinite(Number(value))?Number(value):0));
+  return clamp(master)*clamp(stem);
+}
 function normalizeAudioSelection(ids, tracks) {
   const available=new Set((tracks||[]).map(t=>t.id));
   const chosen=[...new Set(ids||[])].filter(id=>available.has(id));
@@ -34,4 +38,4 @@ function defaultAudioSelection(view, tracks, viewId) {
   return normalizeAudioSelection([(tracks||[]).find(isCompleteAudioTrack)?.id],tracks);
 }
 if(typeof module!=="undefined" && module.exports)
-  module.exports={isCompleteAudioTrack,normalizeAudioSelection,toggleAudioSelection,defaultAudioSelection};
+  module.exports={isCompleteAudioTrack,normalizeAudioSelection,toggleAudioSelection,defaultAudioSelection,effectiveTrackVolume};

@@ -1,6 +1,9 @@
 % Written score: 152 unique measures, then Da Capo al Fine.
 % Playback: opening 116 + middle 36 + opening 116 = 268 measures.
-global = { \time 3/4 s2.*152 \bar "||" }
+% The printed Fine is at the end of measure 116; mark that boundary
+% with a double barline in both scores and all individual/combined parts.
+% It is visual only: MIDI still follows globalPlayback's 268 measures.
+global = { \time 3/4 s2.*116 \bar "||" s2.*36 \bar "||" }
 globalPlayback = { \time 3/4 s2.*268 }
 
 rehearsalMarks = {

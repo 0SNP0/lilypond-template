@@ -1,6 +1,6 @@
 "use strict";
-/** In a static score site the complete mix is exclusive with its component
- * stems: selecting either side removes the other to avoid doubling audio.
+/** A complete mix is a selectable background layer, not a mutually
+ * exclusive mode: its gain and all instrument stems have independent levels.
  */
 function isCompleteAudioTrack(track) {
   return Boolean(track && (track.is_full_mix===true ||
@@ -13,19 +13,14 @@ function effectiveTrackVolume(master, stem) {
 function normalizeAudioSelection(ids, tracks) {
   const available=new Set((tracks||[]).map(t=>t.id));
   const chosen=[...new Set(ids||[])].filter(id=>available.has(id));
-  const full=chosen.find(id=>isCompleteAudioTrack((tracks||[]).find(t=>t.id===id)));
-  return full?[full]:chosen;
+  return chosen;
 }
 function toggleAudioSelection(current, id, enabled, tracks) {
   const track=(tracks||[]).find(t=>t.id===id);
   if(!track)return normalizeAudioSelection(current,tracks);
   const selected=new Set(current||[]);
-  if(enabled){
-    if(isCompleteAudioTrack(track))selected.clear();
-    else for(const item of tracks||[])
-      if(isCompleteAudioTrack(item))selected.delete(item.id);
-    selected.add(id);
-  }else selected.delete(id);
+  if(enabled)selected.add(id);
+  else selected.delete(id);
   return normalizeAudioSelection([...selected],tracks);
 }
 function defaultAudioSelection(view, tracks, viewId) {

@@ -207,12 +207,26 @@ const getStem=id=>manifest?.audio_tracks?.find(t=>t.id===id);
 const stemLevel=id=>stemLevels.get(id)??1;
 
 function applyStemVolumes(){
-  audio.volume=Math.min(1,masterLevel*stemLevel($("track").value));
+  // Global gain multiplies the individual level of every active player.
+  audio.volume=effectiveTrackVolume(masterLevel,stemLevel($("track").value));
   for(const [id,player] of stemPlayers){
-    player.volume=Math.min(1,masterLevel*stemLevel(id));
+    player.volume=effectiveTrackVolume(masterLevel,stemLevel(id));
     player.muted=audio.muted;
   }
 }
+function gainFeedback(slider,output){
+  const refresh=()=>{
+    const percent=Math.round(Number(slider.value)*100);
+    output.textContent=percent+"%";
+    output.parentElement.style.setProperty("--gain-position",percent+"%");
+  };
+  slider.addEventListener("input",refresh);
+  slider.addEventListener("pointerdown",()=>output.parentElement.classList.add("is-adjusting"));
+  for(const event of ["pointerup","pointercancel","blur"])
+    slider.addEventListener(event,()=>output.parentElement.classList.remove("is-adjusting"));
+  refresh();
+}
+gainFeedback($("masterVolume"),$("masterGainValue"));
 function removeStem(id){
   const player=stemPlayers.get(id);
   if(!player)return;
@@ -298,11 +312,17 @@ function drawMixer(){
     check.setAttribute("aria-label","Добавить "+track.label);
     const caption=document.createElement("span");
     caption.textContent=track.label;
+    const gainWrapper=document.createElement("div");
+    gainWrapper.className="gain-control";
     const gain=document.createElement("input");
     gain.type="range";gain.min="0";gain.max="1";
-    gain.step=".05";gain.value=String(stemLevel(track.id));
+    gain.step=".01";gain.value=String(stemLevel(track.id));
     gain.disabled=!check.checked;
     gain.setAttribute("aria-label","Громкость "+track.label);
+    const gainValue=document.createElement("output");
+    gainValue.className="gain-value";
+    gainWrapper.append(gain,gainValue);
+    gainFeedback(gain,gainValue);
     check.addEventListener("change",()=>{
       selectStems(toggleAudioSelection(
         [...selectedStems],track.id,check.checked,manifest.audio_tracks
@@ -312,7 +332,7 @@ function drawMixer(){
       stemLevels.set(track.id,Number(gain.value));
       applyStemVolumes();
     });
-    label.append(check,caption,gain);
+    label.append(check,caption,gainWrapper);
     body.append(label);
   }
   const count=$("mixerCount");
@@ -324,6 +344,40 @@ function drawMixer(){
 
 function preferredTracksForView(id,view){
   return defaultAudioSelection(view,manifest.audio_tracks,id);
+}
+let zoomPercent=100;
+function applyPageZoom(){
+  const pages=$("pages").querySelectorAll(".page");
+  if(!pages.length)return;
+  const isMobile=window.matchMedia("(max-width:800px)").matches;
+  const viewport=$("notation");
+  const width=Math.max(1,viewport.clientWidth-28);
+  const height=Math.max(1,viewport.clientHeight-28);
+  const view=manifest?.views?.[$("view").value];
+  for(const page of pages){
+    if(isMobile){
+      page.style.removeProperty("width");
+      continue;
+    }
+    const box=view?.page_viewboxes?.[page.dataset.page];
+    const ratio=box?.length===4 && box[3]>0?box[2]/box[3]:0.72;
+    const pixels=pageWidthForViewport(width,height,ratio,zoomPercent);
+    if(pixels)page.style.width=pixels+"px";
+  }
+}
+function updateZoom(value){
+  zoomPercent=Math.max(50,Math.min(250,Math.round(Number(value)/10)*10));
+  $("zoomSlider").value=String(zoomPercent);
+  $("zoomValue").textContent=zoomPercent+"%";
+  applyPageZoom();
+}
+$("zoomSlider").addEventListener("input",()=>updateZoom($("zoomSlider").value));
+$("zoomOut").addEventListener("click",()=>updateZoom(zoomPercent-10));
+$("zoomIn").addEventListener("click",()=>updateZoom(zoomPercent+10));
+$("zoomFit").addEventListener("click",()=>updateZoom(100));
+window.addEventListener("resize",applyPageZoom);
+if(typeof ResizeObserver!=="undefined"){
+  new ResizeObserver(applyPageZoom).observe($("notation"));
 }
 function showView() {
   if(!manifest)return;
@@ -377,6 +431,7 @@ function showView() {
     fragment.append(wrapper);
   }
   $("pages").append(fragment);
+  applyPageZoom();
   const url=new URL(location.href);url.searchParams.set("view",id);
   history.replaceState(null,"",url);
   updateTime();
@@ -434,10 +489,6 @@ function syncMediaControls(){
   play.textContent=audio.paused ? "▶" : "Ⅱ";
   play.setAttribute("aria-label",audio.paused?"Воспроизвести":"Пауза");
   play.title=audio.paused?"Воспроизвести":"Пауза";
-  const muted=audio.muted || audio.volume===0;
-  $("muteButton").textContent=muted?"🔇":"🔊";
-  $("muteButton").setAttribute("aria-label",muted?"Включить звук":"Выключить звук");
-  $("volume").value=String(masterLevel);
 }
 function updateTime() {
   syncMediaControls();
@@ -508,20 +559,10 @@ $("mediaSeek").addEventListener("change",()=>{
   mediaSeeking=false;
   seekSeconds(selected);
 });
-$("muteButton").addEventListener("click",()=>{
-  audio.muted=!audio.muted;
-  syncMediaControls();
-});
-$("volume").addEventListener("input",()=>{
-  masterLevel=Number($("volume").value);
+$("masterVolume").addEventListener("input",()=>{
+  masterLevel=Number($("masterVolume").value);
   audio.muted=masterLevel===0;
   applyStemVolumes();
-  syncMediaControls();
-});
-$("mixerAll").addEventListener("click",()=>{
-  const all=manifest?.audio_tracks?.filter(t=>t.id!=="mix" && t.id!=="orchestra")
-    .map(t=>t.id)||[];
-  selectStems(all);
 });
 $("mixerClear").addEventListener("click",()=>selectStems([]));
 function positionMixerPanel(){
@@ -541,6 +582,7 @@ $("sidebarToggle").addEventListener("click",()=>{
   const isCollapsed=panel.classList.toggle("is-collapsed");
   $("sidebarToggle").setAttribute("aria-expanded",String(!isCollapsed));
   $("sidebarToggle").title=isCollapsed?"Показать описание":"Скрыть описание";
+  requestAnimationFrame(applyPageZoom);
 });
 $("speed").addEventListener("input",()=>{
   const rate=Number($("speed").value);

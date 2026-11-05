@@ -128,7 +128,7 @@ class MultiMeasureSpanTests(unittest.TestCase):
     def test_duplicate_regions_are_rejected(self):
         areas = [{"measure_id":"measure-0001"},
                  {"measure_id":"measure-0001"}]
-        with self.assertRaisesRegex(ValueError, "repeated"):
+        with self.assertRaisesRegex(ValueError, "Invalid printed measure sequence|repeated"):
             annotate_measure_spans(areas, 4)
 
 

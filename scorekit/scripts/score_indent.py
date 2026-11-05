@@ -22,10 +22,10 @@ LAYOUT = ROOT / "scorekit" / "lilypond" / "layout" / "score.ily"
 ORCHESTRATION = ROOT / "orchestra.ily"
 START_INDENT = 45.0
 START_SHORT_INDENT = 28.0
-TRANSLATION = re.compile(r"translate\\(\\s*([-+\\d.]+)[,\\s]+([-+\\d.]+)\\s*\\)")
+TRANSLATION = re.compile(r"translate\(\s*([-+\d.]+)[,\s]+([-+\d.]+)\s*\)")
 LABEL = re.compile(
-    r'(shortInstrumentName|instrumentName)\\s*=\\s*'
-    r'(?:\\markup\\s+\\fontsize\\s+#-?\\d+(?:\\.\\d+)?\\s*)?'
+    r'(shortInstrumentName|instrumentName)\s*=\s*'
+    r'(?:\\markup\s+\\fontsize\s+#-?\d+(?:\.\d+)?\s*)?'
     r'"([^"]+)"'
 )
 
@@ -108,7 +108,7 @@ def score_indents(staff_size: float) -> tuple[float, float]:
     if first_x is None and full_names:
         raise RuntimeError("Could not identify full instrument labels in LilyPond SVG")
 
-    margin = re.search(r"(?m)^\\s*left-margin\\s*=\\s*(\\d+(?:\\.\\d+)?)\\\\mm", LAYOUT.read_text(encoding="utf-8"))
+    margin = re.search(r"(?m)^\s*left-margin\s*=\s*(\d+(?:\.\d+)?)\\mm", LAYOUT.read_text(encoding="utf-8"))
     margin_mm = float(margin.group(1)) if margin else 15.0
     first, later = derived_indents(
         (START_INDENT, START_SHORT_INDENT), first_x, later_x, margin_mm

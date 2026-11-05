@@ -319,6 +319,9 @@ function synchronizeStems(hard=false){
                           "seeked","waiting","stalled","suspend"]){
         player.addEventListener(event,()=>{
           if(stemPlayers.get(id)!==player)return;
+          // A newly loaded follower may still be at t=0 while the master
+          // is at a random seek. It must seek first so it can buffer there.
+          if(event==="loadedmetadata")alignStem(player,true);
           onStemBufferChange();
         });
       }
@@ -357,21 +360,14 @@ function checkPlaybackGroup(){
     return;
   }
   const target=audio.currentTime||0;
-  let missing=[...selectedStems].filter(id=>{
-    const player=id===activeMasterId?audio:stemPlayers.get(id);
-    return !player || !hasMediaBuffer(player,target,START_BUFFER_SECONDS);
-  });
-  if(missing.length){
-    suspendGroup();
-    waitingFor(missing);
-    scheduleGroupCheck(240);
-    return;
-  }
-  // At each start/resume, settle every follower on the master clock.
+  // Seek every new follower to the master BEFORE testing whether the
+  // destination is buffered. Otherwise a freshly loaded stream at t=0
+  // will never prefetch a seek into the middle of the piece.
   let aligning=false;
   for(const [id,player] of stemPlayers){
-    if(!selectedStems.has(id))continue;
-    if(Math.abs(player.currentTime-target)>MAX_STEM_DRIFT_SECONDS){
+    if(!selectedStems.has(id) || player.readyState<1)continue;
+    if(!player.seeking &&
+       Math.abs(player.currentTime-target)>MAX_STEM_DRIFT_SECONDS){
       alignStem(player,true);
       aligning=true;
     }
@@ -382,9 +378,9 @@ function checkPlaybackGroup(){
     scheduleGroupCheck(120);
     return;
   }
-  missing=[...selectedStems].filter(id=>{
+  const missing=[...selectedStems].filter(id=>{
     const player=id===activeMasterId?audio:stemPlayers.get(id);
-    return !hasMediaBuffer(player,target,START_BUFFER_SECONDS);
+    return !player || !hasMediaBuffer(player,target,START_BUFFER_SECONDS);
   });
   if(missing.length){
     suspendGroup();

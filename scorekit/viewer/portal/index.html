@@ -36,6 +36,21 @@ audio{display:none}
 #restart:hover{background:#e0e5eb}
 #restart:focus-visible,.catalog-link:focus-visible,.side-toggle:focus-visible{outline:2px solid #1760a1;outline-offset:2px}
 #restart svg{width:19px;height:19px;fill:currentColor}
+#mixerDetails{position:relative;flex:none}
+#mixerDetails>summary{cursor:pointer;border:1px solid #c3cbd7;border-radius:7px;padding:7px 8px;white-space:nowrap;font-size:13px;list-style:none;background:#f7f9fc}
+#mixerDetails>summary::-webkit-details-marker{display:none}
+#mixerDetails[open]>summary,#mixerDetails>summary:hover{background:#e8eef7}
+#mixerPanel{position:absolute;right:0;top:calc(100% + 8px);z-index:40;width:min(340px,90vw);max-height:min(68dvh,550px);overflow:auto;overscroll-behavior:contain;background:#fff;border:1px solid #c8d1df;border-radius:12px;box-shadow:0 8px 26px #14203638;padding:12px}
+#mixerPanel h2{font-size:15px;margin:0 0 6px}
+#mixerPanel p{font-size:12px;color:#6b7689;margin:0 0 10px}
+#mixerActions{display:flex;gap:6px;margin:0 0 10px}
+#mixerActions button{padding:5px 9px;font-size:12px}
+#mixerTracks{display:grid;gap:4px}
+.mixer-track{display:grid;grid-template-columns:22px minmax(0,1fr) 80px;gap:8px;align-items:center;padding:6px 3px;border-bottom:1px solid #eef0f5}
+.mixer-track span{font-size:13px;overflow-wrap:anywhere}
+.mixer-track input[type="range"]{width:100%;min-width:0;accent-color:#1678dc}
+.mixer-track input[type="checkbox"]{width:17px;height:17px;accent-color:#1678dc}
+.mixer-track input[type="range"]:disabled{opacity:.35}
 #speedDetails{position:relative;flex:none}
 #speedDetails summary{padding:7px 5px;cursor:pointer;border-radius:6px;list-style:none;white-space:nowrap;font-variant-numeric:tabular-nums;font-size:12px}
 #speedDetails summary::-webkit-details-marker{display:none}
@@ -88,7 +103,7 @@ main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
   #orchestraLine{display:none}
   .catalog-link{width:28px;height:28px}
   .side-toggle{display:none}
-  .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px}
+  .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:6px}
   .picker{display:flex;align-items:center;gap:4px;min-width:0;font-size:12px}
   .picker select{width:100%;min-width:0;padding:6px 20px 6px 6px;font-size:13px;height:35px}
   .measure-seek{display:none}
@@ -100,6 +115,9 @@ main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
   #mediaSeek{width:45px}
   #restart{height:38px;width:38px}
   #speedDetails summary{min-width:47px;text-align:center}
+  #mixerDetails{position:static}
+  #mixerDetails>summary{padding:6px 7px;font-size:12px}
+  #mixerPanel{position:fixed;top:auto;bottom:60px;left:8px;right:8px;width:auto;max-height:55dvh}
   main{display:block;width:100%;overflow:visible}
   #notation{height:calc(100dvh - 148px);min-height:54dvh;overflow:auto;overscroll-behavior:contain;padding:6px;background:#eef0f4}
   #pages,#notation[data-kind="score"] #pages,#notation[data-kind="concert-score"] #pages{min-width:0;width:100%;max-width:100%;gap:10px}
@@ -124,6 +142,18 @@ main{display:flex;flex:1;min-height:0;min-width:0;width:100%;overflow:hidden}
 <div class="row">
 <label class="picker">Ноты <select id="view" disabled><option>Загрузка…</option></select></label>
 <label class="picker">Звук <select id="track" disabled><option>Загрузка…</option></select></label>
+<details id="mixerDetails">
+ <summary title="Выбрать несколько аудиодорожек">Микшер</summary>
+ <div id="mixerPanel" aria-label="Микшер звуков">
+   <h2>Микшер дорожек</h2>
+   <p>Отметьте любые партии и настройте громкость каждой. Общий звук уже содержит все партии.</p>
+   <div id="mixerActions">
+     <button id="mixerAll" type="button">Все партии</button>
+     <button id="mixerClear" type="button">Без звука</button>
+   </div>
+   <div id="mixerTracks"></div>
+ </div>
+</details>
 <div id="audio-cluster">
 <button id="restart" type="button" title="К началу" aria-label="К началу">
 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 5h2v14H5zM19 5v14L8 12z"/></svg>

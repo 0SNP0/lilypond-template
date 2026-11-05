@@ -95,6 +95,7 @@ async function boot() {
     }
     choices($("view"),Object.entries(manifest.views).map(([id,v])=>[id,viewLabel(id,v)]));
     choices($("track"),[["","Без звука"],...manifest.audio_tracks.map(t=>[t.id,t.label])]);
+    drawMixer();
     $("view").disabled=$("track").disabled=false;
     $("seek").max=String(timeline.measures.length-1);$("seek").disabled=false;
     const param=new URL(location.href).searchParams.get("view");
@@ -175,20 +176,147 @@ function seekSeconds(seconds, startPlayback=false) {
   const token=++seekGeneration;
   if(Math.abs(audio.currentTime-target)<0.012 && !audio.seeking){
     updateTime();
+    synchronizeStems(true);
     if(resume && audio.paused)audio.play().catch(()=>{});
     return;
   }
   // Let the media decoder complete a random seek before resuming.
   // This prevents the old buffered position from playing briefly on mobile.
   audio.pause();
+  stopStemPlayback();
   audio.addEventListener("seeked",()=>{
     if(token!==seekGeneration)return;
     updateTime();
+    synchronizeStems(true);
     if(resume)audio.play().catch(()=>{});
   },{once:true});
   audio.currentTime=target;
   updateTime();
 }
+
+/* The selected HTMLMediaElement is the clock. Additional MP3 stems stream
+   independently and are gently corrected against the clock. Avoid decoding
+   dozens of full-length audio files into phone memory. */
+const selectedStems=new Set();
+const stemLevels=new Map();
+const stemPlayers=new Map();
+let masterLevel=1, lastStemCorrection=0;
+const getStem=id=>manifest?.audio_tracks?.find(t=>t.id===id);
+const stemLevel=id=>stemLevels.get(id)??1;
+
+function applyStemVolumes(){
+  audio.volume=Math.min(1,masterLevel*stemLevel($("track").value));
+  for(const [id,player] of stemPlayers){
+    player.volume=Math.min(1,masterLevel*stemLevel(id));
+    player.muted=audio.muted;
+  }
+}
+function removeStem(id){
+  const player=stemPlayers.get(id);
+  if(!player)return;
+  stemPlayers.delete(id);
+  player.pause();
+  player.removeAttribute("src");
+  player.load();
+}
+function stopStemPlayback(){
+  for(const player of stemPlayers.values())player.pause();
+}
+function alignStem(player,hard=false){
+  if(player.readyState<1 || !audio.getAttribute("src"))return;
+  const time=Math.max(0,Math.min(audio.currentTime||0,
+    Number.isFinite(player.duration)?Math.max(0,player.duration-.05):Infinity));
+  const difference=time-player.currentTime;
+  if(hard || Math.abs(difference)>.3){
+    player.playbackRate=audio.playbackRate;
+    if(Math.abs(difference)>.025)player.currentTime=time;
+  }else{
+    player.playbackRate=audio.playbackRate*
+      (difference>.055?1.025:difference<-.055?.975:1);
+  }
+}
+function synchronizeStems(hard=false){
+  if(!manifest)return;
+  const master=$("track").value;
+  const wanted=new Set([...selectedStems].filter(id=>id!==master));
+  for(const id of [...stemPlayers.keys()])if(!wanted.has(id))removeStem(id);
+  for(const id of wanted){
+    const track=getStem(id);
+    if(!track)continue;
+    let player=stemPlayers.get(id);
+    if(!player){
+      player=new Audio();
+      player.preload="auto";
+      player.src="./latest/"+trustedPath(track.path.replace(/^(\.\.\/)+/,""),"audio/",".mp3");
+      stemPlayers.set(id,player);
+      player.addEventListener("loadedmetadata",()=>{
+        if(stemPlayers.get(id)!==player)return;
+        alignStem(player,true);
+        if(!audio.paused)player.play().catch(()=>{});
+      });
+      player.addEventListener("error",()=>{
+        if(stemPlayers.get(id)===player)
+          message("Не удалось открыть звук: "+track.label);
+      });
+      player.load();
+    }
+    if(hard)alignStem(player,true);
+    if(audio.paused)player.pause();
+    else if(player.readyState>=1 && player.paused){
+      alignStem(player,true);
+      player.play().catch(()=>{});
+    }
+  }
+  applyStemVolumes();
+}
+function selectStems(ids){
+  const available=new Set(manifest?.audio_tracks?.map(t=>t.id)||[]);
+  selectedStems.clear();
+  for(const id of ids)if(available.has(id))selectedStems.add(id);
+  const current=$("track").value;
+  const master=selectedStems.has(current)?current:[...selectedStems][0]||"";
+  if(master!==current){
+    $("track").value=master;
+    setTrack();
+  }else if(!master){
+    setTrack();
+  }else synchronizeStems(true);
+  drawMixer();
+}
+function drawMixer(){
+  if(!manifest)return;
+  const body=$("mixerTracks");
+  body.replaceChildren();
+  for(const track of manifest.audio_tracks){
+    const label=document.createElement("label");
+    label.className="mixer-track";
+    const check=document.createElement("input");
+    check.type="checkbox";
+    check.checked=selectedStems.has(track.id);
+    check.setAttribute("aria-label","Добавить "+track.label);
+    const caption=document.createElement("span");
+    caption.textContent=track.label;
+    const gain=document.createElement("input");
+    gain.type="range";gain.min="0";gain.max="1";
+    gain.step=".05";gain.value=String(stemLevel(track.id));
+    gain.disabled=!check.checked;
+    gain.setAttribute("aria-label","Громкость "+track.label);
+    check.addEventListener("change",()=>{
+      const next=new Set(selectedStems);
+      if(check.checked)next.add(track.id);else next.delete(track.id);
+      selectStems([...next]);
+    });
+    gain.addEventListener("input",()=>{
+      stemLevels.set(track.id,Number(gain.value));
+      applyStemVolumes();
+    });
+    label.append(check,caption,gain);
+    body.append(label);
+  }
+  $("mixerDetails").querySelector("summary").textContent=
+    selectedStems.size>1?"Микшер ("+selectedStems.size+")":"Микшер";
+}
+
 function preferredTrackForView(id,view){
   if(view.kind==="score" || view.kind==="concert-score")
     return manifest.audio_tracks.find(t=>t.id==="mix" || t.id==="orchestra")?.id || manifest.audio_tracks[0]?.id || "";
@@ -253,14 +381,18 @@ function showView() {
   history.replaceState(null,"",url);
   updateTime();
   const preferred=preferredTrackForView(id,view);
+  selectedStems.clear();
+  if(preferred)selectedStems.add(preferred);
   if($("track").value!==preferred){
     $("track").value=preferred;
     setTrack();
-  }
+  }else synchronizeStems(true);
+  drawMixer();
 }
 function setTrack() {
   if(!manifest)return;
   const track=manifest.audio_tracks.find(t=>t.id===$("track").value);
+  for(const id of [...stemPlayers.keys()])removeStem(id);
   if(!track){
     ++trackChange;
     ++seekGeneration;
@@ -284,6 +416,7 @@ function setTrack() {
     playAfterSeek=false;
     audio.playbackRate=requestedRate;
     seekSeconds(target,resume);
+    synchronizeStems(true);
   },{once:true});
   message("");
 }
@@ -310,7 +443,7 @@ function syncMediaControls(){
   const muted=audio.muted || audio.volume===0;
   $("muteButton").textContent=muted?"🔇":"🔊";
   $("muteButton").setAttribute("aria-label",muted?"Включить звук":"Выключить звук");
-  $("volume").value=String(audio.volume);
+  $("volume").value=String(masterLevel);
 }
 function updateTime() {
   syncMediaControls();
@@ -328,18 +461,24 @@ function updateTime() {
   markMeasure(audio.paused ? null : measure.printed_number);
 }
 $("view").addEventListener("change",showView);
-$("track").addEventListener("change",setTrack);
+$("track").addEventListener("change",()=>{
+  const id=$("track").value;
+  selectStems(id?[id]:[]);
+});
 audio.addEventListener("timeupdate",updateTime);
-audio.addEventListener("seeked",updateTime);
+audio.addEventListener("seeked",()=>{updateTime();synchronizeStems(true);});
 audio.addEventListener("loadedmetadata",updateTime);
 audio.addEventListener("durationchange",updateTime);
-audio.addEventListener("volumechange",syncMediaControls);
+audio.addEventListener("volumechange",()=>{
+  syncMediaControls();
+  for(const player of stemPlayers.values())player.muted=audio.muted;
+});
 audio.addEventListener("emptied",syncMediaControls);
 audio.addEventListener("error",()=>{
   syncMediaControls();
   if(audio.error)message("Не удалось воспроизвести выбранный аудиофайл.");
 });
-audio.addEventListener("ended",()=>{stopFrames();updateTime();});
+audio.addEventListener("ended",()=>{stopFrames();stopStemPlayback();updateTime();});
 function stopFrames(){
   if(playbackFrame!==null) cancelAnimationFrame(playbackFrame);
   playbackFrame=null;
@@ -348,10 +487,19 @@ function paintWhilePlaying(){
   playbackFrame=null;
   if(audio.paused)return;
   updateTime();
+  const tick=performance.now();
+  if(tick-lastStemCorrection>200){
+    lastStemCorrection=tick;
+    synchronizeStems();
+  }
   playbackFrame=requestAnimationFrame(paintWhilePlaying);
 }
-audio.addEventListener("play",()=>{stopFrames();paintWhilePlaying();});
-audio.addEventListener("pause",()=>{stopFrames();updateTime();});
+audio.addEventListener("play",()=>{
+  stopFrames();
+  synchronizeStems(true);
+  paintWhilePlaying();
+});
+audio.addEventListener("pause",()=>{stopFrames();stopStemPlayback();updateTime();});
 $("restart").addEventListener("click",()=>seekSeconds(0));
 $("playPause").addEventListener("click",()=>{
   if(audio.paused){
@@ -375,10 +523,17 @@ $("muteButton").addEventListener("click",()=>{
   syncMediaControls();
 });
 $("volume").addEventListener("input",()=>{
-  audio.volume=Number($("volume").value);
-  audio.muted=audio.volume===0;
+  masterLevel=Number($("volume").value);
+  audio.muted=masterLevel===0;
+  applyStemVolumes();
   syncMediaControls();
 });
+$("mixerAll").addEventListener("click",()=>{
+  const all=manifest?.audio_tracks?.filter(t=>t.id!=="mix" && t.id!=="orchestra")
+    .map(t=>t.id)||[];
+  selectStems(all);
+});
+$("mixerClear").addEventListener("click",()=>selectStems([]));
 $("sidebarToggle").addEventListener("click",()=>{
   const panel=$("sidebar");
   const isCollapsed=panel.classList.toggle("is-collapsed");
@@ -388,6 +543,7 @@ $("sidebarToggle").addEventListener("click",()=>{
 $("speed").addEventListener("input",()=>{
   const rate=Number($("speed").value);
   audio.playbackRate=rate;
+  synchronizeStems(true);
   $("speedValue").textContent=Math.round(rate*100)+"%";
   $("speedSummary").textContent=Math.round(rate*100)+"%";
 });

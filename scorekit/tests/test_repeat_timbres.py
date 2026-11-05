@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from build import validate_repeat_timbres
 from check_music_structure import validate_navigation_map
 from export import _svg_measure_regions, _clean_svg
-from score_indent import derived_indents, label_x_from_svg
+from score_indent import derived_indents, label_x_from_svg, layout_left_margin
 import xml.etree.ElementTree as ET
 
 
@@ -125,6 +125,10 @@ class SvgRehearsalMarksTests(unittest.TestCase):
 
 
 class ScoreIndentTests(unittest.TestCase):
+    def test_real_score_layout_margin_is_used(self):
+        self.assertEqual(layout_left_margin("left-margin = 6\\mm"), 6.0)
+        self.assertEqual(layout_left_margin("  left-margin = 12.5\\mm"), 12.5)
+
     def test_measured_name_positions_calibrate_without_guessing_font(self):
         # A 10 mm indent reduction moved real ink by only 5 mm.
         # The old 1:1 assumption would leave 5 mm of unnecessary gutter.

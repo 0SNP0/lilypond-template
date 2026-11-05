@@ -56,6 +56,15 @@ def label_x_from_svg(file: Path, names: set[str]) -> float | None:
     return min(locations) if locations else None
 
 
+def layout_left_margin(content: str) -> float:
+    """Read the real paper margin (mm); don't silently assume 15 mm."""
+    match = re.search(
+        r"(?m)^\s*left-margin\s*=\s*(\d+(?:\.\d+)?)\\mm",
+        content,
+    )
+    return float(match.group(1)) if match else 15.0
+
+
 def derived_indents(
     initial: tuple[float, float],
     baseline: tuple[float | None, float | None],
@@ -144,11 +153,7 @@ def score_indents(staff_size: float) -> tuple[float, float]:
                   START_SHORT_INDENT - TRIAL_DELTA_MM, "trial")
     if baseline[0] is None and full_names:
         raise RuntimeError("Could not locate full instrument names in SVG")
-    margin = re.search(
-        r"(?m)^\\s*left-margin\\s*=\\s*(\\d+(?:\\.\\d+)?)\\\\mm",
-        LAYOUT.read_text(encoding="utf-8")
-    )
-    margin_mm = float(margin.group(1)) if margin else 15.0
+    margin_mm = layout_left_margin(LAYOUT.read_text(encoding="utf-8"))
     first, later = derived_indents(
         (START_INDENT, START_SHORT_INDENT), baseline, trial, margin_mm
     )

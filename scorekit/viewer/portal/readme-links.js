@@ -18,7 +18,15 @@ function readmeLinkTarget(href, repository, tag) {
       !/^[A-Za-z\d_.-]+\/[A-Za-z\d_.-]+$/.test(repository || "") ||
       !/^[A-Za-z\d_.+/-]+$/.test(tag || "")) return null;
   const plain = raw.split(/[?#]/, 1)[0];
-  if (!plain || plain.split("/").some(part => part === "." || part === "..")) return null;
+  if (!plain) return null;
+  // Reject traversal BEFORE URL normalization, including encoded dots and
+  // slashes. URL() would otherwise erase a %2e%2e segment silently.
+  let originalSegments;
+  try {
+    originalSegments = plain.split("/").filter(Boolean).map(decodeURIComponent);
+  } catch (_error) { return null; }
+  if (originalSegments.some(part => part === "." || part === ".." ||
+      part.includes("/") || part.includes("\\\\"))) return null;
   try {
     const parsed = new URL(raw, "https://scorekit.invalid/");
     if (parsed.origin !== "https://scorekit.invalid") return null;

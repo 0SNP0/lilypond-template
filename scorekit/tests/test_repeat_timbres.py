@@ -8,7 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from build import validate_repeat_timbres
 from check_music_structure import validate_navigation_map
-from export import _svg_measure_regions, _clean_svg
+from export import _svg_measure_regions, _clean_svg, annotate_measure_spans
 from score_indent import derived_indents, label_x_from_svg, layout_left_margin
 import xml.etree.ElementTree as ET
 
@@ -88,6 +88,48 @@ class MeasureGeometryTests(unittest.TestCase):
         self.assertIsNone(carry)
         self.assertEqual([(x["page"],x["x"],x["width"]) for x in b
                           if x["measure_id"]=="measure-0003"],[(2,20.,40.)])
+
+
+class MultiMeasureSpanTests(unittest.TestCase):
+    """A rest stays highlighted through its full printed duration."""
+
+    def test_rest_at_end_of_system(self):
+        areas = [
+            {"measure_id": "measure-0037", "page": 1, "y": 32.3},
+            {"measure_id": "measure-0053", "page": 1, "y": 49.2},
+            {"measure_id": "measure-0054", "page": 1, "y": 49.2},
+        ]
+        annotate_measure_spans(areas, 54)
+        self.assertEqual([a["last_printed_measure"] for a in areas],
+                         [52, 53, 54])
+
+    def test_rest_across_page_and_until_last_bar(self):
+        areas = [
+            {"measure_id": "measure-0101", "page": 1, "y": 93.0},
+            {"measure_id": "measure-0115", "page": 2, "y": 12.0},
+            {"measure_id": "measure-0137", "page": 2, "y": 30.0},
+        ]
+        annotate_measure_spans(areas, 152)
+        self.assertEqual([a["last_printed_measure"] for a in areas],
+                         [114, 136, 152])
+
+    def test_export_order_cannot_change_spans(self):
+        areas = [
+            {"measure_id": "measure-0103", "page": 1},
+            {"measure_id": "measure-0101", "page": 1},
+            {"measure_id": "measure-0105", "page": 1},
+        ]
+        annotate_measure_spans(areas, 105)
+        self.assertEqual({a["measure_id"]:a["last_printed_measure"]
+                          for a in areas},
+                         {"measure-0101":102, "measure-0103":104,
+                          "measure-0105":105})
+
+    def test_duplicate_regions_are_rejected(self):
+        areas = [{"measure_id":"measure-0001"},
+                 {"measure_id":"measure-0001"}]
+        with self.assertRaisesRegex(ValueError, "repeated"):
+            annotate_measure_spans(areas, 4)
 
 
 class SvgRehearsalMarksTests(unittest.TestCase):

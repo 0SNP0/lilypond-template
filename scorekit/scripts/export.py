@@ -499,6 +499,31 @@ def _clean_svg(root: ET.Element, staves: list[tuple[float, float, float, float]]
     return viewbox
 
 
+def annotate_measure_spans(regions: list[dict],
+                           printed_measures: int) -> None:
+    """Attach the complete printed span represented by each visible region.
+
+    Multimeasure rests occupy *one* LilyPond physical measure even though
+    their music lasts several printed bars. The gap up to the next visible
+    printed measure belongs to that same rectangle, including when the rest
+    is the last symbol on a system/page. Geometry is never extended past the
+    physical region; only its time interval changes.
+    """
+    ordered = sorted(regions, key=lambda region:
+                     int(region["measure_id"].removeprefix("measure-")))
+    previous = 0
+    for index, region in enumerate(ordered):
+        number = int(region["measure_id"].removeprefix("measure-"))
+        if not previous < number <= printed_measures:
+            raise ValueError(f"Invalid or repeated printed bar region: {number}")
+        next_number = (int(ordered[index + 1]["measure_id"].removeprefix("measure-"))
+                       if index + 1 < len(ordered) else printed_measures + 1)
+        if not number < next_number <= printed_measures + 1:
+            raise ValueError(f"Invalid printed measure sequence: {number}, {next_number}")
+        region["last_printed_measure"] = next_number - 1
+        previous = number
+
+
 def tag_svg(pages: list[Path], timeline: dict, kind: str,
             revision: str) -> tuple[list[dict], list[dict], dict]:
     """Index native SVG measure numbers AND real barline-to-barline regions."""
@@ -560,6 +585,7 @@ def tag_svg(pages: list[Path], timeline: dict, kind: str,
                 "width": round(right-x,3),
                 "height": round(bottom-top+.8,3),
             })
+    annotate_measure_spans(regions, timeline["printed_measures"])
     if not regions:
         print(f"WARNING: {kind}: no safe barline areas recovered; "
               "click-to-seek remains available through the timeline slider")

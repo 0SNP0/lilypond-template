@@ -122,21 +122,6 @@ function measureNumber(id) {
   const match=/^measure-(\d+)$/.exec(id||"");
   return match?Number(match[1]):null;
 }
-function regionForPrinted(measureNumberValue, view) {
-  const areas=view?.measure_areas||[];
-  const found=areas.find(a=>measureNumber(a.measure_id)===measureNumberValue);
-  if(found)return found;
-  // A multimeasure rest has a single physical box for several silent bars.
-  // Only reuse the preceding region when the following mark is on the
-  // same SVG page, so a system or page break is never fabricated.
-  const prior=areas.filter(a=>measureNumber(a.measure_id)<measureNumberValue)
-    .sort((a,b)=>measureNumber(b.measure_id)-measureNumber(a.measure_id))[0];
-  const next=areas.filter(a=>measureNumber(a.measure_id)>measureNumberValue)
-    .sort((a,b)=>measureNumber(a.measure_id)-measureNumber(b.measure_id))[0];
-  // Never extend a rest across a system break: a physical barline is missing.
-  return prior && next && prior.page===next.page &&
-    Math.abs(prior.y-next.y)<0.8 ? prior : null;
-}
 function markMeasure(measureNumberValue) {
   const view=manifest?.views?.[$("view").value];
   const area=regionForPrinted(measureNumberValue,view);

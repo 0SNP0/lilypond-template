@@ -27,6 +27,8 @@ runs:
           node scorekit/tests/test_page_zoom.cjs
           node --check scorekit/viewer/portal/audio-buffer.js
           node scorekit/tests/test_audio_buffer.cjs
+          node --check scorekit/viewer/portal/measure-spans.js
+          node scorekit/tests/test_measure_spans.cjs
           python3 -m unittest discover -s scorekit/tests -p 'test_*.py'
       - name: Validate printed/playback repeat structure
         shell: bash

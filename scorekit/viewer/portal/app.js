@@ -11,7 +11,9 @@ let selectedRegion=null, lastPage="", pendingSeek=null, trackChange=0;
 let playbackFrame=null, playAfterSeek=false, seekGeneration=0;
 let playbackWanted=false;
 let bufferingTimer=null, startingGroup=false, startToken=0;
-const BUFFER_AHEAD_SECONDS=1.25;
+// Hysteresis avoids rapid pause/restart cycles with many MP3 streams.
+const START_BUFFER_SECONDS=3.5;
+const MIN_BUFFER_SECONDS=.65;
 const MAX_STEM_DRIFT_SECONDS=.16;
 const audio = $("audio");
 
@@ -269,7 +271,7 @@ function onStemBufferChange(){
   if(!playbackWanted)return;
   // A stall in ANY selected stream must stop the WHOLE group.
   if(groupPlayers().some(player=>!hasMediaBuffer(player,audio.currentTime,
-       BUFFER_AHEAD_SECONDS))){
+       MIN_BUFFER_SECONDS))){
     ++startToken;
     suspendGroup();
   }
@@ -357,7 +359,7 @@ function checkPlaybackGroup(){
   const target=audio.currentTime||0;
   let missing=[...selectedStems].filter(id=>{
     const player=id===activeMasterId?audio:stemPlayers.get(id);
-    return !player || !hasMediaBuffer(player,target,BUFFER_AHEAD_SECONDS);
+    return !player || !hasMediaBuffer(player,target,START_BUFFER_SECONDS);
   });
   if(missing.length){
     suspendGroup();
@@ -382,7 +384,7 @@ function checkPlaybackGroup(){
   }
   missing=[...selectedStems].filter(id=>{
     const player=id===activeMasterId?audio:stemPlayers.get(id);
-    return !hasMediaBuffer(player,target,BUFFER_AHEAD_SECONDS);
+    return !hasMediaBuffer(player,target,START_BUFFER_SECONDS);
   });
   if(missing.length){
     suspendGroup();
@@ -696,7 +698,7 @@ function paintWhilePlaying(){
     const unavailable=[...selectedStems].filter(id=>{
       const player=id===activeMasterId?audio:stemPlayers.get(id);
       return !player || player.paused ||
-        !hasMediaBuffer(player,target,BUFFER_AHEAD_SECONDS);
+        !hasMediaBuffer(player,target,MIN_BUFFER_SECONDS);
     });
     if(unavailable.length){
       ++startToken;

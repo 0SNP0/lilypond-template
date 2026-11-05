@@ -1,17 +1,17 @@
-name: Publish ScoreKit project website
+name: Publish score viewer
 # Pages are rebuilt only after all release assets have been uploaded.
 # A push to main must not update a published site.
 on:
   repository_dispatch:
-    types: [scorekit-release]
+    types: [scorekit-viewer-update]
 permissions:
   contents: read
 concurrency:
-  group: scorekit-project-pages-${{ github.ref }}
+  group: scorekit-viewer-pages-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   build:
-    name: Build latest release website
+    name: Build latest release viewer
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this score repository and ScoreKit
@@ -62,7 +62,7 @@ jobs:
         with:
           path: _site/
   deploy:
-    name: Deploy latest release to Pages
+    name: Deploy score viewer to Pages
     needs: build
     runs-on: ubuntu-latest
     permissions:

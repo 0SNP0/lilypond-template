@@ -588,6 +588,13 @@ def main() -> None:
         ("combined-" + part.stem, part, "combined", part) for part in combined
     ]
     from notation_hash import music_fingerprint, print_fingerprint
+    from view_audio import load_audio_overrides, infer_audio_ids
+    overrides = load_audio_overrides(ROOT)
+    source_ids = {record[0] for record in sources}
+    unknown_views = set(overrides) - source_ids
+    if unknown_views:
+        raise RuntimeError(f"Unknown view IDs in music/view-audio-map.json: {sorted(unknown_views)}")
+    audio_ids = {"mix", *(part.stem for part in parts)}
     views = {}
     notation = {}
     for view_id, source, kind, part in sources:
@@ -607,6 +614,7 @@ def main() -> None:
         print_hash = print_fingerprint(source)
         views[view_id] = {
             "kind": kind,
+            "audio_track_ids": infer_audio_ids(view_id, kind, source, audio_ids, overrides),
             "source": str(source.relative_to(ROOT)),
             "pages": [str(file.relative_to(VIEWER)) for file in pages],
             "measure_anchors": anchors,
@@ -638,6 +646,7 @@ def main() -> None:
             {
                 "id": "mix",
                 "label": "Общий звук",
+                "is_full_mix": True,
                 "path": "../audio/" + naming["mix"] + ".mp3",
             },
             *[

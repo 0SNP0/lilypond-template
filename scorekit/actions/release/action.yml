@@ -1,4 +1,4 @@
-name: ScoreKit publish release
+name: ScoreKit publish score release
 description: Publish score PDFs and archives for a Git release tag
 inputs:
   tag:
@@ -15,7 +15,7 @@ runs:
         with:
           name: score-media-${{ github.sha }}
           path: .
-      - name: Prepare standalone orchestra audio file
+      - name: Prepare standalone complete-mix audio file
         shell: bash
         run: |
           set -euo pipefail
@@ -38,9 +38,9 @@ runs:
             echo "Create release $TAG with compiled assets"
             gh release create "$TAG" dist/pdf/*.pdf dist/packages/*-pdf-*.zip dist/packages/*-audio-*.zip dist/packages/*-viewer-*.zip dist/release/89-*.mp3 --verify-tag --generate-notes --title "$TAG"
           fi
-      - name: Refresh public Pages mirror after releasing
+      - name: Update public score viewer after attaching release assets
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run: gh api "repos/$GH_REPO/dispatches" -f event_type=scorekit-release
+        run: gh api "repos/$GH_REPO/dispatches" -f event_type=scorekit-viewer-update

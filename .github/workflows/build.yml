@@ -1,4 +1,4 @@
-name: Build orchestra
+name: Build score
 on:
   push:
     branches: ['**']
@@ -7,7 +7,7 @@ on:
   release:
     types: [published]
 concurrency:
-  group: orchestra-${{ github.workflow }}-${{ github.ref }}
+  group: scorekit-build-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name != 'release' }}
 permissions:
   contents: read

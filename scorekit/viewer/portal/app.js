@@ -272,9 +272,9 @@ function synchronizeStems(hard=false){
   applyStemVolumes();
 }
 function selectStems(ids){
-  const available=new Set(manifest?.audio_tracks?.map(t=>t.id)||[]);
   selectedStems.clear();
-  for(const id of ids)if(available.has(id))selectedStems.add(id);
+  for(const id of normalizeAudioSelection(ids,manifest?.audio_tracks))
+    selectedStems.add(id);
   const current=$("track").value;
   const master=selectedStems.has(current)?current:[...selectedStems][0]||"";
   if(master!==activeMasterId){
@@ -304,9 +304,9 @@ function drawMixer(){
     gain.disabled=!check.checked;
     gain.setAttribute("aria-label","Громкость "+track.label);
     check.addEventListener("change",()=>{
-      const next=new Set(selectedStems);
-      if(check.checked)next.add(track.id);else next.delete(track.id);
-      selectStems([...next]);
+      selectStems(toggleAudioSelection(
+        [...selectedStems],track.id,check.checked,manifest.audio_tracks
+      ));
     });
     gain.addEventListener("input",()=>{
       stemLevels.set(track.id,Number(gain.value));
@@ -322,13 +322,8 @@ function drawMixer(){
     selectedStems.size>1?"Микшер: "+selectedStems.size+" дорожки":"Микшер");
 }
 
-function preferredTrackForView(id,view){
-  if(view.kind==="score" || view.kind==="concert-score")
-    return manifest.audio_tracks.find(t=>t.id==="mix" || t.id==="orchestra")?.id || manifest.audio_tracks[0]?.id || "";
-  if(manifest.audio_tracks.some(t=>t.id===id))return id;
-  // A combined desk has multiple musicians. Until true multi-track mixing
-  // is available, use the complete orchestra rather than an arbitrary stem.
-  return manifest.audio_tracks.find(t=>t.id==="mix" || t.id==="orchestra")?.id || manifest.audio_tracks[0]?.id || "";
+function preferredTracksForView(id,view){
+  return defaultAudioSelection(view,manifest.audio_tracks,id);
 }
 function showView() {
   if(!manifest)return;
@@ -385,14 +380,7 @@ function showView() {
   const url=new URL(location.href);url.searchParams.set("view",id);
   history.replaceState(null,"",url);
   updateTime();
-  const preferred=preferredTrackForView(id,view);
-  selectedStems.clear();
-  if(preferred)selectedStems.add(preferred);
-  if(activeMasterId!==preferred){
-    $("track").value=preferred;
-    setTrack();
-  }else synchronizeStems(true);
-  drawMixer();
+  selectStems(preferredTracksForView(id,view));
 }
 function setTrack() {
   if(!manifest)return;
@@ -536,6 +524,18 @@ $("mixerAll").addEventListener("click",()=>{
   selectStems(all);
 });
 $("mixerClear").addEventListener("click",()=>selectStems([]));
+function positionMixerPanel(){
+  const details=$("mixerDetails");
+  if(!details.open || window.matchMedia("(max-width:800px)").matches)return;
+  const trigger=$("mixerToggle").getBoundingClientRect();
+  const width=Math.min(340,window.innerWidth-16);
+  const left=Math.max(8,Math.min(trigger.left,window.innerWidth-width-8));
+  const top=Math.max(8,trigger.bottom+8);
+  details.style.setProperty("--mixer-left",left+"px");
+  details.style.setProperty("--mixer-top",top+"px");
+}
+$("mixerDetails").addEventListener("toggle",positionMixerPanel);
+window.addEventListener("resize",positionMixerPanel);
 $("sidebarToggle").addEventListener("click",()=>{
   const panel=$("sidebar");
   const isCollapsed=panel.classList.toggle("is-collapsed");

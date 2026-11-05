@@ -349,6 +349,11 @@ function checkPlaybackGroup(){
     scheduleGroupCheck(200);
     return;
   }
+  if(!audio.paused && players.every(player=>!player.paused)){
+    // A routine progress/canplay event must not restart an already
+    // synchronized group; the animation monitor handles live drift.
+    return;
+  }
   const target=audio.currentTime||0;
   let missing=[...selectedStems].filter(id=>{
     const player=id===activeMasterId?audio:stemPlayers.get(id);

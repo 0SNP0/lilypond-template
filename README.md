@@ -1,15 +1,18 @@
 # The Snowstorm — Waltz
 
-[![Build](https://github.com/0SNP0/lilypond-template/actions/workflows/build.yml/badge.svg)](https://github.com/0SNP0/lilypond-template/actions/workflows/build.yml)
-[![Текущий релиз](https://img.shields.io/github/v/release/0SNP0/lilypond-template?label=release&logo=github)](https://github.com/0SNP0/lilypond-template/releases/latest)
+**Георгий Свиридов — «Метель. Вальс».**
 
-## Партитура и партии
+**Ensemble, Assemble**
 
-**«Метель. Вальс» — Георгий Свиридов.** Оркестровая партитура в транспонированном и концертном строе и отдельные партии для печати **только на A4**.
+[![Актуальный релиз](https://img.shields.io/github/v/release/0SNP0/lilypond-template?label=release&logo=github)](https://github.com/0SNP0/lilypond-template/releases/latest)
 
-**[Последний опубликованный комплект](https://github.com/0SNP0/lilypond-template/releases/latest)** · [Все релизы](https://github.com/0SNP0/lilypond-template/releases) · [Сборки текущей ветки](https://github.com/0SNP0/lilypond-template/actions/workflows/build.yml).
+## Ноты и записи
 
-Каждый push запускает две последовательные сборки: сначала PDF партитур и партий, затем MP3 и интерактивные SVG с общим JSON-таймлайном. MIDI используется только как промежуточный формат и не распространяется. Git-версия видна на каждой странице.
+Оркестровая партитура в транспонированном и концертном строе, а также отдельные и объединённые партии инструментов.
+
+[Открыть партитуру и прослушать](https://0snp0.github.io/lilypond-template/) · [Скачать PDF и аудиоматериалы](https://github.com/0SNP0/lilypond-template/releases/latest)
+
+В партитуре 152 печатных такта. Последовательность воспроизведения с D.C. al Fine содержит 268 тактов.
 
 ## Сведения о произведении
 
@@ -30,40 +33,6 @@
 | Авторские права | Copyright belongs to the respective rightsholders |
 <!-- SCORE-METADATA:END -->
 
-## Сайт партитуры и просмотрщик
+## Источники нот
 
-Каждый проект партитуры публикует **свой** GitHub Pages-сайт,
-содержащий **только последний опубликованный релиз**. Нотные страницы
-SVG и отдельные MP3 раздаются напрямую с Pages и запрашиваются по мере
-использования. Прошлые версии и файлы для музыкантов хранятся в GitHub
-Releases. Будущий общий каталог произведений будет отдельным сайтом
-со ссылками на такие проектные страницы.
-
-- [Открыть сайт «Метель. Вальс»](https://0snp0.github.io/lilypond-template/)
-- [Просмотрщик](https://0snp0.github.io/lilypond-template/viewer/)
-- [Workflow публикации Pages](https://github.com/0SNP0/lilypond-template/actions/workflows/pages.yml)
-- [Локальный запуск и архитектура](docs/TEST_SITE.md)
-
-Локальный запуск из ScoreKit:
-
-```bash
-python3 scorekit/viewer/serve.py
-```
-Для загрузки последнего опубликованного релиза локально:
-`python3 scorekit/viewer/serve.py --from-release`.
-
-## Фреймворк сборки
-
-Универсальная часть проекта находится в [ScoreKit](scorekit/): сборка и экспорт, оформление LilyPond, CI/CD-компоненты, просмотрщик и [общие инструкции](scorekit/docs/PROJECT_GUIDE.md). В корне остаются только музыкальное произведение, минимальный workflow GitHub Actions и его документация. Каталог `scorekit/` подготовлен для последующего перевода в Git-сабмодуль без изменения расположения.
-
-```bash
-python3 scorekit/scripts/check_music_structure.py
-python3 scorekit/scripts/build.py build
-python3 scorekit/scripts/build.py package
-```
-
-## Работа над партитурой
-
-[Транспонированная партитура](score.ly) · [Концертный строй](concert-score.ly) · [Порядок инструментов](orchestra.ily) · [Метаданные](metadata.ily).
-
-**[Инструкция по редактированию, объединённым станам, сборке и просмотрщику](docs/PROJECT_GUIDE.md)**. Музыкальные исходники расположены в `music/*.ily`; там нет вторых копий нот для сдвоенных нотоносцев. Отчёт [сверки с MusicXML](docs/MXL_AUDIT.md).
+[Партитура](score.ly) · [Концертный строй](concert-score.ly) · [Состав инструментов](orchestra.ily) · [Исходные ноты](music/) · [Сверка с исходным MusicXML](docs/MXL_AUDIT.md).

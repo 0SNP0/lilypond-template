@@ -21,10 +21,10 @@ function choices(select, rows) {
   }
 }
 function viewLabel(id, view) {
-  const types = {"score":"Партитура","concert-score":"Концертный строй",
-                 "individual":"Партия","combined":"Объединённая партия"};
-  const name = view.label || id.replaceAll("-", " ");
-  return (types[view.kind] || "Ноты") + " · " + name;
+  if(view.label)return view.label;
+  if(id==="score")return "Партитура";
+  if(id==="concert-score")return "Концертный строй";
+  return id.replace(/^combined-/,"").replaceAll("-"," ");
 }
 function trustedPath(path, prefix, suffix) {
   if (typeof path !== "string" || !path.startsWith(prefix) ||
@@ -84,7 +84,7 @@ async function boot() {
       throw Error("Нет данных нот и времени воспроизведения");
     const fullTitle=[info.title,info.subtitle].filter(Boolean).join(" — ")||"Партитура";
     $("heading").textContent=fullTitle;
-    $("orchestraLine").textContent=info.orchestra ? "Оркестр: "+info.orchestra : "";
+    $("orchestraLine").textContent=info.orchestra || "";
     $("orchestraLine").hidden=!info.orchestra;
     $("version").textContent="Актуальная версия: "+info.tag;
     document.title=fullTitle+" — ScoreKit";
@@ -155,7 +155,7 @@ function seekPrinted(number) {
 function seekSeconds(seconds, startPlayback=false) {
   if(!Number.isFinite(seconds)||seconds<0)return;
   if(!audio.getAttribute("src")){
-    const defaultTrack=manifest?.audio_tracks?.find(t=>t.id==="orchestra") ||
+    const defaultTrack=manifest?.audio_tracks?.find(t=>t.id==="mix" || t.id==="orchestra") ||
                        manifest?.audio_tracks?.[0];
     if(!defaultTrack)return;
     pendingSeek=seconds;
@@ -191,11 +191,11 @@ function seekSeconds(seconds, startPlayback=false) {
 }
 function preferredTrackForView(id,view){
   if(view.kind==="score" || view.kind==="concert-score")
-    return manifest.audio_tracks.find(t=>t.id==="orchestra")?.id || manifest.audio_tracks[0]?.id || "";
+    return manifest.audio_tracks.find(t=>t.id==="mix" || t.id==="orchestra")?.id || manifest.audio_tracks[0]?.id || "";
   if(manifest.audio_tracks.some(t=>t.id===id))return id;
   // A combined desk has multiple musicians. Until true multi-track mixing
   // is available, use the complete orchestra rather than an arbitrary stem.
-  return manifest.audio_tracks.find(t=>t.id==="orchestra")?.id || manifest.audio_tracks[0]?.id || "";
+  return manifest.audio_tracks.find(t=>t.id==="mix" || t.id==="orchestra")?.id || manifest.audio_tracks[0]?.id || "";
 }
 function showView() {
   if(!manifest)return;
@@ -287,7 +287,33 @@ function setTrack() {
   },{once:true});
   message("");
 }
+function formatMediaTime(value){
+  if(!Number.isFinite(value) || value<0)return "0:00";
+  const seconds=Math.floor(value);
+  return Math.floor(seconds/60)+":"+String(seconds%60).padStart(2,"0");
+}
+let mediaSeeking=false;
+function syncMediaControls(){
+  const hasTrack=Boolean(audio.getAttribute("src"));
+  const validDuration=Number.isFinite(audio.duration) && audio.duration>0;
+  const duration=validDuration?audio.duration:0;
+  const control=$("mediaSeek");
+  control.disabled=!hasTrack || !validDuration;
+  control.max=String(duration);
+  if(!mediaSeeking)control.value=String(Math.min(audio.currentTime||0,duration));
+  $("mediaTime").textContent=formatMediaTime(audio.currentTime)+" / "+formatMediaTime(duration);
+  const play=$("playPause");
+  play.disabled=!hasTrack;
+  play.textContent=audio.paused ? "▶" : "Ⅱ";
+  play.setAttribute("aria-label",audio.paused?"Воспроизвести":"Пауза");
+  play.title=audio.paused?"Воспроизвести":"Пауза";
+  const muted=audio.muted || audio.volume===0;
+  $("muteButton").textContent=muted?"🔇":"🔊";
+  $("muteButton").setAttribute("aria-label",muted?"Включить звук":"Выключить звук");
+  $("volume").value=String(audio.volume);
+}
 function updateTime() {
+  syncMediaControls();
   if(!timeline?.measures?.length || !manifest)return;
   const ms=(Number.isFinite(audio.currentTime)?audio.currentTime:0)*1000,measures=timeline.measures;
   let low=0,high=measures.length;
@@ -306,6 +332,13 @@ $("track").addEventListener("change",setTrack);
 audio.addEventListener("timeupdate",updateTime);
 audio.addEventListener("seeked",updateTime);
 audio.addEventListener("loadedmetadata",updateTime);
+audio.addEventListener("durationchange",updateTime);
+audio.addEventListener("volumechange",syncMediaControls);
+audio.addEventListener("emptied",syncMediaControls);
+audio.addEventListener("error",()=>{
+  syncMediaControls();
+  if(audio.error)message("Не удалось воспроизвести выбранный аудиофайл.");
+});
 audio.addEventListener("ended",()=>{stopFrames();updateTime();});
 function stopFrames(){
   if(playbackFrame!==null) cancelAnimationFrame(playbackFrame);
@@ -320,6 +353,32 @@ function paintWhilePlaying(){
 audio.addEventListener("play",()=>{stopFrames();paintWhilePlaying();});
 audio.addEventListener("pause",()=>{stopFrames();updateTime();});
 $("restart").addEventListener("click",()=>seekSeconds(0));
+$("playPause").addEventListener("click",()=>{
+  if(audio.paused){
+    if(Number.isFinite(audio.duration) && audio.currentTime>=audio.duration-.05)
+      seekSeconds(0,true);
+    else audio.play().catch(()=>message("Воспроизведение недоступно."));
+  }else audio.pause();
+});
+$("mediaSeek").addEventListener("input",()=>{
+  mediaSeeking=true;
+  $("mediaTime").textContent=formatMediaTime(Number($("mediaSeek").value))+
+    " / "+formatMediaTime(audio.duration);
+});
+$("mediaSeek").addEventListener("change",()=>{
+  const selected=Number($("mediaSeek").value);
+  mediaSeeking=false;
+  seekSeconds(selected);
+});
+$("muteButton").addEventListener("click",()=>{
+  audio.muted=!audio.muted;
+  syncMediaControls();
+});
+$("volume").addEventListener("input",()=>{
+  audio.volume=Number($("volume").value);
+  audio.muted=audio.volume===0;
+  syncMediaControls();
+});
 $("sidebarToggle").addEventListener("click",()=>{
   const panel=$("sidebar");
   const isCollapsed=panel.classList.toggle("is-collapsed");
@@ -339,4 +398,5 @@ $("seek").addEventListener("input",()=>{
   const measure=timeline?.measures?.[Number($("seek").value)];
   if(measure)seekSeconds(measure.start_ms/1000);
 });
+syncMediaControls();
 boot();

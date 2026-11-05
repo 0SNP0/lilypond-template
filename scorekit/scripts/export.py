@@ -609,8 +609,8 @@ def main() -> None:
         "audio": "../audio/" + naming["mix"] + ".mp3",
         "audio_tracks": [
             {
-                "id": "orchestra",
-                "label": "Весь оркестр",
+                "id": "mix",
+                "label": "Общий звук",
                 "path": "../audio/" + naming["mix"] + ".mp3",
             },
             *[

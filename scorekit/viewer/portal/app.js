@@ -9,6 +9,10 @@ const message = text => $("message").textContent = text;
 let info=null, manifest=null, timeline=null;
 let selectedRegion=null, lastPage="", pendingSeek=null, trackChange=0;
 let playbackFrame=null, playAfterSeek=false, seekGeneration=0;
+let playbackWanted=false;
+let bufferingTimer=null, startingGroup=false, startToken=0;
+const BUFFER_AHEAD_SECONDS=1.25;
+const MAX_STEM_DRIFT_SECONDS=.16;
 const audio = $("audio");
 
 function choices(select, rows) {
@@ -157,43 +161,46 @@ function seekPrinted(number) {
 }
 function seekSeconds(seconds, startPlayback=false) {
   if(!Number.isFinite(seconds)||seconds<0)return;
+  const resume=startPlayback || playbackWanted;
+  playbackWanted=resume;
+  ++startToken;
+  clearBufferingTimer();
+  suspendGroup();
   if(!audio.getAttribute("src")){
-    const defaultTrack=manifest?.audio_tracks?.find(t=>t.id==="mix" || t.id==="orchestra") ||
-                       manifest?.audio_tracks?.[0];
-    if(!defaultTrack)return;
+    const first=[...selectedStems][0];
+    const fallback=first || manifest?.audio_tracks?.find(t=>t.id==="mix"||t.id==="orchestra")?.id
+      || manifest?.audio_tracks?.[0]?.id;
+    if(!fallback)return;
     pendingSeek=seconds;
-    playAfterSeek=startPlayback;
-    $("track").value=defaultTrack.id;
+    playAfterSeek=resume;
+    $("track").value=fallback;
     setTrack();
     return;
   }
-  if(audio.readyState < HTMLMediaElement.HAVE_METADATA){
+  if(audio.readyState<HTMLMediaElement.HAVE_METADATA){
     pendingSeek=seconds;
-    playAfterSeek=startPlayback;
+    playAfterSeek=resume;
+    scheduleGroupCheck();
     return;
   }
   const target=Math.min(seconds,Number.isFinite(audio.duration)?
-      Math.max(0,audio.duration-.05):seconds);
-  const resume=startPlayback || !audio.paused;
+    Math.max(0,audio.duration-.05):seconds);
   const token=++seekGeneration;
-  if(Math.abs(audio.currentTime-target)<0.012 && !audio.seeking){
-    updateTime();
+  if(Math.abs(audio.currentTime-target)<.012 && !audio.seeking){
     synchronizeStems(true);
-    if(resume && audio.paused)audio.play().catch(()=>{});
+    updateTime();
+    scheduleGroupCheck();
     return;
   }
-  // Let the media decoder complete a random seek before resuming.
-  // This prevents the old buffered position from playing briefly on mobile.
-  audio.pause();
-  stopStemPlayback();
   audio.addEventListener("seeked",()=>{
     if(token!==seekGeneration)return;
-    updateTime();
     synchronizeStems(true);
-    if(resume)audio.play().catch(()=>{});
+    updateTime();
+    scheduleGroupCheck();
   },{once:true});
   audio.currentTime=target;
   updateTime();
+  scheduleGroupCheck();
 }
 
 /* The selected HTMLMediaElement is the clock. Additional MP3 stems stream
@@ -227,6 +234,47 @@ function gainFeedback(slider,output){
   refresh();
 }
 gainFeedback($("masterVolume"),$("masterGainValue"));
+function clearBufferingTimer(){
+  if(bufferingTimer!==null)clearTimeout(bufferingTimer);
+  bufferingTimer=null;
+}
+function scheduleGroupCheck(delay=120){
+  if(!playbackWanted || bufferingTimer!==null)return;
+  bufferingTimer=setTimeout(()=>{
+    bufferingTimer=null;
+    checkPlaybackGroup();
+  },delay);
+}
+function groupPlayers(){
+  return selectedStems.has(activeMasterId)?
+    [audio,...stemPlayers.values()]:[];
+}
+function suspendGroup(){
+  audio.pause();
+  for(const player of stemPlayers.values())player.pause();
+  stopFrames();
+}
+function trackDisplayName(id){
+  return getStem(id)?.label||id;
+}
+function waitingFor(ids){
+  if(!playbackWanted)return;
+  const names=ids.map(trackDisplayName);
+  message(names.length?
+    "Загрузка звука: "+names.slice(0,3).join(", ")+
+      (names.length>3?" и ещё "+(names.length-3):""):
+    "Синхронизация дорожек…");
+}
+function onStemBufferChange(){
+  if(!playbackWanted)return;
+  // A stall in ANY selected stream must stop the WHOLE group.
+  if(groupPlayers().some(player=>!hasMediaBuffer(player,audio.currentTime,
+       BUFFER_AHEAD_SECONDS))){
+    ++startToken;
+    suspendGroup();
+  }
+  scheduleGroupCheck();
+}
 function removeStem(id){
   const player=stemPlayers.get(id);
   if(!player)return;
@@ -243,7 +291,7 @@ function alignStem(player,hard=false){
   const time=Math.max(0,Math.min(audio.currentTime||0,
     Number.isFinite(player.duration)?Math.max(0,player.duration-.05):Infinity));
   const difference=time-player.currentTime;
-  if(hard || Math.abs(difference)>.3){
+  if(hard || Math.abs(difference)>.28){
     player.playbackRate=audio.playbackRate;
     if(Math.abs(difference)>.025)player.currentTime=time;
   }else{
@@ -265,27 +313,116 @@ function synchronizeStems(hard=false){
       player.preload="auto";
       player.src="./latest/"+trustedPath(track.path.replace(/^(\.\.\/)+/,""),"audio/",".mp3");
       stemPlayers.set(id,player);
-      player.addEventListener("loadedmetadata",()=>{
-        if(stemPlayers.get(id)!==player)return;
-        alignStem(player,true);
-        if(!audio.paused)player.play().catch(()=>{});
-      });
+      for(const event of ["loadedmetadata","canplay","canplaythrough","progress",
+                          "seeked","waiting","stalled","suspend"]){
+        player.addEventListener(event,()=>{
+          if(stemPlayers.get(id)!==player)return;
+          onStemBufferChange();
+        });
+      }
       player.addEventListener("error",()=>{
-        if(stemPlayers.get(id)===player)
-          message("Не удалось открыть звук: "+track.label);
+        if(stemPlayers.get(id)===player){
+          playbackWanted=false;
+          ++startToken;
+          suspendGroup();
+          clearBufferingTimer();
+          message("Не удалось загрузить дорожку: "+track.label+
+            ". Отключите её в микшере и повторите воспроизведение.");
+        }
       });
       player.load();
     }
-    if(hard)alignStem(player,true);
-    if(audio.paused)player.pause();
-    else if(player.readyState>=1 && player.paused){
-      alignStem(player,true);
-      player.play().catch(()=>{});
-    }
+    // Align before resuming. Never start a follower on its own.
+    if(hard && player.readyState>=1)alignStem(player,true);
+    if(!playbackWanted)player.pause();
   }
   applyStemVolumes();
 }
+function checkPlaybackGroup(){
+  if(!playbackWanted || startingGroup || !manifest)return;
+  synchronizeStems();
+  if(!activeMasterId || !selectedStems.has(activeMasterId))return;
+  const players=groupPlayers();
+  if(players.length!==selectedStems.size){
+    suspendGroup();
+    waitingFor([...selectedStems].filter(id=>id!==activeMasterId && !stemPlayers.has(id)));
+    scheduleGroupCheck(200);
+    return;
+  }
+  const target=audio.currentTime||0;
+  let missing=[...selectedStems].filter(id=>{
+    const player=id===activeMasterId?audio:stemPlayers.get(id);
+    return !player || !hasMediaBuffer(player,target,BUFFER_AHEAD_SECONDS);
+  });
+  if(missing.length){
+    suspendGroup();
+    waitingFor(missing);
+    scheduleGroupCheck(240);
+    return;
+  }
+  // At each start/resume, settle every follower on the master clock.
+  let aligning=false;
+  for(const [id,player] of stemPlayers){
+    if(!selectedStems.has(id))continue;
+    if(Math.abs(player.currentTime-target)>MAX_STEM_DRIFT_SECONDS){
+      alignStem(player,true);
+      aligning=true;
+    }
+  }
+  if(aligning){
+    suspendGroup();
+    waitingFor([]);
+    scheduleGroupCheck(120);
+    return;
+  }
+  missing=[...selectedStems].filter(id=>{
+    const player=id===activeMasterId?audio:stemPlayers.get(id);
+    return !hasMediaBuffer(player,target,BUFFER_AHEAD_SECONDS);
+  });
+  if(missing.length){
+    suspendGroup();
+    waitingFor(missing);
+    scheduleGroupCheck(240);
+    return;
+  }
+  const token=++startToken;
+  startingGroup=true;
+  // Issue all play() calls in the same JavaScript turn. Do not allow
+  // independently buffered stems to run while the slowest is waiting.
+  const attempts=players.map(player=>{
+    player.playbackRate=audio.playbackRate;
+    return player.play();
+  });
+  Promise.all(attempts).then(()=>{
+    startingGroup=false;
+    if(token!==startToken || !playbackWanted){
+      suspendGroup();
+      return;
+    }
+    message("");
+    stopFrames();
+    paintWhilePlaying();
+  }).catch(error=>{
+    startingGroup=false;
+    if(token!==startToken)return;
+    ++startToken;
+    suspendGroup();
+    if(error?.name==="NotAllowedError"){
+      playbackWanted=false;
+      clearBufferingTimer();
+      message("Браузер заблокировал запуск аудио. Нажмите воспроизведение ещё раз.");
+    }else{
+      waitingFor([]);
+      scheduleGroupCheck(320);
+    }
+  });
+}
+
 function selectStems(ids){
+  const resume=playbackWanted;
+  ++startToken;
+  clearBufferingTimer();
+  suspendGroup();
   selectedStems.clear();
   for(const id of normalizeAudioSelection(ids,manifest?.audio_tracks))
     selectedStems.add(id);
@@ -297,6 +434,9 @@ function selectStems(ids){
   }else if(!master){
     setTrack();
   }else synchronizeStems(true);
+  playbackWanted=resume && selectedStems.size>0;
+  if(playbackWanted)scheduleGroupCheck();
+  else message("");
   drawMixer();
 }
 function drawMixer(){
@@ -443,6 +583,9 @@ function setTrack() {
   activeMasterId=track?.id||"";
   for(const id of [...stemPlayers.keys()])removeStem(id);
   if(!track){
+    playbackWanted=false;
+    clearBufferingTimer();
+    ++startToken;
     ++trackChange;
     ++seekGeneration;
     playAfterSeek=false;
@@ -451,7 +594,8 @@ function setTrack() {
     return;
   }
   const path=trustedPath(track.path.replace(/^(\.\.\/)+/,""),"audio/",".mp3");
-  const previousTime=audio.currentTime||0,playing=!audio.paused;
+  const previousTime=audio.currentTime||0;
+  const resume=playbackWanted || playAfterSeek;
   const requestedRate=Number($("speed").value);
   ++seekGeneration;
   const token=++trackChange;
@@ -460,12 +604,12 @@ function setTrack() {
   audio.addEventListener("loadedmetadata",()=>{
     if(token!==trackChange)return;
     const target=pendingSeek??previousTime;
-    const resume=playing || playAfterSeek;
     pendingSeek=null;
     playAfterSeek=false;
     audio.playbackRate=requestedRate;
     seekSeconds(target,resume);
     synchronizeStems(true);
+    scheduleGroupCheck();
   },{once:true});
   message("");
 }
@@ -486,9 +630,9 @@ function syncMediaControls(){
   $("mediaTime").textContent=formatMediaTime(audio.currentTime)+" / "+formatMediaTime(duration);
   const play=$("playPause");
   play.disabled=!hasTrack;
-  play.textContent=audio.paused ? "▶" : "Ⅱ";
-  play.setAttribute("aria-label",audio.paused?"Воспроизвести":"Пауза");
-  play.title=audio.paused?"Воспроизвести":"Пауза";
+  play.textContent=playbackWanted ? "Ⅱ" : "▶";
+  play.setAttribute("aria-label",playbackWanted?"Пауза":"Воспроизвести");
+  play.title=playbackWanted?"Пауза":"Воспроизвести";
 }
 function updateTime() {
   syncMediaControls();
@@ -507,7 +651,11 @@ function updateTime() {
 }
 $("view").addEventListener("change",showView);
 audio.addEventListener("timeupdate",updateTime);
-audio.addEventListener("seeked",()=>{updateTime();synchronizeStems(true);});
+audio.addEventListener("seeked",()=>{
+  updateTime();
+  synchronizeStems(true);
+  scheduleGroupCheck();
+});
 audio.addEventListener("loadedmetadata",updateTime);
 audio.addEventListener("durationchange",updateTime);
 audio.addEventListener("volumechange",()=>{
@@ -515,39 +663,88 @@ audio.addEventListener("volumechange",()=>{
   for(const player of stemPlayers.values())player.muted=audio.muted;
 });
 audio.addEventListener("emptied",syncMediaControls);
+for(const event of ["waiting","stalled","seeking","canplay","progress"]){
+  audio.addEventListener(event,onStemBufferChange);
+}
 audio.addEventListener("error",()=>{
   syncMediaControls();
   if(audio.error)message("Не удалось воспроизвести выбранный аудиофайл.");
 });
-audio.addEventListener("ended",()=>{stopFrames();stopStemPlayback();updateTime();});
+audio.addEventListener("ended",()=>{
+  playbackWanted=false;
+  ++startToken;
+  clearBufferingTimer();
+  stopFrames();stopStemPlayback();updateTime();
+});
 function stopFrames(){
   if(playbackFrame!==null) cancelAnimationFrame(playbackFrame);
   playbackFrame=null;
 }
 function paintWhilePlaying(){
   playbackFrame=null;
-  if(audio.paused)return;
+  if(!playbackWanted || audio.paused)return;
   updateTime();
   const tick=performance.now();
-  if(tick-lastStemCorrection>200){
+  if(tick-lastStemCorrection>150){
     lastStemCorrection=tick;
-    synchronizeStems();
+    const target=audio.currentTime;
+    const unavailable=[...selectedStems].filter(id=>{
+      const player=id===activeMasterId?audio:stemPlayers.get(id);
+      return !player || player.paused ||
+        !hasMediaBuffer(player,target,BUFFER_AHEAD_SECONDS);
+    });
+    if(unavailable.length){
+      ++startToken;
+      suspendGroup();
+      waitingFor(unavailable);
+      scheduleGroupCheck();
+      return;
+    }
+    for(const [id,player] of stemPlayers){
+      if(!selectedStems.has(id))continue;
+      if(Math.abs(player.currentTime-target)>MAX_STEM_DRIFT_SECONDS){
+        ++startToken;
+        suspendGroup();
+        alignStem(player,true);
+        waitingFor([]);
+        scheduleGroupCheck();
+        return;
+      }
+      alignStem(player);
+    }
   }
   playbackFrame=requestAnimationFrame(paintWhilePlaying);
 }
 audio.addEventListener("play",()=>{
-  stopFrames();
-  synchronizeStems(true);
-  paintWhilePlaying();
+  if(!startingGroup && !playbackWanted){
+    // External media actions must not bypass the group buffer gate.
+    suspendGroup();
+  }
+  updateTime();
 });
-audio.addEventListener("pause",()=>{stopFrames();stopStemPlayback();updateTime();});
+audio.addEventListener("pause",()=>{
+  stopFrames();
+  stopStemPlayback();
+  updateTime();
+});
 $("restart").addEventListener("click",()=>seekSeconds(0));
 $("playPause").addEventListener("click",()=>{
-  if(audio.paused){
-    if(Number.isFinite(audio.duration) && audio.currentTime>=audio.duration-.05)
-      seekSeconds(0,true);
-    else audio.play().catch(()=>message("Воспроизведение недоступно."));
-  }else audio.pause();
+  if(playbackWanted){
+    playbackWanted=false;
+    ++startToken;
+    clearBufferingTimer();
+    suspendGroup();
+    message("");
+    updateTime();
+  }else if(Number.isFinite(audio.duration) &&
+            audio.currentTime>=audio.duration-.05){
+    seekSeconds(0,true);
+  }else{
+    playbackWanted=true;
+    synchronizeStems(true);
+    scheduleGroupCheck(0);
+    updateTime();
+  }
 });
 $("mediaSeek").addEventListener("input",()=>{
   mediaSeeking=true;
@@ -587,7 +784,12 @@ $("sidebarToggle").addEventListener("click",()=>{
 $("speed").addEventListener("input",()=>{
   const rate=Number($("speed").value);
   audio.playbackRate=rate;
-  synchronizeStems(true);
+  if(playbackWanted){
+    ++startToken;
+    suspendGroup();
+    synchronizeStems(true);
+    scheduleGroupCheck(0);
+  }else synchronizeStems(true);
   $("speedValue").textContent=Math.round(rate*100)+"%";
   $("speedSummary").textContent=Math.round(rate*100)+"%";
 });

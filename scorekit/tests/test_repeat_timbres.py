@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from build import validate_repeat_timbres
 from check_music_structure import validate_navigation_map
 from export import _svg_measure_regions, _clean_svg
+from score_indent import derived_indents, label_x_from_svg
 import xml.etree.ElementTree as ET
 
 
@@ -121,6 +122,24 @@ class SvgRehearsalMarksTests(unittest.TestCase):
         ET.SubElement(text,f"{{{ns}}}text").text="10"
         _clean_svg(root,[(30.,34.,10.,105.)],"v1.2.3")
         self.assertEqual([x for x in root if x.tag.endswith("g")],[])
+
+
+class ScoreIndentTests(unittest.TestCase):
+    def test_measured_name_positions_calibrate_without_guessing_font(self):
+        first,later=derived_indents((45,28),24.03,13.30,6)
+        self.assertEqual((first,later),(27.97,21.7))
+
+    def test_label_extraction_from_lilypond_svg(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            path=Path(d)/"page-001.svg"
+            path.write_text(
+                '<svg xmlns="http://www.w3.org/2000/svg">'
+                '<g transform="translate(23.14, 90)">'
+                '<text>Clarinets in A I–II</text></g>'
+                '</svg>',encoding="utf-8"
+            )
+            self.assertEqual(label_x_from_svg(path,{"Clarinets in A I–II"}),23.14)
 
 
 if __name__ == "__main__":

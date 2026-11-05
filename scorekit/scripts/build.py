@@ -176,34 +176,9 @@ def score_staff_count() -> int:
 
 
 def score_instrument_indents(staff_size: float) -> tuple[float, float]:
-    """Estimate label extents from the actual score's instrument names.
-
-    No fixed orchestration or instrument-specific names belong in ScoreKit.
-    The small safety margin accounts for the staff-group braces and padding.
-    Both print and SVG use the same values.
-    """
-    source = (ROOT / "orchestra.ily").read_text(encoding="utf-8")
-    pattern = re.compile(
-        r'(shortInstrumentName|instrumentName)\s*=\s*'
-        r'(?:\\markup\s+\\fontsize\s+#-?\d+(?:\.\d+)?\s*)?'
-        r'"([^"]+)"'
-    )
-    labels = {"instrumentName": [], "shortInstrumentName": []}
-    for kind, name in pattern.findall(source):
-        labels[kind].append(name)
-
-    def width_mm(label: str) -> float:
-        # Font-independent approximate advances in em units. No system font,
-        # user language or platform-specific measurement tools are required.
-        narrow = "ilI1.,:;!| '"
-        wide = "MW@%w"
-        width_em = sum(0.27 if ch in narrow else 0.85 if ch in wide
-                       else 0.51 for ch in label)
-        return width_em * staff_size * 0.89 * (25.4 / 72)
-
-    full = max((width_mm(label) for label in labels["instrumentName"]), default=0)
-    short = max((width_mm(label) for label in labels["shortInstrumentName"]), default=0)
-    return round(max(7.0, full + 3.0), 2), round(max(5.0, short + 3.0), 2)
+    """Use measured LilyPond SVG label origins for both PDF and web scores."""
+    from score_indent import score_indents
+    return score_indents(staff_size)
 
 
 def natural_score_staff_size(count: int) -> float:

@@ -37,15 +37,15 @@
   left-margin = 6\mm
   right-margin = 6\mm
   % Full names on the first system; short labels after the first break.
-  % The batch builder measures the instrument labels and supplies the
-  % required first/continuation indents. Plain LilyPond previews use a
-  % conservative default until run through the project builder.
+  % The builder measures label positions with native LilyPond SVG first.
+  % PDF and SVG then use exactly the same derived first/continuation indents.
+  % Direct-editor previews retain sensible conservative fallback values.
   indent = #(let ((n (getenv "SCORE_INDENT_MM")))
               (if (and n (string->number n))
-                  (* (string->number n) mm) (* 34 mm)))
+                  (* (string->number n) mm) (* 30 mm)))
   short-indent = #(let ((n (getenv "SCORE_SHORT_INDENT_MM")))
                     (if (and n (string->number n))
-                        (* (string->number n) mm) (* 14 mm)))
+                        (* (string->number n) mm) (* 19 mm)))
   print-first-page-number = ##t
   print-page-number = ##t
   % Do not vertically stretch a single system or force another system onto A4.

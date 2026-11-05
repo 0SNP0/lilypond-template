@@ -57,5 +57,6 @@ runs:
             dist/packages/*-pdf-*.zip
             dist/print-manifest.json
             build/build-info.json
+            build/score-indent.json
           if-no-files-found: error
           retention-days: 14

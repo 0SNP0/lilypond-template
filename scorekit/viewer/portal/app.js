@@ -200,7 +200,7 @@ function seekSeconds(seconds, startPlayback=false) {
 const selectedStems=new Set();
 const stemLevels=new Map();
 const stemPlayers=new Map();
-let masterLevel=1, lastStemCorrection=0;
+let masterLevel=1, lastStemCorrection=0, activeMasterId="";
 const getStem=id=>manifest?.audio_tracks?.find(t=>t.id===id);
 const stemLevel=id=>stemLevels.get(id)??1;
 
@@ -275,7 +275,7 @@ function selectStems(ids){
   for(const id of ids)if(available.has(id))selectedStems.add(id);
   const current=$("track").value;
   const master=selectedStems.has(current)?current:[...selectedStems][0]||"";
-  if(master!==current){
+  if(master!==activeMasterId){
     $("track").value=master;
     setTrack();
   }else if(!master){
@@ -383,7 +383,7 @@ function showView() {
   const preferred=preferredTrackForView(id,view);
   selectedStems.clear();
   if(preferred)selectedStems.add(preferred);
-  if($("track").value!==preferred){
+  if(activeMasterId!==preferred){
     $("track").value=preferred;
     setTrack();
   }else synchronizeStems(true);
@@ -392,6 +392,7 @@ function showView() {
 function setTrack() {
   if(!manifest)return;
   const track=manifest.audio_tracks.find(t=>t.id===$("track").value);
+  activeMasterId=track?.id||"";
   for(const id of [...stemPlayers.keys()])removeStem(id);
   if(!track){
     ++trackChange;

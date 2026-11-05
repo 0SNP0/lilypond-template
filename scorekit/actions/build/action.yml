@@ -19,6 +19,8 @@ runs:
         shell: bash
         run: |
           node --check scorekit/viewer/portal/app.js
+          node --check scorekit/viewer/portal/readme-links.js
+          node scorekit/tests/test_readme_links.cjs
           python3 -m unittest discover -s scorekit/tests -p 'test_*.py'
       - name: Validate printed/playback repeat structure
         shell: bash

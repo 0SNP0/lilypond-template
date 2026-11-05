@@ -35,4 +35,4 @@
 
 ## Источники нот
 
-[Партитура](score.ly) · [Концертный строй](concert-score.ly) · [Состав инструментов](orchestra.ily) · [Исходные ноты](music/) · [Сверка с исходным MusicXML](docs/MXL_AUDIT.md).
+[Партитура](score.ly) · [Концертный строй](concert-score.ly) · [Состав инструментов](orchestra.ily) · [Исходные ноты](music/).

@@ -45,13 +45,16 @@ function displayMarkdown(text) {
       USE_PROFILES:{html:true}
     });
     for(const link of root.querySelectorAll("a[href]")) {
-      const url = new URL(link.getAttribute("href"), location.href);
-      if(!["https:","http:","mailto:"].includes(url.protocol)) {
+      const resolved=readmeLinkTarget(link.getAttribute("href"),
+        info?.repo, info?.tag);
+      if(!resolved){
         link.removeAttribute("href");
-      } else {
-        link.href=url.href;
-        link.target="_blank";
-        link.rel="noopener noreferrer";
+      }else{
+        link.href=resolved;
+        if(!resolved.startsWith("#")){
+          link.target="_blank";
+          link.rel="noopener noreferrer";
+        }
       }
     }
   } else {
@@ -94,9 +97,8 @@ async function boot() {
       $("repository").hidden=false;
     }
     choices($("view"),Object.entries(manifest.views).map(([id,v])=>[id,viewLabel(id,v)]));
-    choices($("track"),[["","Без звука"],...manifest.audio_tracks.map(t=>[t.id,t.label])]);
     drawMixer();
-    $("view").disabled=$("track").disabled=false;
+    $("view").disabled=false;
     $("seek").max=String(timeline.measures.length-1);$("seek").disabled=false;
     const param=new URL(location.href).searchParams.get("view");
     if(param && Object.hasOwn(manifest.views,param))$("view").value=param;
@@ -313,8 +315,11 @@ function drawMixer(){
     label.append(check,caption,gain);
     body.append(label);
   }
-  $("mixerDetails").querySelector("summary").textContent=
-    selectedStems.size>1?"Микшер ("+selectedStems.size+")":"Микшер";
+  const count=$("mixerCount");
+  count.textContent=String(selectedStems.size);
+  count.hidden=selectedStems.size<=1;
+  $("mixerToggle").setAttribute("aria-label",
+    selectedStems.size>1?"Микшер: "+selectedStems.size+" дорожки":"Микшер");
 }
 
 function preferredTrackForView(id,view){
@@ -462,10 +467,6 @@ function updateTime() {
   markMeasure(audio.paused ? null : measure.printed_number);
 }
 $("view").addEventListener("change",showView);
-$("track").addEventListener("change",()=>{
-  const id=$("track").value;
-  selectStems(id?[id]:[]);
-});
 audio.addEventListener("timeupdate",updateTime);
 audio.addEventListener("seeked",()=>{updateTime();synchronizeStems(true);});
 audio.addEventListener("loadedmetadata",updateTime);

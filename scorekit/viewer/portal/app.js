@@ -400,6 +400,7 @@ function checkPlaybackGroup(){
     startingGroup=false;
     if(token!==startToken || !playbackWanted){
       suspendGroup();
+      scheduleGroupCheck();
       return;
     }
     message("");
@@ -407,7 +408,10 @@ function checkPlaybackGroup(){
     paintWhilePlaying();
   }).catch(error=>{
     startingGroup=false;
-    if(token!==startToken)return;
+    if(token!==startToken){
+      scheduleGroupCheck();
+      return;
+    }
     ++startToken;
     suspendGroup();
     if(error?.name==="NotAllowedError"){

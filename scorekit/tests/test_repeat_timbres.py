@@ -126,8 +126,16 @@ class SvgRehearsalMarksTests(unittest.TestCase):
 
 class ScoreIndentTests(unittest.TestCase):
     def test_measured_name_positions_calibrate_without_guessing_font(self):
-        first,later=derived_indents((45,28),24.03,13.30,6)
-        self.assertEqual((first,later),(27.97,21.7))
+        # A 10 mm indent reduction moved real ink by only 5 mm.
+        # The old 1:1 assumption would leave 5 mm of unnecessary gutter.
+        first,later=derived_indents(
+            (45,28), (17.71,12.13), (12.71,7.13), 6
+        )
+        self.assertEqual((first,later),(25.58,17.74))
+
+    def test_calibration_rejects_nonresponsive_label_coordinates(self):
+        with self.assertRaisesRegex(RuntimeError, "displacement"):
+            derived_indents((45,28),(20,10),(20,10),6)
 
     def test_label_extraction_from_lilypond_svg(self):
         import tempfile

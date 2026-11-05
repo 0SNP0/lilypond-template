@@ -164,5 +164,4 @@ def score_indents(staff_size: float) -> tuple[float, float]:
     CACHE.write_text(json.dumps({"key": key, "first_mm": first,
                                  "later_mm": later}, indent=2) + "\n",
                      encoding="utf-8")
-    shutil.rmtree(folder)
     return first, later

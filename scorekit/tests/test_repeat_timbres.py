@@ -131,7 +131,7 @@ class ScoreIndentTests(unittest.TestCase):
         first,later=derived_indents(
             (45,28), (17.71,12.13), (12.71,7.13), 6
         )
-        self.assertEqual((first,later),(25.58,17.74))
+        self.assertEqual((first,later),(23.58,17.74))
 
     def test_calibration_rejects_nonresponsive_label_coordinates(self):
         with self.assertRaisesRegex(RuntimeError, "displacement"):

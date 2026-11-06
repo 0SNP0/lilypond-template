@@ -15,8 +15,8 @@ fluteTwoOpening = {
  cis'''4 s2 |
  R2.*17 |
  gis''2.~( |
- gis''4 \acciaccatura { gis''16 } a''2) |
- gis''4( cis'''2) |
+ gis''4 a''2) |
+ gis''4( ^\markup \italic { "II" } cis'''2) |
  gis''4( cis'''2) |
   % Bars 105-108
  gis''2.~( |
@@ -26,7 +26,11 @@ fluteTwoOpening = {
   % Bars 109-112
  cis'''2.~ |
  cis'''4 d'''2 |
- R2.*4 |
+  % Both flutes play the same notes in measures 111-114.
+ a'''2.~ |
+ a'''4 fis'''4 \ff gis'''4 |
+ a'''4 gis'''4 fis'''4 |
+ e'''4 cis'''4 a''4 |
  gis''8( \ff e'''8) e'''4-. dis'''4-. |
  cis'''4-. s2 |
 }
@@ -34,14 +38,12 @@ fluteTwoOpening = {
 fluteTwoBridge = {
   % Bars 117-120
  R2.*17 |
- gis''2.~ \mf |
- gis''2. \mf |
- gis''2.~ \mp |
+ gis''2.~ |
+ gis''2. |
+ gis''2.~ |
   % Bars 137-140
  gis''4 s2 |
- R2.*13 |
- gis'2. |
- R2. |
+ R2.*15 |
 }
 
 fluteTwoMusic = { \fluteTwoOpening \fluteTwoBridge }

@@ -2,9 +2,11 @@
 % Each paired desk is constructed from the two solo music streams.
 % Keep printed and playback forms separate to honor D.C. al Fine.
 
+% On the combined staff only, shift full-measure rests away from notes
+% in the other voice. The independent part PDFs retain normal rest positions.
 flutesTogether = \partCombine #'(0 . 0)
-  { \fluteOneMusic }
-  { \fluteTwoMusic }
+  { \override MultiMeasureRest.staff-position = #10 \fluteOneMusic }
+  { \override MultiMeasureRest.staff-position = #-10 \fluteTwoMusic }
 flutesTogetherPlayback = \partCombine #'(0 . 0)
   { \fluteOneMusicPlayback }
   { \fluteTwoMusicPlayback }

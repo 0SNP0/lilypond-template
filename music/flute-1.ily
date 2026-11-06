@@ -55,11 +55,14 @@ fluteOneOpening = {
   % Bars 101-104
  gis''4) r4 r4 |
  R2.*9 |
- a'''2.~ ^\markup \italic { "a2" } |
+ \set Staff.printPartCombineTexts = ##t
+ \partCombineUnisono a'''2.~ |
  a'''4 fis'''4 \ff gis'''4 |
   % Bars 113-116
  a'''4 gis'''4 fis'''4 |
  e'''4 cis'''4 a''4 |
+ \partCombineAutomatic
+ \set Staff.printPartCombineTexts = ##f
  e'''8( \ff gis'''8) gis'''4-. fis'''4-. |
  e'''4-. r4 r4 |
 }

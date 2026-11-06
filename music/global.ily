@@ -36,10 +36,9 @@ s2. \textEndMark \markup \bold "Fine" |
   \mark \markup \box \bold \abs-fontsize #14 "20" s2.*12 |
   % Bars 137–144
   \mark \markup \box \bold \abs-fontsize #14 "21" s2.*8 |
-  % Bars 145–151
-  \mark \markup \box \bold \abs-fontsize #14 "22" s2.*7 |
-  % Bar 152
-s2. \textEndMark \markup \bold "D.C. al Fine" |
+  % Bars 145–152: one uninterrupted spacer keeps the final rest compressible.
+  \mark \markup \box \bold \abs-fontsize #14 "22"
+  s2.*8 \textEndMark \markup \bold "D.C. al Fine" |
 }
 rehearsalMarksPlayback = {
   \tempo 2. = 66

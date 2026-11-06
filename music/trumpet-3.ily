@@ -5,15 +5,15 @@ trumpetThreeOpening = {
   \key c \major
   \time 3/4
   % Bars 1–4
- f'8 _\markup \italic { "marc." }-_ \f f'8-_ f'4 r4 |
- ges'8-_ ges'8-_ ges'4 r4 |
- f'8-_ f'8-_ f'4-^ r4 |
+ f'8 _\markup \italic { "marc." } \f f'8 f'4 r4 |
+ ges'8 ges'8 ges'4 r4 |
+ f'8 f'8 f'4 r4 |
  R2.*49 |
- << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo a'2. } >> |
+ R2. |
  R2.*12 |
- << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo a'2. } >> |
+ R2. |
  R2.*10 |
- << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo a'2. } >> |
+ R2. |
  R2.*7 |
  r4 bes4-. \f bes4-. |
  r4 bes4-. bes4-. |

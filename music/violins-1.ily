@@ -67,7 +67,7 @@ violinsOneOpening = {
  cis''4-. r4 r4 |
   % Bars 53–56
  R2.*3 |
- << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo gis'2. } >> |
+ R2. |
   % Bars 57–60
  R2.*12 |
  <cis'' cis'''>2. _\markup \italic { "espr." } ^\markup \italic { "div." } \f |
@@ -133,13 +133,13 @@ violinsOneOpening = {
 
 violinsOneBridge = {
   % Bars 117–120
- << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo gis'2. } >> |
+ R2. |
  R2.*9 |
- << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo gis'2. } >> |
+ R2. |
  R2.*13 |
- << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo gis'2. } >> |
+ R2. |
  R2.*8 |
- << { \voiceOne \once \override MultiMeasureRest.staff-position = #10 R2. } \\ { \voiceTwo gis'2. } >> |
+ R2. |
  R2.*2 |
 }
 

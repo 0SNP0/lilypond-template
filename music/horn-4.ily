@@ -4,9 +4,9 @@ hornFourOpening = {
   \key c \major
   \time 3/4
   % Bars 1-4
- dis'8-_ \f dis'8-_ dis'4-_ r4 |
- dis'8-_ dis'8-_ dis'4-_ r4 |
- dis'8-_ dis'8-_ dis'4-_ r4 |
+ dis'8 \f dis'8 dis'4 r4 |
+ dis'8 dis'8 dis'4 r4 |
+ dis'8 dis'8 dis'4 r4 |
  R2.*42 |
  d''2. |
  R2.*30 |

@@ -4,9 +4,9 @@ hornOneOpening = {
   \key c \major
   \time 3/4
   % Bars 1-4
- dis''8 _\markup \italic { "marc." }-_ \f dis''8-_ dis''4-_ r4 |
- dis''8-^ dis''8-^ dis''4-^ r4 |
- dis''8-^ dis''8-^ dis''4-^ r4 |
+ dis''8 _\markup \italic { "marc." } \f dis''8 dis''4 r4 |
+ dis''8 dis''8 dis''4 r4 |
+ dis''8 dis''8 dis''4 r4 |
  R2.*42 |
  gis'2.->( ^\markup \italic { "I" } \f |
  gis'2.~) \f |

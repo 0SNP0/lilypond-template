@@ -9,60 +9,60 @@ violasOpening = {
   \time 3/4
   % Bars 1–4
  R2.*4 |
- r4 ^\markup \italic { "div." } <gis cis'>4-_ \mf <gis cis'>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
+ r4 ^\markup \italic { "div." } <gis cis'>4 \mf <gis cis'>4 |
+ r4 <gis cis'>4 <gis cis'>4 |
+ r4 <a cis'>4 <a cis'>4 |
+ r4 <a cis'>4 <a cis'>4 |
   % Bars 9–12
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
+ r4 <gis cis'>4 <gis cis'>4 |
+ r4 <a cis'>4 <a cis'>4 |
+ r4 <gis cis'>4 <gis cis'>4 |
+ r4 <a cis'>4 <a cis'>4 |
   % Bars 13–16
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
+ r4 <gis cis'>4 <gis cis'>4 |
+ r4 <gis cis'>4 <gis cis'>4 |
+ r4 <a cis'>4 <a cis'>4 |
+ r4 <a cis'>4 <a cis'>4 |
   % Bars 17–20
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <gis bis>4-_ <gis bis>4 |
- r4 <gis cis'>4-_ <gis cis'>4-_ |
+ r4 <gis cis'>4 <gis cis'>4 |
+ r4 <gis bis>4 <gis bis>4 |
+ r4 <gis cis'>4 <gis cis'>4 |
  <gis cis'>4 r4 r4 |
   % Bars 21–24
- r4 <gis bis>4-_ \mf <gis bis>4 |
- r4 <gis bis>4-_ <gis bis>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
+ r4 <gis bis>4 \mf <gis bis>4 |
+ r4 <gis bis>4 <gis bis>4 |
+ r4 <gis cis'>4 <gis cis'>4 |
+ r4 <gis cis'>4 <gis cis'>4 |
   % Bars 25–28
- r4 <gis bis>4-_ <gis bis>4 |
- r4 <gis bis>4-_ <gis bis>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
+ r4 <gis bis>4 <gis bis>4 |
+ r4 <gis bis>4 <gis bis>4 |
+ r4 <gis cis'>4 <gis cis'>4 |
+ r4 <gis cis'>4 <gis cis'>4 |
   % Bars 29–32
- r4 <b cis'>4-_ <b cis'>4 |
- r4 <b cis'>4-_ <b cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
+ r4 <b cis'>4 <b cis'>4 |
+ r4 <b cis'>4 <b cis'>4 |
+ r4 <a cis'>4 <a cis'>4 |
+ r4 <a cis'>4 <a cis'>4 |
   % Bars 33–36
  <a cis'>4-> r4 r4 |
  <ais cis'>4-> r4 r4 |
  <a cis'>4-> r4 r4 |
  R2. |
   % Bars 37–40
- r4 <gis bis>4-_ \f <gis bis>4 |
- r4 <gis bis>4-_ <gis bis>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
+ r4 <gis bis>4 \f <gis bis>4 |
+ r4 <gis bis>4 <gis bis>4 |
+ r4 <gis cis'>4 <gis cis'>4 |
+ r4 <gis cis'>4 <gis cis'>4 |
   % Bars 41–44
- r4 <gis bis>4-_ <gis bis>4 |
- r4 <gis bis>4-_ <gis bis>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
- r4 <gis cis'>4-_ <gis cis'>4 |
+ r4 <gis bis>4 <gis bis>4 |
+ r4 <gis bis>4 <gis bis>4 |
+ r4 <gis cis'>4 <gis cis'>4 |
+ r4 <gis cis'>4 <gis cis'>4 |
   % Bars 45–48
- r4 <b cis'>4-_ <b cis'>4 |
- r4 <b cis'>4-_ <b cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
- r4 <a cis'>4-_ <a cis'>4 |
+ r4 <b cis'>4 <b cis'>4 |
+ r4 <b cis'>4 <b cis'>4 |
+ r4 <a cis'>4 <a cis'>4 |
+ r4 <a cis'>4 <a cis'>4 |
   % Bars 49–52
  <a cis'>4 r4 r4 |
  <a cis'>4 r4 r4 |

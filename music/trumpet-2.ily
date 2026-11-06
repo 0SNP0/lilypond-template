@@ -4,9 +4,9 @@ trumpetTwoOpening = {
   \key c \major
   \time 3/4
   % Bars 1-4
- bes'8-^ \f ^\markup \italic { "a2" } bes'8-^ bes'4-^ r4 |
- bes'8-^ \f bes'8-^ bes'4-^ r4 |
- aes'8-^ \f aes'8-^ aes'4-^ r4 |
+ bes'8 \f ^\markup \italic { "a2" } bes'8 bes'4 r4 |
+ bes'8 \f bes'8 bes'4 r4 |
+ aes'8  aes'8 aes'4 r4 |
  R2.*49 |
  r4 ^\markup \italic { "I, II" } b'4-. \mf b'4-. |
  r4 ais'4-. ais'4-. |

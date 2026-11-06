@@ -6,19 +6,19 @@ violinsOneOpening = {
   \time 3/4
   % Bars 1–4
  R2.*4 |
- gis''4-. ^\markup \italic { "unis." } \mf e''8 dis''8 cis''4~ |
+ gis''4->-.\downbow ^\markup \italic { "unis." } \mf e''8\downbow dis''8 cis''4~ |
  cis''8 dis''8-. e''8-. fis''8-. gis''8-. cis'''8-. |
  e'''4 dis'''4 cis'''4 |
  \acciaccatura { cis'''16 } a''2. |
   % Bars 9–12
  gis''8 gis''8 cis'''2 |
  fis''8 fis''8 cis'''2 |
- \acciaccatura { fis''16-^ } e''4-.) dis''4 cis''4-_ |
- \acciaccatura { cis''16-^ } fis''4) e''4 dis''4-_ |
+ \acciaccatura { fis''16 } e''4->-.) dis''4 cis''4 |
+ \acciaccatura { cis''16 } fis''4) e''4 dis''4 |
   % Bars 13–16
- \acciaccatura { dis''16-^ } gis''4-.) e''8 dis''8 cis''4~ |
+ \acciaccatura { dis''16 } gis''4->-.) e''8 dis''8 cis''4~ |
  cis''8 dis''8-. e''8-. fis''8-. gis''8-. cis'''8-. |
- e'''4 dis'''4 cis'''4-_ |
+ e'''4 dis'''4 cis'''4 |
  \acciaccatura { cis'''16 } a'''2.) |
   % Bars 17–20
  gis'''4( e'''4 cis'''4) |

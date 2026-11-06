@@ -12,10 +12,10 @@ oboeOneOpening = {
   % Bars 9-12
  gis''4( cis'''2) |
  fis''4( cis'''2) |
- \acciaccatura { fis''16 } e''4-_( dis''4 cis''4 |
- \acciaccatura { cis''16 } fis''4-. e''4 dis''4 |
+ e''4( dis''4 cis''4 |
+ fis''4 e''4 dis''4 |
   % Bars 13-16
- gis''4-_) e''8-. dis''8-. cis''4~ |
+ gis''4) e''8-. dis''8-. cis''4~ |
  cis''8 dis''8-. e''8-. fis''8-. gis''8-. cis'''8-. |
  e'''4-. dis'''4-. cis'''4-. |
  cis'''4-. r4 r4 |

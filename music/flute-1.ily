@@ -55,14 +55,13 @@ fluteOneOpening = {
   % Bars 101-104
  gis''4) r4 r4 |
  R2.*9 |
- \set Staff.printPartCombineTexts = ##t
- \partCombineUnisono a'''2.~ |
+ % The a2 text is for the shared staff only, not Flute I's solo part.
+ \tag #'solo { a'''2.~ }
+ \tag #'combined { a'''2.~ ^\markup \italic { "a2" } } |
  a'''4 fis'''4 \ff gis'''4 |
   % Bars 113-116
  a'''4 gis'''4 fis'''4 |
  e'''4 cis'''4 a''4 |
- \partCombineAutomatic
- \set Staff.printPartCombineTexts = ##f
  e'''8( \ff gis'''8) gis'''4-. fis'''4-. |
  e'''4-. r4 r4 |
 }
@@ -78,5 +77,9 @@ fluteOneBridge = {
  R2.*15 |
 }
 
-fluteOneMusic = { \fluteOneOpening \fluteOneBridge }
-fluteOneMusicPlayback = \scorePlayback \fluteOneOpening \fluteOneBridge
+% Solo score and MIDI never carry markings intended for the shared staff.
+fluteOneMusic = \keepWithTag #'solo { \fluteOneOpening \fluteOneBridge }
+% Shared conductor and combined part views display a2 on the actual note.
+fluteOneMusicCombined = \keepWithTag #'combined { \fluteOneOpening \fluteOneBridge }
+fluteOneMusicPlayback = \scorePlayback
+  { \keepWithTag #'solo \fluteOneOpening } \fluteOneBridge

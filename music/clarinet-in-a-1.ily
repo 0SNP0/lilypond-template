@@ -7,18 +7,24 @@ clarinetInAOneOpening = {
  R2.*36 |
  b'2.~( \f |
  b'4 \mf c''2) \f |
+ \tag #'combined { \partCombineApart }
  b'4( \f e''2) |
  b'4( e''2) |
+ \tag #'combined { \partCombineAutomatic }
   % Bars 41-44
  b'2.~( \f |
  b'4 c''2) \f |
+ \tag #'combined { \partCombineApart }
  b'4( \f e''2) |
  b'4( e''2) |
+ \tag #'combined { \partCombineAutomatic }
   % Bars 45-48
  e''2.~ \f |
+ \tag #'combined { \partCombineApart }
  e''4 f''4.( e''8 |
  c'''2.~ |
- c'''4) a''4( \f ^\markup \italic { "I" } b''4 |
+ c'''4) a''4( \f b''4 |
+ \tag #'combined { \partCombineAutomatic }
   % Bars 49-52
  c'''4 b''4 a''4 |
  g''4 e''4 c''4) |
@@ -42,12 +48,14 @@ clarinetInAOneOpening = {
  c'''4-. r8 d'''8-. c'''4-. |
   % Bars 81-84
  b''4-. r8 a''8-. g''4-. |
+ \tag #'combined { \partCombineApart }
  fis''4-. r8 g''8-. fis''4-. |
  e''4 r4 r4 |
+ \tag #'combined { \partCombineAutomatic }
  R2. |
   % Bars 85-88
  b'2.~( \f ^\markup \italic { "I" } |
- b'4-_ \acciaccatura { b'16 } c''2) |
+ b'4-_ c''2) |
  b'4( e''2) |
  b'4( e''2) |
   % Bars 89-92
@@ -56,9 +64,11 @@ clarinetInAOneOpening = {
  b'4( e''2) |
  b'4( g''2) |
   % Bars 93-96
- e''2.~ ^\markup \italic { "II" } ^\markup \italic { "I" } |
+ \tag #'combined { \partCombineApart }
+ e''2.~ |
  e''4 r4 r4 |
  R2.*6 |
+ \tag #'combined { \partCombineAutomatic }
  b''8( \ff c'''8 b''8 a''8 fis''8 dis''8 |
  b'4) r4 r4 |
  R2.*2 |
@@ -116,5 +126,25 @@ clarinetInAOneBridge = {
  g'4) r4 r4 |
 }
 
-clarinetInAOneMusic = { \clarinetInAOneOpening \clarinetInAOneBridge }
-clarinetInAOneMusicPlayback = \scorePlayback \clarinetInAOneOpening \clarinetInAOneBridge
+clarinetInAOneMusic = \keepWithTag #'solo { \clarinetInAOneOpening \clarinetInAOneBridge }
+clarinetInAOneMusicCombined = \keepWithTag #'combined { \clarinetInAOneOpening \clarinetInAOneBridge }
+clarinetInAOneMusicPlayback = \scorePlayback
+  { \keepWithTag #'solo \clarinetInAOneOpening } \clarinetInAOneBridge
+
+% Print-only labels for the common clarinet staff.
+clarinetsDeskCues = {
+  s2.*47
+  s4
+  \once \override NoteColumn.ignore-collision = ##t
+  \once \omit NoteHead
+  \once \omit Stem
+  a''4^\markup \italic { "I" }
+  s4
+  s2.*66
+  \once \override NoteColumn.ignore-collision = ##t
+  \once \omit NoteHead
+  \once \omit Stem
+  \once \omit Dots
+  g''2.^\markup \italic { "I" } _\markup \italic { "II" }
+  s2.*37
+}

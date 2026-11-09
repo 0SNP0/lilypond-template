@@ -5,5 +5,5 @@
 \include "../../music/global.ily"
 \include "../../scorekit/lilypond/layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Clarinets in A I–II" tagline = ##f }
-\score { \new Staff \with { printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \partCombine #'(0 . 0) { \clarinetInAOneMusic } { \clarinetInATwoMusic } } >> \partPrintLayout }
+\score { \new Staff \with { printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \partCombine #'(0 . 0) { \clarinetInAOneMusicCombined } { \clarinetInATwoMusic } } { \clarinetsDeskCues } >> \partPrintLayout }
 \score { \new Staff \with { printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \partCombine #'(0 . 0) { \clarinetInAOneMusic } { \clarinetInATwoMusic } } >> \midi { } }

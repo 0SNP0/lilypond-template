@@ -12,14 +12,14 @@ flutesTogetherPlayback = \partCombine #'(0 . 0)
   { \fluteTwoMusicPlayback }
 
 oboesTogether = \partCombine #'(0 . 0)
-  { \oboeOneMusic }
+  { \oboeOneMusicCombined }
   { \oboeTwoMusic }
 oboesTogetherPlayback = \partCombine #'(0 . 0)
   { \oboeOneMusicPlayback }
   { \oboeTwoMusicPlayback }
 
 clarinetsInATogether = \partCombine #'(0 . 0)
-  { \clarinetInAOneMusic }
+  { \clarinetInAOneMusicCombined }
   { \clarinetInATwoMusic }
 clarinetsInATogetherPlayback = \partCombine #'(0 . 0)
   { \clarinetInAOneMusicPlayback }

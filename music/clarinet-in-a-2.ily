@@ -7,18 +7,18 @@ clarinetInATwoOpening = {
  R2.*36 |
  b'8( \f c''8 b'8 a'8 \> fis'8 dis'8 |
  b4) \mf r4 \f r4 |
- R2. \f |
+ R2. |
  R2. |
   % Bars 41-44
  b'8( \f c''8 b'8 a'8 fis'8 dis'8 |
  b4) r4 \f r4 |
- R2. \f |
+ R2. |
  R2. |
   % Bars 45-48
  e''8( \f f''8 e''8 d''8 b'8 gis'8 |
  e'4) r4 r4 |
  r4 r4 r4 |
- r4 r4 \f ^\markup \italic { "I" } r4 |
+ r4 r4 r4 |
   % Bars 49-52
  R2.*28 |
  g'4-. \ff r8 b'8-. e''4-. |
@@ -30,7 +30,7 @@ clarinetInATwoOpening = {
  dis''4 r4 dis''4 |
  e''4 s2 |
  R2.*9 |
- e''2.~ ^\markup \italic { "II" } ^\markup \italic { "I" } |
+ e''2.~ |
  e''4 f''4. e''8 |
  c'''2.~ |
  c'''4 a''4( b''4 |

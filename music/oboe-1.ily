@@ -57,11 +57,14 @@ oboeOneOpening = {
  a''4-. r8 b''8-. a''4-. |
   % Bars 81-84
  gis''4-. r8 fis''8-. e''4-. |
+ \tag #'combined { \partCombineApart }
  dis''4-. r8 e''8-. dis''4-. |
  cis''4 r4 r4 |
+ \tag #'combined { \partCombineAutomatic }
  R2.*17 |
  gis''8( \ff a''8 gis''8 fis''8 dis''8 bis'8 |
  gis'4) r4 \f r4 |
+ \tag #'combined { \partCombineApart }
  R2.*2 |
  gis''8( \ff a''8 gis''8 fis''8 dis''8 bis'8 |
  gis'4) r4 r4 |
@@ -69,6 +72,7 @@ oboeOneOpening = {
  cis'''8( \ff d'''8 cis'''8 b''8 gis''8 eis''8 |
  cis''4) r4 r4 |
  R2.*4 |
+ \tag #'combined { \partCombineAutomatic }
  e''8( \ff gis''8) gis''4-. fis''4-. |
  e''4-. r4 r4 |
 }
@@ -114,5 +118,7 @@ oboeOneBridge = {
  R2.*4 |
 }
 
-oboeOneMusic = { \oboeOneOpening \oboeOneBridge }
-oboeOneMusicPlayback = \scorePlayback \oboeOneOpening \oboeOneBridge
+oboeOneMusic = \keepWithTag #'solo { \oboeOneOpening \oboeOneBridge }
+oboeOneMusicCombined = \keepWithTag #'combined { \oboeOneOpening \oboeOneBridge }
+oboeOneMusicPlayback = \scorePlayback
+  { \keepWithTag #'solo \oboeOneOpening } \oboeOneBridge

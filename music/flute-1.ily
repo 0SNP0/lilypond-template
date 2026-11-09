@@ -54,7 +54,12 @@ fluteOneOpening = {
  fis''4 e''4. dis''8 |
   % Bars 101-104
  gis''4) r4 r4 |
+ % In the combined flute staff only, keep Flute I's complete-bar rest
+ % clear of Flute II's sounding high notes in bars 102-110.
+ % Solo Flute I keeps LilyPond's ordinary centered multi-measure rest.
+ \tag #'combined { \override MultiMeasureRest.staff-position = #0 }
  R2.*9 |
+ \tag #'combined { \revert MultiMeasureRest.staff-position }
  a'''2.~ |
  a'''4 fis'''4 \ff gis'''4 |
   % Bars 113-116
@@ -75,8 +80,11 @@ fluteOneBridge = {
  R2.*15 |
 }
 
-fluteOneMusic = { \fluteOneOpening \fluteOneBridge }
-fluteOneMusicPlayback = \scorePlayback \fluteOneOpening \fluteOneBridge
+% The same notes are used in all variants; only rest engraving differs.
+fluteOneMusic = \keepWithTag #'solo { \fluteOneOpening \fluteOneBridge }
+fluteOneMusicCombined = \keepWithTag #'combined { \fluteOneOpening \fluteOneBridge }
+fluteOneMusicPlayback = \scorePlayback
+  { \keepWithTag #'solo \fluteOneOpening } \fluteOneBridge
 
 % Printing-only cue on the combined flute staff, independent of partCombine:
 % the unison note belongs to both players, but a2 does not belong in solo PDFs.

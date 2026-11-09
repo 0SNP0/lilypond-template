@@ -5,7 +5,7 @@
 % On the combined staff only, shift full-measure rests away from notes
 % in the other voice. The independent part PDFs retain normal rest positions.
 flutesTogether = \partCombine #'(0 . 0)
-  { \override MultiMeasureRest.staff-position = #10 \fluteOneMusicCombined }
+  { \override MultiMeasureRest.staff-position = #10 \fluteOneMusic }
   { \override MultiMeasureRest.staff-position = #-10 \fluteTwoMusic }
 flutesTogetherPlayback = \partCombine #'(0 . 0)
   { \fluteOneMusicPlayback }

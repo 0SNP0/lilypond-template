@@ -55,9 +55,7 @@ fluteOneOpening = {
   % Bars 101-104
  gis''4) r4 r4 |
  R2.*9 |
- % The a2 text is for the shared staff only, not Flute I's solo part.
- \tag #'solo { a'''2.~ }
- \tag #'combined { a'''2.~ ^\markup \italic { "a2" } } |
+ a'''2.~ |
  a'''4 fis'''4 \ff gis'''4 |
   % Bars 113-116
  a'''4 gis'''4 fis'''4 |
@@ -77,9 +75,19 @@ fluteOneBridge = {
  R2.*15 |
 }
 
-% Solo score and MIDI never carry markings intended for the shared staff.
-fluteOneMusic = \keepWithTag #'solo { \fluteOneOpening \fluteOneBridge }
-% Shared conductor and combined part views display a2 on the actual note.
-fluteOneMusicCombined = \keepWithTag #'combined { \fluteOneOpening \fluteOneBridge }
-fluteOneMusicPlayback = \scorePlayback
-  { \keepWithTag #'solo \fluteOneOpening } \fluteOneBridge
+fluteOneMusic = { \fluteOneOpening \fluteOneBridge }
+fluteOneMusicPlayback = \scorePlayback \fluteOneOpening \fluteOneBridge
+
+% Printing-only cue on the combined flute staff, independent of partCombine:
+% the unison note belongs to both players, but a2 does not belong in solo PDFs.
+% The invisible anchor note creates a genuine TextScript at the start of bar 111,
+% and is not included in any MIDI voice.
+flutesADueCue = {
+  s2.*110
+  \once \override NoteColumn.ignore-collision = ##t
+  \once \omit NoteHead
+  \once \omit Stem
+  \once \omit Dots
+  a'''2.^\markup \italic { "a2" }
+  s2.*41
+}

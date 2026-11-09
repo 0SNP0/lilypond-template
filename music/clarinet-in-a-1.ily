@@ -67,8 +67,17 @@ clarinetInAOneOpening = {
  \tag #'combined { \partCombineApart }
  e''2.~ |
  e''4 r4 r4 |
- R2.*6 |
- \tag #'combined { \partCombineAutomatic }
+ \tag #'combined { \override MultiMeasureRest.staff-position = #6 }
+ R2. |
+ R2. |
+ R2. |
+ R2. |
+ R2. |
+ R2. |
+ \tag #'combined {
+   \revert MultiMeasureRest.staff-position
+   \partCombineAutomatic
+ }
  b''8( \ff c'''8 b''8 a''8 fis''8 dis''8 |
  b'4) r4 r4 |
  R2.*2 |

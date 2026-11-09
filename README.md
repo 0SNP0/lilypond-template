@@ -5,6 +5,7 @@
 **Ensemble, Assemble**
 
 [![Актуальный релиз](https://img.shields.io/github/v/release/0SNP0/lilypond-template?label=release&logo=github)](https://github.com/0SNP0/lilypond-template/releases/latest)
+[![Build score](https://github.com/0SNP0/lilypond-template/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/0SNP0/lilypond-template/actions/workflows/build.yml)
 
 ## Ноты и записи
 

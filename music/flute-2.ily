@@ -16,7 +16,7 @@ fluteTwoOpening = {
  R2.*17 |
  gis''2.~( |
  gis''4 a''2) |
- gis''4( ^\markup \italic { "II" } cis'''2) |
+ gis''4( cis'''2) |
  gis''4( cis'''2) |
   % Bars 105-108
  gis''2.~( |

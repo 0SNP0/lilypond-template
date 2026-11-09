@@ -19,7 +19,7 @@ fluteOneOpening = {
  gis'''2.) |
   % Bars 73-76
  fis'''2. |
- e'''4( \f d'''4. e'''8 |
+ e'''4( d'''4. e'''8 |
  d'''2. |
  cis'''2.) |
   % Bars 77-80
@@ -54,12 +54,17 @@ fluteOneOpening = {
  fis''4 e''4. dis''8 |
   % Bars 101-104
  gis''4) r4 r4 |
- % In the combined flute staff only, keep Flute I's complete-bar rest
- % clear of Flute II's sounding high notes in bars 102-110.
- % Solo Flute I keeps LilyPond's ordinary centered multi-measure rest.
- \tag #'combined { \override MultiMeasureRest.staff-position = #0 }
- R2.*9 |
- \tag #'combined { \revert MultiMeasureRest.staff-position }
+ % Flute I is tacet from bar 102; solo rests, but the shared
+ % staff needs only Flute II's notes under the II cue.
+ \tag #'solo { R2. } \tag #'combined { s2. } |
+ \tag #'solo { R2. } \tag #'combined { s2. } |
+ \tag #'solo { R2. } \tag #'combined { s2. } |
+ \tag #'solo { R2. } \tag #'combined { s2. } |
+ \tag #'solo { R2. } \tag #'combined { s2. } |
+ \tag #'solo { R2. } \tag #'combined { s2. } |
+ \tag #'solo { R2. } \tag #'combined { s2. } |
+ \tag #'solo { R2. } \tag #'combined { s2. } |
+ \tag #'solo { R2. } \tag #'combined { s2. } |
  a'''2.~ |
  a'''4 fis'''4 \ff gis'''4 |
   % Bars 113-116
@@ -86,12 +91,22 @@ fluteOneMusicCombined = \keepWithTag #'combined { \fluteOneOpening \fluteOneBrid
 fluteOneMusicPlayback = \scorePlayback
   { \keepWithTag #'solo \fluteOneOpening } \fluteOneBridge
 
-% Printing-only cue on the combined flute staff, independent of partCombine:
-% the unison note belongs to both players, but a2 does not belong in solo PDFs.
-% The invisible anchor note creates a genuine TextScript at the start of bar 111,
-% and is not included in any MIDI voice.
-flutesADueCue = {
-  s2.*110
+% Print-only instrument indications for the shared Flutes I-II staff.
+% No extra notes or text are included in individual parts or MIDI.
+flutesDeskCues = {
+  s2.*76
+  \once \override NoteColumn.ignore-collision = ##t
+  \once \omit NoteHead
+  \once \omit Stem
+  \once \omit Dots
+  gis''2.^\markup \italic { "I" } _\markup \italic { "II" }
+  s2.*24
+  \once \override NoteColumn.ignore-collision = ##t
+  \once \omit NoteHead
+  \once \omit Stem
+  \once \omit Dots
+  gis''2.^\markup \italic { "II" }
+  s2.*8
   \once \override NoteColumn.ignore-collision = ##t
   \once \omit NoteHead
   \once \omit Stem

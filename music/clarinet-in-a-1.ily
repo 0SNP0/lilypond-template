@@ -38,12 +38,12 @@ clarinetInAOneOpening = {
  b''2.) |
   % Bars 73-76
  a''2. |
- \tag #'solo { g''4( }
- \tag #'combined { g''4 }
- f''4. g''8 |
+ % Keep the actual notes and slur in both outputs. Hide only the
+ % spanner on the shared staff, where partCombine otherwise extends it.
+ \tag #'combined { \once \override Slur.stencil = ##f }
+ g''4( f''4. g''8 |
  f''2. |
- \tag #'solo { e''2.) }
- \tag #'combined { e''2. } |
+ e''2.) |
   % Bars 77-80
  b'4-. \ff r8 e''8-. g''4-. |
  b''4-. r8 a''8-. g''4-. |

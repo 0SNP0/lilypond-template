@@ -132,6 +132,94 @@ class PlaybackMarkerTests(unittest.TestCase):
                                    b"scorekit-bar:3", b"scorekit-bar:1",
                                    b"scorekit-bar:2"])
 
+    def assert_lilypond_route(self, music: str, expected: list[int],
+                             printed: int) -> None:
+        """Compile a real MIDI file and check both pitches and printed-bar route.
+
+        MIDI note-on positions independently confirm the playback duration:
+        the expected route alone must not conceal missing/extra measures.
+        Test sources use one quarter note per printed bar.
+        """
+        include = (Path(__file__).resolve().parents[1]
+                   / "lilypond/playback-markers.ily").as_posix()
+        source = (r'\version "2.26.0"' + "\n"
+                  + f'\\include "{include}"' + "\n"
+                  + r'music = { \time 1/4 ' + music + " }\n"
+                  + r'\score { \unfoldRepeats \music \midi { } }' + "\n")
+        with tempfile.TemporaryDirectory() as tmp:
+            file = Path(tmp) / "route.ly"
+            file.write_text(source, encoding="utf-8")
+            run = subprocess.run(
+                ["lilypond", "-dno-print-pages", "-o", str(Path(tmp) / "route"),
+                 str(file)],
+                capture_output=True, text=True, timeout=60,
+            )
+            self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+            division, events = midi_events(Path(tmp) / "route.midi")
+        note_starts = sorted({
+            tick for tick, typ, _track, data in events
+            if typ == "channel" and (data[0] & 0xF0) == 0x90
+            and len(data) >= 3 and data[2] > 0
+        })
+        self.assertEqual(note_starts, [i * division for i in range(len(expected))])
+        resolved = marker_route(events, note_starts, legacy_printed=printed)
+        self.assertEqual(resolved, (expected, printed))
+        # No redundant anchor occurs in the middle of a MIDI measure.
+        self.assertEqual(
+            {tick for tick, typ, _track, data in events
+             if typ == "marker" and data.startswith(b"scorekit-bar:")}
+            - set(note_starts), set(),
+        )
+
+    @unittest.skipUnless(shutil.which("lilypond"), "LilyPond is unavailable")
+    def test_lilypond_dal_segno_al_coda(self):
+        # Intro 1-2; D.S. to bar 3 after playing 3-6; jump to Coda 7-8.
+        # Based on the native LilyPond segno/coda alternatives syntax.
+        music = r"""
+          \scorekitPlaybackStart #1 c4
+          \scorekitPlaybackStart #2 d4
+          \repeat segno 2 {
+            \scorekitPlaybackStart #3 e4
+            \scorekitPlaybackStart #4 f4
+            \alternative {
+              \volta 1 {
+                \scorekitPlaybackStart #5 g4
+                \scorekitPlaybackStart #6 a4
+              }
+              \volta 2 \volta #'() {
+                \section
+                \sectionLabel "Coda"
+              }
+            }
+          }
+          \scorekitPlaybackStart #7 b4
+          \scorekitPlaybackStart #8 c'4
+          \fine
+        """
+        self.assert_lilypond_route(
+            music, [1, 2, 3, 4, 5, 6, 3, 4, 7, 8], printed=8,
+        )
+
+    @unittest.skipUnless(shutil.which("lilypond"), "LilyPond is unavailable")
+    def test_lilypond_four_pass_volta_with_nonconsecutive_endings(self):
+        # 1st/3rd endings share printed bar 3, 2nd/4th share bar 4.
+        # The 5th printed bar is performed once after all four passes.
+        music = r"""
+          \repeat volta 4 {
+            \scorekitPlaybackStart #1 c4
+            \scorekitPlaybackStart #2 d4
+            \alternative {
+              \volta 1,3 { \scorekitPlaybackStart #3 e4 }
+              \volta 2,4 { \scorekitPlaybackStart #4 f4 }
+            }
+          }
+          \scorekitPlaybackStart #5 g4
+        """
+        self.assert_lilypond_route(
+            music, [1, 2, 3, 1, 2, 4, 1, 2, 3, 1, 2, 4, 5],
+            printed=5,
+        )
+
     def test_midi_meta_marker_is_read(self):
         # Format 0, 1 track, 480 ticks/quarter; marker then end-of-track.
         label = b"scorekit-bar:1"

@@ -15,7 +15,8 @@ fluteTwoOpening = {
  cis'''4 s2 |
  R2.*17 |
  gis''2.~( |
- gis''4 a''2) |
+ \tag #'solo { gis''4 a''2) }
+ \tag #'combined { gis''4^\markup \italic { "II" } a''2) } |
  gis''4( cis'''2) |
  gis''4( cis'''2) |
   % Bars 105-108
@@ -46,5 +47,7 @@ fluteTwoBridge = {
  R2.*15 |
 }
 
-fluteTwoMusic = { \fluteTwoOpening \fluteTwoBridge }
-fluteTwoMusicPlayback = \scorePlayback \fluteTwoOpening \fluteTwoBridge
+fluteTwoMusic = \keepWithTag #'solo { \fluteTwoOpening \fluteTwoBridge }
+fluteTwoMusicCombined = \keepWithTag #'combined { \fluteTwoOpening \fluteTwoBridge }
+fluteTwoMusicPlayback = \scorePlayback
+  { \keepWithTag #'solo \fluteTwoOpening } \fluteTwoBridge

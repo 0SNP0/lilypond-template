@@ -31,7 +31,7 @@ oboeOneOpening = {
  cis''2. |
  b'2.)) |
   % Bars 61-64
- a'2.(( \f |
+ a'2.(( |
  cis''2.)) |
  fis'2.( |
  a'2.) |
@@ -66,7 +66,7 @@ oboeOneOpening = {
  gis'4) r4 \f r4 |
  \tag #'combined {
    \partCombineApart
-   \override MultiMeasureRest.staff-position = #6
+   \override MultiMeasureRest.staff-position = #10
  }
  R2. |
  R2. |

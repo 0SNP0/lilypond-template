@@ -100,13 +100,7 @@ flutesDeskCues = {
   \once \omit Stem
   \once \omit Dots
   gis''2.^\markup \italic { "I" } _\markup \italic { "II" }
-  s2.*24
-  \once \override NoteColumn.ignore-collision = ##t
-  \once \omit NoteHead
-  \once \omit Stem
-  \once \omit Dots
-  gis''2.^\markup \italic { "II" }
-  s2.*8
+  s2.*33
   \once \override NoteColumn.ignore-collision = ##t
   \once \omit NoteHead
   \once \omit Stem

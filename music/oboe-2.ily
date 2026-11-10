@@ -15,7 +15,7 @@ oboeTwoOpening = {
  a'2. |
  gis'2.)) |
   % Bars 61-64
- fis'2.(( \f |
+ fis'2.(( |
  gis'2.)) |
  cis'2.( |
  fis'2.) |

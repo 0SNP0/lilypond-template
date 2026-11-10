@@ -6,7 +6,7 @@
 % Individual overlap cases are corrected locally in flute-1.ily.
 flutesTogether = \partCombine #'(0 . 0)
   { \fluteOneMusicCombined }
-  { \fluteTwoMusic }
+  { \fluteTwoMusicCombined }
 flutesTogetherPlayback = \partCombine #'(0 . 0)
   { \fluteOneMusicPlayback }
   { \fluteTwoMusicPlayback }

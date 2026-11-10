@@ -20,7 +20,7 @@ oboesTogetherPlayback = \partCombine #'(0 . 0)
 
 clarinetsInATogether = \partCombine #'(0 . 0)
   { \clarinetInAOneMusicCombined }
-  { \clarinetInATwoMusic }
+  { \clarinetInATwoMusicCombined }
 clarinetsInATogetherPlayback = \partCombine #'(0 . 0)
   { \clarinetInAOneMusicPlayback }
   { \clarinetInATwoMusicPlayback }

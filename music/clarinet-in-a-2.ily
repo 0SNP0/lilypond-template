@@ -5,17 +5,23 @@ clarinetInATwoOpening = {
   \time 3/4
   % Bars 1-4
  R2.*36 |
- b'8( \f c''8 b'8 a'8 \> fis'8 dis'8 |
- b4) \mf r4 \f r4 |
+ \tag #'solo { b'8( \f }
+ \tag #'combined { b'8( }
+ c''8 b'8 a'8 fis'8 dis'8 |
+ b4) r4 r4 |
+ \tag #'combined { \once \override MultiMeasureRest.staff-position = #-8 }
  R2. |
+ \tag #'combined { \once \override MultiMeasureRest.staff-position = #-8 }
  R2. |
   % Bars 41-44
- b'8( \f c''8 b'8 a'8 fis'8 dis'8 |
- b4) r4 \f r4 |
+ b'8( c''8 b'8 a'8 fis'8 dis'8 |
+ b4) r4 r4 |
+ \tag #'combined { \once \override MultiMeasureRest.staff-position = #-8 }
  R2. |
+ \tag #'combined { \once \override MultiMeasureRest.staff-position = #-8 }
  R2. |
   % Bars 45-48
- e''8( \f f''8 e''8 d''8 b'8 gis'8 |
+ e''8( f''8 e''8 d''8 b'8 gis'8 |
  e'4) r4 r4 |
  r4 r4 r4 |
  r4 r4 r4 |
@@ -101,5 +107,7 @@ clarinetInATwoBridge = {
  g'4 s2 |
 }
 
-clarinetInATwoMusic = { \clarinetInATwoOpening \clarinetInATwoBridge }
-clarinetInATwoMusicPlayback = \scorePlayback \clarinetInATwoOpening \clarinetInATwoBridge
+clarinetInATwoMusic = \keepWithTag #'solo { \clarinetInATwoOpening \clarinetInATwoBridge }
+clarinetInATwoMusicCombined = \keepWithTag #'combined { \clarinetInATwoOpening \clarinetInATwoBridge }
+clarinetInATwoMusicPlayback = \scorePlayback
+  { \keepWithTag #'solo \clarinetInATwoOpening } \clarinetInATwoBridge

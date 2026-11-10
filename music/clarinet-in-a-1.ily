@@ -6,24 +6,24 @@ clarinetInAOneOpening = {
   % Bars 1-4
  R2.*36 |
  b'2.~( \f |
- b'4 \mf c''2) \f |
+ b'4 c''2) |
  \tag #'combined { \partCombineApart }
- b'4( \f e''2) |
+ b'4( e''2) |
  b'4( e''2) |
  \tag #'combined { \partCombineAutomatic }
   % Bars 41-44
- b'2.~( \f |
- b'4 c''2) \f |
+ b'2.~( |
+ b'4 c''2) |
  \tag #'combined { \partCombineApart }
- b'4( \f e''2) |
+ b'4( e''2) |
  b'4( e''2) |
  \tag #'combined { \partCombineAutomatic }
   % Bars 45-48
- e''2.~ \f |
+ e''2.~ |
  \tag #'combined { \partCombineApart }
  e''4 f''4.( e''8 |
  c'''2.~ |
- c'''4) a''4( \f b''4 |
+ c'''4) a''4( b''4 |
  \tag #'combined { \partCombineAutomatic }
   % Bars 49-52
  c'''4 b''4 a''4 |
@@ -38,9 +38,12 @@ clarinetInAOneOpening = {
  b''2.) |
   % Bars 73-76
  a''2. |
- g''4( f''4. g''8 |
+ \tag #'solo { g''4( }
+ \tag #'combined { g''4 }
+ f''4. g''8 |
  f''2. |
- e''2.) |
+ \tag #'solo { e''2.) }
+ \tag #'combined { e''2. } |
   % Bars 77-80
  b'4-. \ff r8 e''8-. g''4-. |
  b''4-. r8 a''8-. g''4-. |
@@ -67,7 +70,7 @@ clarinetInAOneOpening = {
  \tag #'combined { \partCombineApart }
  e''2.~ |
  e''4 r4 r4 |
- \tag #'combined { \override MultiMeasureRest.staff-position = #6 }
+ \tag #'combined { \override MultiMeasureRest.staff-position = #10 }
  R2. |
  R2. |
  R2. |
@@ -76,10 +79,10 @@ clarinetInAOneOpening = {
  R2. |
  \tag #'combined {
    \revert MultiMeasureRest.staff-position
-   \partCombineAutomatic
  }
  b''8( \ff c'''8 b''8 a''8 fis''8 dis''8 |
  b'4) r4 r4 |
+ \tag #'combined { \partCombineAutomatic }
  R2.*2 |
  b''8( \ff c'''8 b''8 a''8 fis''8 dis''8 |
  b'4) r4 r4 |

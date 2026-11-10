@@ -5,17 +5,19 @@ clarinetInATwoOpening = {
   \time 3/4
   % Bars 1-4
  R2.*36 |
- \tag #'solo { b'8( \f }
- \tag #'combined { b'8( }
- c''8 b'8 a'8 fis'8 dis'8 |
- b4) r4 r4 |
+ b'8( \tag #'solo { \f } c''8 b'8 a'8 fis'8 dis'8 |
+ b4)
+ \tag #'combined { \once \override Rest.transparent = ##t } r4
+ \tag #'combined { \once \override Rest.transparent = ##t } r4 |
  \tag #'combined { \once \override MultiMeasureRest.staff-position = #-8 }
  R2. |
  \tag #'combined { \once \override MultiMeasureRest.staff-position = #-8 }
  R2. |
   % Bars 41-44
  b'8( c''8 b'8 a'8 fis'8 dis'8 |
- b4) r4 r4 |
+ b4)
+ \tag #'combined { \once \override Rest.transparent = ##t } r4
+ \tag #'combined { \once \override Rest.transparent = ##t } r4 |
  \tag #'combined { \once \override MultiMeasureRest.staff-position = #-8 }
  R2. |
  \tag #'combined { \once \override MultiMeasureRest.staff-position = #-8 }

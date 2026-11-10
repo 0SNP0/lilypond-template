@@ -15,8 +15,8 @@ fluteTwoOpening = {
  cis'''4 s2 |
  R2.*17 |
  gis''2.~( |
- \tag #'solo { gis''4 a''2) }
- \tag #'combined { gis''4^\markup \italic { "II" } a''2) } |
+ \tag #'combined { \textMark \markup \italic { "II" } }
+ gis''4 a''2) |
  gis''4( cis'''2) |
  gis''4( cis'''2) |
   % Bars 105-108

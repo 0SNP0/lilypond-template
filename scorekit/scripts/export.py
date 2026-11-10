@@ -117,14 +117,25 @@ def music_digest(file: Path) -> str:
 
 
 
-def playback_print_map() -> tuple[list[int] | None, int | None]:
-    """Optional work-specific repeat map; generic viewer knows no work names."""
+def playback_print_map() -> tuple[list[int] | None, int | None, int | None]:
+    """Read optional printed count and legacy route (if still configured).
+
+    A LilyPond/MIDI-marker route does not require playback_sections in JSON.
+    Work-specific validation can keep printed_measures and a count guard.
+    """
     config = ROOT / "music" / "playback-map.json"
     if not config.is_file():
-        return None, None
+        return None, None, None
     document = json.loads(config.read_text(encoding="utf-8"))
     printed = int(document["printed_measures"])
-    sections = document["playback_sections"]
+    if printed <= 0:
+        raise ValueError("printed_measures must be positive")
+    expected = document.get("expected_playback_measures")
+    if expected is not None and (not isinstance(expected, int) or expected <= 0):
+        raise ValueError("expected_playback_measures must be a positive integer")
+    sections = document.get("playback_sections")
+    if sections is None:
+        return None, printed, expected
     playback: list[int] = []
     for section in sections:
         start, end = int(section["start"]), int(section["end"])
@@ -133,7 +144,7 @@ def playback_print_map() -> tuple[list[int] | None, int | None]:
         playback.extend(range(start, end + 1))
     if not playback or set(playback) != set(range(1, printed + 1)):
         raise ValueError("Playback map omits some printed measures")
-    return playback, printed
+    return playback, printed, expected
 
 def make_timeline(file: Path) -> dict:
     """Compute exact MIDI-clock measure intervals, including tempo changes.
@@ -141,7 +152,7 @@ def make_timeline(file: Path) -> dict:
     A time-signature change must occur at a measure boundary. Repeats may
     create multiple playback visits and will need an explicit notation map.
     """
-    playback_map, printed_measure_count = playback_print_map()
+    playback_map, printed_measure_count, expected_playback_count = playback_print_map()
     division, events = midi_events(file)
     timings = [(0, 500000)]
     meters = [(0, 4, 4)]
@@ -213,8 +224,17 @@ def make_timeline(file: Path) -> dict:
         for item, printed_number in zip(out, printed_route):
             item["printed_number"] = printed_number
             item["printed_measure_id"] = f"measure-{printed_number:04d}"
+    elif playback_map is None and printed_measure_count is not None and len(out) != printed_measure_count:
+        raise ValueError(
+            "MIDI contains a different number of measures than the printed "
+            "score, but no playback markers or explicit repeat map were found"
+        )
     if printed_measure_count is None:
         printed_measure_count = len(out)
+    if expected_playback_count is not None and len(out) != expected_playback_count:
+        raise ValueError(
+            f"Expected {expected_playback_count} playback measures; got {len(out)}"
+        )
     return {
         "schema": SCHEMA,
         "clock_source": file.name,

@@ -41,7 +41,7 @@ python3 scorekit/scripts/build.py package --full
 
 В `parts/*.ly` можно указать `#(define partStaffSize 22)` и `#(define partTargetPages 2)`: сборщик подбирает максимально крупный стан, умещающийся на целевое число страниц. Печатные `R2.*N` с `\compressEmptyMeasures` образуют многотактовые паузы; метки репетиций разделяют их только в нужных местах.
 
-Конкретный маршрут исполнения задаётся проектом через `music/playback-map.json`. ScoreKit проверяет соответствие данных `playback_sections` и `navigation`, не пытаясь переписывать партитуру, `metadata.ily` или `global.ily`. Объединённую печатную партию ударных проект поддерживает как обычный нотный исходник; одноразовый генератор удалён.
+Маршрут исполнения может определяться музыкальной формой LilyPond с MIDI-маркерами `\\scorekitPlaybackStart`. ScoreKit извлекает переходы из MIDI в `timeline.json`, а `music/playback-map.json` оставляет для редакционных проверок и, при необходимости, ожидаемого числа тактов. Старые проекты с `playback_sections` и `navigation` продолжают поддерживаться. Подробнее: [Маркеры маршрута](PLAYBACK_MARKERS.md). Объединённые печатные партии могут быть обычными нотными исходниками проекта; одноразовые генераторы не нужны.
 
 Подробнее: [Стиль](CODE_STYLE.md), [Объединение партий](PART_COMBINING.md), [Импорт](IMPORT_FROM_MUSESCORE.md), [SoundFont](SOUNDFONTS.md).
 

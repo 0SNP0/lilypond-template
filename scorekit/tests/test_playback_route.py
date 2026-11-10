@@ -1,6 +1,8 @@
 """Work-independent playback routing and MIDI marker regression tests."""
 from __future__ import annotations
 
+import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -69,6 +71,36 @@ class PlaybackMarkerTests(unittest.TestCase):
 
     def test_unrelated_rehearsal_marks_are_ignored(self):
         self.assertIsNone(marker_route([(0, "marker", 0, b"Allegro")], [0]))
+
+    @unittest.skipUnless(shutil.which("lilypond"), "LilyPond is unavailable")
+    def test_lilypond_volta_emits_repeatable_markers(self):
+        # Integration check: the actual pinned LilyPond should emit the
+        # markers used by ScoreKit, not merely the synthetic test bytes.
+        include = (Path(__file__).resolve().parents[1]
+                   / "lilypond/playback-markers.ily").as_posix()
+        source = (r'\version "2.26.0"' + "\n"
+                  + f'\\include "{include}"' + "\n"
+                  + r'music = { \time 1/4 \repeat volta 2 { '
+                  + r'\scorekitPlaybackStart #1 c4 '
+                  + r'\scorekitPlaybackStart #2 d4 } }' + "\n"
+                  + r'\score { \unfoldRepeats \music \midi { } }' + "\n")
+        with tempfile.TemporaryDirectory() as tmp:
+            file = Path(tmp) / "repeat.ly"
+            file.write_text(source, encoding="utf-8")
+            run = subprocess.run(
+                ["lilypond", "-dno-print-pages", "-o", str(Path(tmp) / "repeat"),
+                 str(file)],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+            midi = Path(tmp) / "repeat.midi"
+            self.assertTrue(midi.is_file())
+            _division, actual = midi_events(midi)
+        anchors = [(tick, data) for tick, kind, _track, data in actual
+                   if kind == "marker" and data.startswith(b"scorekit-bar:")]
+        self.assertEqual([data for _tick, data in anchors],
+                         [b"scorekit-bar:1", b"scorekit-bar:2",
+                          b"scorekit-bar:1", b"scorekit-bar:2"])
 
     def test_midi_meta_marker_is_read(self):
         # Format 0, 1 track, 480 ticks/quarter; marker then end-of-track.

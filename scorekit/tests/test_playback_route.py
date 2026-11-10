@@ -102,6 +102,36 @@ class PlaybackMarkerTests(unittest.TestCase):
                          [b"scorekit-bar:1", b"scorekit-bar:2",
                           b"scorekit-bar:1", b"scorekit-bar:2"])
 
+    @unittest.skipUnless(shutil.which("lilypond"), "LilyPond is unavailable")
+    def test_lilypond_da_capo_al_fine(self):
+        # LilyPond native segno/Fine: perform bars 1,2,3,1,2.
+        include = (Path(__file__).resolve().parents[1]
+                   / "lilypond/playback-markers.ily").as_posix()
+        source = (r'\version "2.26.0"' + "\n"
+                  + f'\\include "{include}"' + "\n"
+                  + r'music = { \time 1/4 \repeat segno 2 { '
+                  + r'\scorekitPlaybackStart #1 c4 '
+                  + r'\scorekitPlaybackStart #2 d4 '
+                  + r'\volta 2 \fine '
+                  + r'\volta 1 { \scorekitPlaybackStart #3 e4 } '
+                  + r'} }' + "\n"
+                  + r'\score { \unfoldRepeats \music \midi { } }' + "\n")
+        with tempfile.TemporaryDirectory() as tmp:
+            file = Path(tmp) / "dc.ly"
+            file.write_text(source, encoding="utf-8")
+            run = subprocess.run(
+                ["lilypond", "-dno-print-pages", "-o", str(Path(tmp) / "dc"),
+                 str(file)],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+            _division, actual = midi_events(Path(tmp) / "dc.midi")
+        anchors = [data for _tick, kind, _track, data in actual
+                   if kind == "marker" and data.startswith(b"scorekit-bar:")]
+        self.assertEqual(anchors, [b"scorekit-bar:1", b"scorekit-bar:2",
+                                   b"scorekit-bar:3", b"scorekit-bar:1",
+                                   b"scorekit-bar:2"])
+
     def test_midi_meta_marker_is_read(self):
         # Format 0, 1 track, 480 ticks/quarter; marker then end-of-track.
         label = b"scorekit-bar:1"

@@ -14,10 +14,11 @@ sourceCredit = "Imported from user-provided MusicXML; proofread before performan
 rightsCredit = "Copyright belongs to the respective rightsholders"
 orchestraName = "Ensemble, Assemble"
 \include "scorekit/lilypond/version.ily"
+\include "scorekit/lilypond/playback-markers.ily"
 
 % The work's single performance-form rule. Every instrumental Opening/Bridge
 % is passed here; the order is defined once rather than repeated per player.
-% Printed Fine / D.C. and playback-map.json must agree with this form.
+% The playback clock uses the same form; MIDI markers map visits to printed bars.
 scorePlayback = #(define-music-function (opening bridge)
   (ly:music? ly:music?)
   #{ $opening $bridge $opening #})

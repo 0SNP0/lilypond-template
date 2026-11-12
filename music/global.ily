@@ -4,7 +4,7 @@
 % with a double barline in both scores and all individual/combined parts.
 % It is visual only: MIDI still follows globalPlayback's 268 measures.
 global = { \time 3/4 s2.*116 \bar "||" s2.*36 \bar "||" }
-globalPlayback = { \time 3/4 s2.*268 }
+globalPlayback = { \time 3/4 \scorePlayback { s2.*116 } { s2.*36 } }
 
 rehearsalMarks = {
   \tempo \markup { \italic "Tempo di valse allegro" } 2. = 66
@@ -42,5 +42,9 @@ s2. \textEndMark \markup \bold "Fine" |
 }
 rehearsalMarksPlayback = {
   \tempo 2. = 66
-  s2.*268
+  % Replay markers follow the same LilyPond performance form as every part.
+  % The second visit to bar 1 is emitted automatically by \scorePlayback.
+  \scorePlayback
+    { \scorekitPlaybackStart #1 s2.*116 }
+    { s2.*36 }
 }

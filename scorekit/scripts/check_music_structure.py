@@ -95,12 +95,21 @@ def main() -> None:
     printed = int(spec["printed_measures"])
     if printed <= 0:
         raise ValueError("printed_measures must be positive")
-    sections = spec.get("playback_sections") or [{"start": 1, "end": printed}]
-    if not all(isinstance(s.get("start"), int) and
-               isinstance(s.get("end"), int) and
-               1 <= s["start"] <= s["end"] <= printed for s in sections):
-        raise ValueError("Playback sections refer outside the printed score")
-    visits = sum(s["end"] - s["start"] + 1 for s in sections)
+    sections = spec.get("playback_sections")
+    if sections is not None:
+        if not sections or not all(isinstance(s.get("start"), int) and
+                isinstance(s.get("end"), int) and
+                1 <= s["start"] <= s["end"] <= printed for s in sections):
+            raise ValueError("Playback sections refer outside the printed score")
+    if "navigation" in spec and sections is None:
+        raise ValueError("Legacy navigation requires playback_sections")
+    visits = (sum(s["end"] - s["start"] + 1 for s in sections)
+              if sections is not None else None)
+    expected = spec.get("expected_playback_measures")
+    if expected is not None and (not isinstance(expected, int) or expected <= 0):
+        raise ValueError("expected_playback_measures must be a positive integer")
+    if visits is not None and expected is not None and visits != expected:
+        raise ValueError("Expected playback count disagrees with playback_sections")
 
     for name in spec.get("forbid_duplicate_music_sources", []):
         if (MUSIC / (name + ".ily")).exists():
@@ -157,9 +166,12 @@ def main() -> None:
         if fr'\bar "{barline}"' not in global_text:
             raise ValueError(f"Expected final barline {barline}")
 
-    validate_navigation_map(spec, printed, sections)
+    if sections is not None:
+        validate_navigation_map(spec, printed, sections)
+    playback_info = (f"{visits} playback bars (legacy JSON route)" if visits is not None
+                     else "MIDI-derived playback route")
     print(f"Music checked: {len(music_files)} sources, "
-          f"{printed} printed bars, {visits} playback bars")
+          f"{printed} printed bars, {playback_info}")
 
 
 if __name__ == "__main__":

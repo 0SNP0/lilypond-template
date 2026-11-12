@@ -1,32 +1,6 @@
 {
   "schema": "ensemble-playback-map-v1",
   "printed_measures": 152,
-  "playback_sections": [
-    {
-      "start": 1,
-      "end": 116
-    },
-    {
-      "start": 117,
-      "end": 152
-    },
-    {
-      "start": 1,
-      "end": 116
-    }
-  ],
-  "navigation": [
-    {
-      "after_measure": 116,
-      "label": "Fine"
-    },
-    {
-      "after_measure": 152,
-      "label": "D.C. al Fine",
-      "jump_to": 1,
-      "stop_after": 116
-    }
-  ],
   "exclusive_measures": [
     {
       "measure": 4,
@@ -235,5 +209,6 @@
     "trumpets-1-2",
     "trombones-1-2",
     "trombone-3-and-tuba"
-  ]
+  ],
+  "expected_playback_measures": 268
 }

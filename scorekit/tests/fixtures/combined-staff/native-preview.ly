@@ -7,21 +7,21 @@
 upperBothA = \relative c'' { c4 d e f }
 lowerBothA = \relative c'' { c4 b a g }
 upperFirst = \relative c'' { g4 a b c }
-lowerFirst = { R1 }
-upperSecond = { R1 }
+lowerFirst = { r1 }
+upperSecond = { r1 }
 lowerSecond = \relative c'' { c4 d e f }
-upperA2 = \relative c'' { g4 a b c }
-lowerA2 = \relative c'' { g4 a b c }
-upperBothB = { R1 }
+upperDuet = \relative c'' { g4 a b c }
+lowerDuet = \relative c'' { g4 a b c }
+upperBothB = { r1 }
 lowerBothB = \relative c'' { c4 d e f }
 
 upperMusic = {
   \time 4/4
-  \upperBothA | \upperFirst | \upperSecond | \upperA2 | \upperBothB |
+  \upperBothA | \upperFirst | \upperSecond | \upperDuet | \upperBothB |
 }
 lowerMusic = {
   \time 4/4
-  \lowerBothA | \lowerFirst | \lowerSecond | \lowerA2 | \lowerBothB |
+  \lowerBothA | \lowerFirst | \lowerSecond | \lowerDuet | \lowerBothB |
 }
 
 % Desk-only commands: never included in upperMusic or lowerMusic.
@@ -32,7 +32,7 @@ deskBothA = <<
 >>
 deskFirst = { \oneVoice \mark \markup \box "I" \upperFirst }
 deskSecond = { \oneVoice \mark \markup \box "II" \lowerSecond }
-deskA2 = { \oneVoice \mark \markup \box "a2" \upperA2 }
+deskDuet = { \oneVoice \mark \markup \box "a2" \upperDuet }
 deskBothB = <<
   {
     \voiceOne
@@ -46,7 +46,7 @@ deskBothB = <<
 
 combinedMusic = {
   \time 4/4
-  \deskBothA | \deskFirst | \deskSecond | \deskA2 | \deskBothB |
+  \deskBothA | \deskFirst | \deskSecond | \deskDuet | \deskBothB |
   \oneVoice
 }
 

@@ -217,7 +217,7 @@ def compile_lilypond(source: Path, output: Path, version: str,
     size = preferred_size
     best_size: float | None = None
     attempts = 0
-    if target_pages:
+    if target_pages and not fast_pdf:
         try:
             from pypdf import PdfReader
         except ImportError as exc:

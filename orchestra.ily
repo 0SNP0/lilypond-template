@@ -32,6 +32,7 @@
 \include "music/violoncellos.ily"
 \include "music/contrabasses.ily"
 
+\include "music/combined/flutes.ily"
 \include "music/paired.ily"
 \include "music/drum-kit.ily"
 

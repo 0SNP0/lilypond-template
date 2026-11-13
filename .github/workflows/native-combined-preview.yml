@@ -1,9 +1,9 @@
 name: Native desk smoke
 on:
   push:
-    branches: [feature/native-combined-staff]
+    branches: ['**']
   pull_request:
-    paths: ['scorekit/lilypond/combined-staff.ily', 'music/combined/**', 'scorekit/tests/fixtures/combined-staff/**', '.github/workflows/native-combined-preview.yml']
+    paths: ['music/combined/**', 'music/paired.ily', 'music/clarinet-in-a-*.ily', 'parts/combined/**', 'scorekit/tests/fixtures/combined-staff/**', '.github/workflows/native-combined-preview.yml']
 permissions:
   contents: read
 jobs:

@@ -11,12 +11,15 @@ oboesTogetherPlayback = \partCombine #'(0 . 0)
   { << { \oboeOneMusicPlayback } { \partCombineApart s2.*268 } >> }
   { \oboeTwoMusicPlayback }
 
-clarinetsInATogether = \partCombine #'(0 . 0)
-  { << { \clarinetInAOneMusicCombined } { \partCombineApart s2.*152 } >> }
-  { \clarinetInATwoMusicCombined }
-clarinetsInATogetherPlayback = \partCombine #'(0 . 0)
-  { << { \clarinetInAOneMusicPlayback } { \partCombineApart s2.*268 } >> }
-  { \clarinetInATwoMusicPlayback }
+clarinetsInATogether = <<
+  \new Voice { \voiceOne \clarinetInAOneMusicCombined }
+  \new Voice { \voiceTwo \clarinetInATwoMusicCombined }
+>>
+clarinetsInATogetherPlayback = <<
+  \new Voice { \voiceOne \clarinetInAOneMusicPlayback }
+  \new Voice { \voiceTwo \clarinetInATwoMusicPlayback }
+>>
+
 
 bassoonsTogether = \partCombine #'(0 . 0)
   { << { \bassoonOneMusic } { \partCombineApart s2.*152 } >> }

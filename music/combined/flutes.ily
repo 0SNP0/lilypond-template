@@ -12,11 +12,14 @@
 % All remaining bars: I,II.
 flutesModeOpening = {
   \partCombineApart s2.*15
-  \partCombineSoloI s2.*5
+  \partCombineSoloI \omit Staff.MultiMeasureRest s2.*5
+  \undo \omit Staff.MultiMeasureRest
   \partCombineApart s2.*48
-  \partCombineSoloI s2.*8
+  \partCombineSoloI \omit Staff.MultiMeasureRest s2.*8
+  \undo \omit Staff.MultiMeasureRest
   \partCombineApart s2.*8
-  \partCombineSoloI s2.*16
+  \partCombineSoloI \omit Staff.MultiMeasureRest s2.*16
+  \undo \omit Staff.MultiMeasureRest
   \partCombineApart s2.
   \partCombineSoloII s2.*9
   \partCombineUnisono s2.*4
@@ -38,4 +41,12 @@ flutesTogetherPlayback = \partCombine #'(0 . 0)
 
 % No invisible dummy notes for labels. PartCombine's own text engraver
 % supplies I, II and a2 at mode transitions.
-flutesDeskCues = { s2.*152 }
+flutesDeskCues = {
+  s2.*15
+  \textMark \markup \italic "I" s2.*5
+  s2.*48
+  \textMark \markup \italic "I" s2.*8
+  s2.*8
+  \textMark \markup \italic "I" s2.*16
+  s2.*52
+}

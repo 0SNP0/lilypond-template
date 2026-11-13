@@ -26,3 +26,9 @@ jobs:
             lilypond -dno-point-and-click -o "build/combined-smoke/$name" "$part"
             test -s "build/combined-smoke/$name.pdf"
           done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-flutes-preview
+          path: build/combined-smoke/flutes-1-2.pdf
+          if-no-files-found: error
+          retention-days: 7

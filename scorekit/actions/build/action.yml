@@ -24,7 +24,7 @@ runs:
           SCOREKIT_FAST_PDF=1 python3 scorekit/scripts/build.py build
           python3 scorekit/scripts/build.py package
       - name: Upload early PDF bundle
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: score-pdf-${{ github.sha }}
           path: |

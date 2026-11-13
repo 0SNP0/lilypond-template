@@ -10,6 +10,13 @@ runs:
   steps:
       - name: Install pinned LilyPond from ScoreKit
         uses: ./scorekit/actions/install-lilypond
+      - name: Compile native combined-staff preview fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/combined-staff-preview
+          lilypond -dno-point-and-click -o build/combined-staff-preview/native-preview scorekit/tests/fixtures/combined-staff/native-preview.ly
+          test -s build/combined-staff-preview/native-preview.pdf
       - name: Install PDF validation dependencies
         shell: bash
         run: |

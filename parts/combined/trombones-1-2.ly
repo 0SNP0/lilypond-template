@@ -5,5 +5,5 @@
 \include "../../music/global.ily"
 \include "../../scorekit/lilypond/layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Trombones I–II" tagline = ##f }
-\score { \new Staff \with { printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \partCombine #'(0 . 0) { \tromboneOneMusic } { \tromboneTwoMusic } } >> \partPrintLayout }
-\score { \new Staff \with { printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \partCombine #'(0 . 0) { \tromboneOneMusic } { \tromboneTwoMusic } } >> \midi { } }
+\score { \new Staff \with { \consists Merge_rests_engraver printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \partCombine #'(0 . 0) { << { \tromboneOneMusic } { \partCombineApart s2.*152 } >> } { \tromboneTwoMusic } } >> \partPrintLayout }
+\score { \new Staff \with { \consists Merge_rests_engraver printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \partCombine #'(0 . 0) { << { \tromboneOneMusic } { \partCombineApart s2.*152 } >> } { \tromboneTwoMusic } } >> \midi { } }

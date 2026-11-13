@@ -5,7 +5,7 @@ fluteOneOpening = {
   \time 3/4
   % Bars 1-4
  R2.*15 |
- a'''2.-> \f ^\markup \italic { "I" } |
+ a'''2.-> \f |
   % Bars 17-20
  gis'''4( e'''4 cis'''4 |
  gis''4 \acciaccatura { b''16 } a''4. gis''8 |
@@ -13,7 +13,7 @@ fluteOneOpening = {
  cis'''4) r4 r4 |
   % Bars 21-24
  R2.*48 |
- cis'''2. _\markup \italic { "espr." }( ^\markup \italic { "I" } \f |
+ cis'''2. _\markup \italic { "espr." }( \f |
  e'''2.) |
  a'''2.( |
  gis'''2.) |
@@ -29,11 +29,11 @@ fluteOneOpening = {
  a'''4-. r8 b'''8-. a'''4-. |
   % Bars 81-84
  gis'''4-. r8 fis'''8-. e'''4-. |
- \partCombineApart dis'''4-. r8 \once \override Stem.direction = #UP e'''8-. dis'''4-. |
+ dis'''4-. r8 e'''8-. dis'''4-. |
  cis'''4 r4 r4 |
- \partCombineAutomatic R2. |
+ R2. |
   % Bars 85-88
- gis''2.~( \f ^\markup \italic { "I" } |
+ gis''2.~( \f |
  gis''4 a''2) |
  gis''4( cis'''2) |
  gis''4( cis'''2) |
@@ -54,17 +54,16 @@ fluteOneOpening = {
  fis''4 e''4. dis''8 |
   % Bars 101-104
  gis''4) r4 r4 |
- % Flute I is tacet from bar 102; solo rests, but the shared
- % staff needs only Flute II's notes under the II cue.
- \tag #'solo { R2. } \tag #'combined { s2. } |
- \tag #'solo { R2. } \tag #'combined { s2. } |
- \tag #'solo { R2. } \tag #'combined { s2. } |
- \tag #'solo { R2. } \tag #'combined { s2. } |
- \tag #'solo { R2. } \tag #'combined { s2. } |
- \tag #'solo { R2. } \tag #'combined { s2. } |
- \tag #'solo { R2. } \tag #'combined { s2. } |
- \tag #'solo { R2. } \tag #'combined { s2. } |
- \tag #'solo { R2. } \tag #'combined { s2. } |
+ % Flute I is tacet from bar 102; the desk map selects II.
+ R2. |
+ R2. |
+ R2. |
+ R2. |
+ R2. |
+ R2. |
+ R2. |
+ R2. |
+ R2. |
  a'''2.~ |
  a'''4 fis'''4 \ff gis'''4 |
   % Bars 113-116
@@ -86,25 +85,9 @@ fluteOneBridge = {
 }
 
 % The same notes are used in all variants; only rest engraving differs.
-fluteOneMusic = \keepWithTag #'solo { \fluteOneOpening \fluteOneBridge }
-fluteOneMusicCombined = \keepWithTag #'combined { \fluteOneOpening \fluteOneBridge }
-fluteOneMusicPlayback = \scorePlayback
-  { \keepWithTag #'solo \fluteOneOpening } \fluteOneBridge
+fluteOneMusic = { \fluteOneOpening \fluteOneBridge }
+fluteOneMusicCombined = \fluteOneMusic
+fluteOneMusicPlayback = \scorePlayback \fluteOneOpening \fluteOneBridge
 
 % Print-only instrument indications for the shared Flutes I-II staff.
 % No extra notes or text are included in individual parts or MIDI.
-flutesDeskCues = {
-  s2.*76
-  \once \override NoteColumn.ignore-collision = ##t
-  \once \omit NoteHead
-  \once \omit Stem
-  \once \omit Dots
-  gis''2.^\markup \italic { "I" } _\markup \italic { "II" }
-  s2.*33
-  \once \override NoteColumn.ignore-collision = ##t
-  \once \omit NoteHead
-  \once \omit Stem
-  \once \omit Dots
-  a'''2.^\markup \italic { "a2" }
-  s2.*41
-}

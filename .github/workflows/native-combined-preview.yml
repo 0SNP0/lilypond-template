@@ -1,0 +1,34 @@
+name: Native desk smoke
+on:
+  push:
+    branches: [feature/native-combined-staff]
+  pull_request:
+    paths: ['scorekit/lilypond/combined-staff.ily', 'music/combined/**', 'scorekit/tests/fixtures/combined-staff/**', '.github/workflows/native-combined-preview.yml']
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./scorekit/actions/install-lilypond
+      - name: Compile native desk fixtures
+        run: |
+          set -euo pipefail
+          mkdir -p build/combined-smoke
+          lilypond -o build/combined-smoke/mode-map scorekit/tests/fixtures/combined-staff/mode-map.ly
+          test -s build/combined-smoke/mode-map.pdf
+          lilypond -o build/combined-smoke/native-preview scorekit/tests/fixtures/combined-staff/native-preview.ly
+          test -s build/combined-smoke/native-preview.pdf
+          for part in parts/combined/*.ly; do
+            name="$(basename "$part" .ly)"
+            lilypond -dno-point-and-click -o "build/combined-smoke/$name" "$part"
+            test -s "build/combined-smoke/$name.pdf"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-flutes-preview
+          path: build/combined-smoke/flutes-1-2.pdf
+          if-no-files-found: error
+          retention-days: 7

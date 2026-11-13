@@ -9,7 +9,7 @@ MUSIC = ROOT / "music"
 
 def source_bars(path, section):
     text = path.read_text(encoding="utf-8")
-    match = re.search(rf"(?ms)^flute(?:One|Two){section} = \\{{(.*?)^\\}}", text)
+    match = re.search(rf"(?ms)^flute(?:One|Two){section} = \{{(.*?)^\}}", text)
     if match is None:
         raise AssertionError(f"Missing flute {section}: {path}")
     bars = []

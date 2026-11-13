@@ -6,5 +6,5 @@
 \include "../../music/combined/flutes.ily"
 \include "../../scorekit/lilypond/layout/part.ily"
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Flutes I–II" tagline = ##f }
-\score { \new Staff \with { printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \flutesTogether } { \flutesDeskCues } >> \partPrintLayout }
-\score { \new Staff \with { printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \flutesTogetherPlayback } >> \midi { } }
+\score { \new Staff \with { printPartCombineTexts = ##t soloText = "I" soloIIText = "II" aDueText = "a2" } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \flutesTogether } { \flutesDeskCues } >> \partPrintLayout }
+\score { \new Staff \with { printPartCombineTexts = ##t soloText = "I" soloIIText = "II" aDueText = "a2" } << { \global } { \rehearsalMarks } { \flutesTogetherPlayback } >> \midi { } }

@@ -29,9 +29,9 @@ fluteOneOpening = {
  a'''4-. r8 b'''8-. a'''4-. |
   % Bars 81-84
  gis'''4-. r8 fis'''8-. e'''4-. |
- \partCombineApart dis'''4-. r8 \once \override Stem.direction = #UP e'''8-. dis'''4-. |
+ dis'''4-. r8 e'''8-. dis'''4-. |
  cis'''4 r4 r4 |
- \partCombineAutomatic R2. |
+ R2. |
   % Bars 85-88
  gis''2.~( \f ^\markup \italic { "I" } |
  gis''4 a''2) |
@@ -56,15 +56,15 @@ fluteOneOpening = {
  gis''4) r4 r4 |
  % Flute I is tacet from bar 102; solo rests, but the shared
  % staff needs only Flute II's notes under the II cue.
- \tag #'solo { R2. } \tag #'combined { s2. } |
- \tag #'solo { R2. } \tag #'combined { s2. } |
- \tag #'solo { R2. } \tag #'combined { s2. } |
- \tag #'solo { R2. } \tag #'combined { s2. } |
- \tag #'solo { R2. } \tag #'combined { s2. } |
- \tag #'solo { R2. } \tag #'combined { s2. } |
- \tag #'solo { R2. } \tag #'combined { s2. } |
- \tag #'solo { R2. } \tag #'combined { s2. } |
- \tag #'solo { R2. } \tag #'combined { s2. } |
+ R2. |
+ R2. |
+ R2. |
+ R2. |
+ R2. |
+ R2. |
+ R2. |
+ R2. |
+ R2. |
  a'''2.~ |
  a'''4 fis'''4 \ff gis'''4 |
   % Bars 113-116
@@ -86,10 +86,9 @@ fluteOneBridge = {
 }
 
 % The same notes are used in all variants; only rest engraving differs.
-fluteOneMusic = \keepWithTag #'solo { \fluteOneOpening \fluteOneBridge }
-fluteOneMusicCombined = \keepWithTag #'combined { \fluteOneOpening \fluteOneBridge }
-fluteOneMusicPlayback = \scorePlayback
-  { \keepWithTag #'solo \fluteOneOpening } \fluteOneBridge
+fluteOneMusic = { \fluteOneOpening \fluteOneBridge }
+fluteOneMusicCombined = \fluteOneMusic
+fluteOneMusicPlayback = \scorePlayback \fluteOneOpening \fluteOneBridge
 
 % Print-only instrument indications for the shared Flutes I-II staff.
 % No extra notes or text are included in individual parts or MIDI.

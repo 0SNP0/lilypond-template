@@ -93,18 +93,3 @@ fluteOneMusicPlayback = \scorePlayback
 
 % Print-only instrument indications for the shared Flutes I-II staff.
 % No extra notes or text are included in individual parts or MIDI.
-flutesDeskCues = {
-  s2.*76
-  \once \override NoteColumn.ignore-collision = ##t
-  \once \omit NoteHead
-  \once \omit Stem
-  \once \omit Dots
-  gis''2.^\markup \italic { "I" } _\markup \italic { "II" }
-  s2.*33
-  \once \override NoteColumn.ignore-collision = ##t
-  \once \omit NoteHead
-  \once \omit Stem
-  \once \omit Dots
-  a'''2.^\markup \italic { "a2" }
-  s2.*41
-}

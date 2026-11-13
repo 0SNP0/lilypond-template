@@ -41,7 +41,7 @@ class FluteCombinedModes(unittest.TestCase):
         self.assertEqual(lower[15], "R2.")
         for measure in range(102, 111):
             self.assertTrue(
-                upper[measure - 1].startswith(r"\tag #'solo { R2. }"),
+                upper[measure - 1] == "R2.",
                 f"Flute I is not silent at bar {measure}")
 
     def test_mode_timeline_is_complete(self):

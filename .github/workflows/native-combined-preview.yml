@@ -21,3 +21,8 @@ jobs:
           test -s build/combined-smoke/mode-map.pdf
           lilypond -o build/combined-smoke/native-preview scorekit/tests/fixtures/combined-staff/native-preview.ly
           test -s build/combined-smoke/native-preview.pdf
+          for part in parts/combined/*.ly; do
+            name="$(basename "$part" .ly)"
+            lilypond -dno-point-and-click -o "build/combined-smoke/$name" "$part"
+            test -s "build/combined-smoke/$name.pdf"
+          done

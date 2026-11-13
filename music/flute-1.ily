@@ -5,7 +5,7 @@ fluteOneOpening = {
   \time 3/4
   % Bars 1-4
  R2.*15 |
- a'''2.-> \f ^\markup \italic { "I" } |
+ a'''2.-> \f |
   % Bars 17-20
  gis'''4( e'''4 cis'''4 |
  gis''4 \acciaccatura { b''16 } a''4. gis''8 |
@@ -13,7 +13,7 @@ fluteOneOpening = {
  cis'''4) r4 r4 |
   % Bars 21-24
  R2.*48 |
- cis'''2. _\markup \italic { "espr." }( ^\markup \italic { "I" } \f |
+ cis'''2. _\markup \italic { "espr." }( \f |
  e'''2.) |
  a'''2.( |
  gis'''2.) |
@@ -33,7 +33,7 @@ fluteOneOpening = {
  cis'''4 r4 r4 |
  R2. |
   % Bars 85-88
- gis''2.~( \f ^\markup \italic { "I" } |
+ gis''2.~( \f |
  gis''4 a''2) |
  gis''4( cis'''2) |
  gis''4( cis'''2) |
@@ -54,8 +54,7 @@ fluteOneOpening = {
  fis''4 e''4. dis''8 |
   % Bars 101-104
  gis''4) r4 r4 |
- % Flute I is tacet from bar 102; solo rests, but the shared
- % staff needs only Flute II's notes under the II cue.
+ % Flute I is tacet from bar 102; the desk map selects II.
  R2. |
  R2. |
  R2. |

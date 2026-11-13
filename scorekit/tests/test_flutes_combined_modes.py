@@ -38,7 +38,10 @@ class FluteCombinedModes(unittest.TestCase):
     def test_solo_i_and_ii_are_really_silent_in_other_part(self):
         upper = source_bars(MUSIC / "flute-1.ily", "Opening")
         lower = source_bars(MUSIC / "flute-2.ily", "Opening")
-        self.assertEqual(lower[15], "R2.")
+        for start, end in ((16, 20), (69, 76), (85, 100)):
+            for measure in range(start, end + 1):
+                self.assertEqual(lower[measure - 1], "R2.",
+                                 f"Flute II is not silent at bar {measure}")
         for measure in range(102, 111):
             self.assertTrue(
                 upper[measure - 1] == "R2.",

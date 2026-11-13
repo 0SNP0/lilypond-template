@@ -6,14 +6,18 @@
 % I / II: only that instrument is printed; the other is silent.
 % a2: one notehead and stem; both parts MUST have the same music.
 %
-% Flute I alone: bar 16.
+% Flute I alone: bars 16-20, 69-76 and 85-100.
 % Flute II alone: bars 102-110.
 % a2: bars 111-114 (the two source note streams agree there).
 % All remaining bars: I,II.
 flutesModeOpening = {
   \partCombineApart s2.*15
-  \partCombineSoloI s2.
-  \partCombineApart s2.*85
+  \partCombineSoloI s2.*5
+  \partCombineApart s2.*48
+  \partCombineSoloI s2.*8
+  \partCombineApart s2.*8
+  \partCombineSoloI s2.*16
+  \partCombineApart s2.
   \partCombineSoloII s2.*9
   \partCombineUnisono s2.*4
   \partCombineApart s2.*2

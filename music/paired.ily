@@ -4,13 +4,6 @@
 
 % The shared staff uses regular rest placement whenever both flutes rest.
 % Individual overlap cases are corrected locally in flute-1.ily.
-flutesTogether = \partCombine #'(0 . 0)
-  { \fluteOneMusicCombined }
-  { \fluteTwoMusicCombined }
-flutesTogetherPlayback = \partCombine #'(0 . 0)
-  { \fluteOneMusicPlayback }
-  { \fluteTwoMusicPlayback }
-
 oboesTogether = \partCombine #'(0 . 0)
   { \oboeOneMusicCombined }
   { \oboeTwoMusic }

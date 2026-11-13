@@ -1,55 +1,55 @@
-# Native combined staff: experimental design
+# Combined instrumental desks (native LilyPond)
 
-Status: exploratory, **not production-ready**. This branch does not replace
-`music/paired.ily` or alter existing score/part rendering.
+The actual orchestral score uses **one authoritative music source per instrument**.
+The combined score and combined desk parts reuse those sources directly.
+No Python-generated music file is needed for live LilyPond preview.
 
-## Existing implementation and problems
+## Current score
 
-- `music/paired.ily` constructs desks with `\\partCombine`.
-- `music/flute-1.ily` and `music/flute-2.ily` use `solo`/`combined`
-  tags and local engraving corrections. Those belong in the desk layer.
-- `flutesDeskCues` uses invisible note objects to place mode labels.
-- `parts/combined/flutes-1-2.ly` independently repeats the combining logic.
+- `music/combined/flutes.ily`: editable measure-aligned mode timeline
+  for Flutes I–II, used by both `orchestra.ily` and
+  `parts/combined/flutes-1-2.ly`.
+- `music/paired.ily`: all eight other paired desks use independent voices
+  by default, enforced by a native `\\partCombineApart` control stream.
+- `music/flute-1.ily` and `music/flute-2.ily`: independent original notes,
+  rests and dynamics; no fake noteheads or combined-only rest suppression.
+- `scorekit/tests/test_flutes_combined_modes.py`: verifies timeline duration,
+  actual silence in I/II ranges and exact a2 equality in bars 111–114.
+- `scorekit/tests/fixtures/combined-staff/mode-map.ly`: small independent
+  native LilyPond fixture exercising forced I, II, a2 and two-voice mode.
 
-## Invariants
+## How to change flute modes
 
-1. Each instrument's music remains the only authoritative note/rest stream.
-2. Solo scores and MIDI use those streams directly.
-3. Combined-only layout, including whole-measure rest displacement, is
-   isolated from the solo sources.
-4. The default I,II mode has independent voices, upper stems up and lower
-   stems down; coincident noteheads may overlap, but stems remain separate.
-5. Coincident rests are visually merged; an isolated whole-bar rest must not
-   collide with the other voice, with desk-local overrides as fallback.
-6. I and II show only the selected instrument and require the other to rest.
-7. a2 prints one voice only if notes, rhythm, dynamics, articulations and
-   other performance markings are identical. Otherwise use I,II.
-8. Mode changes are bar-aligned initially; meter changes and repeats must
-   be handled by musical time, not page layout.
-9. LilyPond preview must work without a Python preprocessing step.
+Edit only `music/combined/flutes.ily`:
 
-## Experiment
+- `\\partCombineApart s2.*N`: I,II, independent voices; stems up/down.
+- `\\partCombineSoloI s2.*N`: show only I; II must be silent.
+- `\\partCombineSoloII s2.*N`: show only II; I must be silent.
+- `\\partCombineUnisono s2.*N`: show one notehead/stem for a2.
 
-`scorekit/tests/fixtures/combined-staff/native-preview.ly` is a standalone
-four-bar LilyPond file with two independent music variables, one shared
-two-voice staff and two individual staffs. Compile with:
+`s2.` represents one measure in the present 3/4 score. The two control
+sections have 116 and 36 measures respectively. The playback timeline
+uses the same `\\scorePlayback` repeat structure as the music itself.
 
-```sh
-lilypond -o native-preview scorekit/tests/fixtures/combined-staff/native-preview.ly
-```
+**Do not use a2 for different dynamics, articulations or notes.**
+The current flute a2 region (111–114) is checked against both original
+sources; when editing the region, extend the tests and verify it visually.
 
-This establishes the intended source separation and provides a preview
-fixture. **It does not implement** per-bar I/II/a2 mode changes, automatic
-rest collision detection, or semantic validation. No LilyPond executable
-was available in the authoring environment, so the fixture has not yet
-been rendered or visually verified.
+## Engraving and preview
 
-## Next implementation gate
+`\\partCombine` remains the LilyPond engraver. `Merge_rests_engraver`
+is attached to combined orchestral staves; the standalone native fixture
+also exercises it. PartCombine's own labels replace the former invisible
+dummy-note labels for the flute desk.
 
-Prototype a Scheme music transformation that splits two source streams at
-bar boundaries and produces per-bar engraving without changing the source
-parts. Test mode labels using independent timed skips rather than fake
-noteheads. Validate a2 equivalence and I/II silence before suppressing
-any voice. Compare generated SVG/PDF for unisons, merged rests, collisions,
-mode transitions, changing meters and repeats. Only migrate production
-desks after a native preview and integration tests pass.
+The generic paired desks currently use I,II throughout; only the flute
+desk has explicit I, II and a2 transitions. Their source-level historical
+corrections have **not all been migrated** to desk-only modules. This is
+a remaining limitation, not an implemented feature.
+
+A separate `Native desk smoke` workflow compiles both fixtures using the
+project's pinned LilyPond 2.26.0. The normal `Build score` workflow
+compiles the full current orchestral score and parts. CI compilation
+alone does not guarantee visual collision freedom: review PDFs before
+merging and use desk-local `MultiMeasureRest.staff-position` overrides
+when LilyPond's default rest placement is inadequate.

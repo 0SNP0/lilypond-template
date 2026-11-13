@@ -209,11 +209,15 @@ def compile_lilypond(source: Path, output: Path, version: str,
     pages_match = (re.search(r'#\(define\s+partTargetPages\s+(\d+)\)',
                              source_text) if not score else None)
     target_pages = int(pages_match.group(1)) if pages_match else None
-    score_size = natural_score_staff_size(score_staff_count()) if score else None
+    fast_pdf = os.environ.get("SCOREKIT_FAST_PDF") == "1"
+    score_size = (12.0 if fast_pdf else natural_score_staff_size(score_staff_count())) if score else None
+    if fast_pdf and target_pages:
+        # Previous full search selected 27.5 pt for the two-page violin II part.
+        size = 27.5 if source.stem == "violins-2" else preferred_size
     size = preferred_size
     best_size: float | None = None
     attempts = 0
-    if target_pages:
+    if target_pages and not fast_pdf:
         try:
             from pypdf import PdfReader
         except ImportError as exc:
@@ -224,7 +228,12 @@ def compile_lilypond(source: Path, output: Path, version: str,
         env = {"SCORE_BUILD_REVISION": version}
         if score_size is not None:
             env["SCORE_STAFF_SIZE"] = str(score_size)
-            first_indent, continuation_indent = score_instrument_indents(score_size)
+            # Full SVG indentation calibration used to rerender the entire score
+            # twice at *each* attempted staff size (~12 minutes per PDF job).
+            # These values were measured with LilyPond 2.26.0 at 12.0 pt.
+            first_indent, continuation_indent = (
+                (30.31, 20.77) if fast_pdf and score_size == 12.0
+                else score_instrument_indents(score_size))
             env["SCORE_INDENT_MM"] = str(first_indent)
             env["SCORE_SHORT_INDENT_MM"] = str(continuation_indent)
             print(f"Score label indents: {first_indent:g} / {continuation_indent:g} mm", flush=True)
@@ -238,7 +247,7 @@ def compile_lilypond(source: Path, output: Path, version: str,
         if "error:" in result.lower() or not pdf.is_file():
             raise RuntimeError(f"LilyPond failed or produced no PDF: {source}")
         overfull = "compressing over-full page" in result
-        if target_pages:
+        if target_pages and not fast_pdf:
             pages = len(PdfReader(str(pdf)).pages)
             valid = pages <= target_pages and not overfull
             print(f"Part {source.name}: {size:g} pt, {pages} pages "

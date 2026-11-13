@@ -9,7 +9,7 @@ runs:
   using: composite
   steps:
       - name: Download completed PDF print stage
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: score-pdf-${{ github.sha }}
           path: .
@@ -41,7 +41,7 @@ runs:
           python3 scorekit/scripts/build.py build --audio --reuse-pdf
           python3 scorekit/scripts/build.py package --full
       - name: Upload synchronized media and viewer bundle
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: score-media-${{ github.sha }}
           path: |

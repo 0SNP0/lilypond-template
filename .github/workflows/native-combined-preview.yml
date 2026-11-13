@@ -1,9 +1,9 @@
 name: Native desk smoke
 on:
   push:
-    branches: [feature/native-combined-staff]
+    branches: ['**']
   pull_request:
-    paths: ['scorekit/lilypond/combined-staff.ily', 'music/combined/**', 'scorekit/tests/fixtures/combined-staff/**', '.github/workflows/native-combined-preview.yml']
+    paths: ['music/combined/**', 'music/paired.ily', 'music/clarinet-in-a-*.ily', 'parts/combined/**', 'scorekit/tests/fixtures/combined-staff/**', '.github/workflows/native-combined-preview.yml']
 permissions:
   contents: read
 jobs:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ./scorekit/actions/install-lilypond
       - name: Compile native desk fixtures
         run: |
@@ -26,7 +26,7 @@ jobs:
             lilypond -dno-point-and-click -o "build/combined-smoke/$name" "$part"
             test -s "build/combined-smoke/$name.pdf"
           done
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: native-flutes-preview
           path: build/combined-smoke/flutes-1-2.pdf

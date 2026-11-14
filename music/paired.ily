@@ -44,9 +44,8 @@ hornsTwoFourTogetherPlayback = \partCombine #'(0 . 0)
   { << { \hornTwoMusicPlayback } { \partCombineApart s2.*268 } >> }
   { \hornFourMusicPlayback }
 
-trumpetsTogether = \partCombine #'(0 . 0)
-  { << { \trumpetOneMusic } { \partCombineApart s2.*152 } >> }
-  { \trumpetTwoMusicCombined }
+trumpetsTogether = << \new Voice { \voiceOne \trumpetOneMusic } \new Voice { \voiceTwo \trumpetTwoMusicCombined } >>
+
 trumpetsTogetherPlayback = \partCombine #'(0 . 0)
   { << { \trumpetOneMusicPlayback } { \partCombineApart s2.*268 } >> }
   { \trumpetTwoMusicPlayback }

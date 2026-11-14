@@ -143,11 +143,13 @@ clarinetInAOneMusicPlayback = \scorePlayback
 
 % Explicit desk labels only where they resolve ambiguity.
 clarinetsDeskCues = {
-  s2.*68
+  s2.*48
+  \textMark \markup \italic "a2" s2.
+  s2.*19
   \textMark \markup \italic "I" s2.
   s2.*15
   \textMark \markup \italic "I" s2.
   s2.*7
-  \textMark \markup \italic "I" s2.
+  \textMark \markup \italic "I,II" s2.
   s2.*59
 }

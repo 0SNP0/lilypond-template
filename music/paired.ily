@@ -9,14 +9,54 @@ oboesTogether = \partCombine #'(0 . 0)
   { \oboeTwoMusicCombined }
 oboesTogetherPlayback = << \new Voice { \voiceOne \oboeOneMusicPlayback } \new Voice { \voiceTwo \oboeTwoMusicPlayback } >>
 
+% Combined clarinet staff only: centered shared rests, default otherwise.
+clarinetsRestLayout = {
+  \deskRestCenter s2.*36
+  \deskRestAuto s2.*16
+  \deskRestCenter s2.*16
+  \deskRestAuto s2.*26
+  \deskRestUpper #10 s2.*3
+  \deskRestUpper #6 s2.*3
+  \deskRestAuto s2.*2
+  \deskRestCenter s2.*2
+  \deskRestAuto s2.*2
+  \deskRestCenter s2.*2
+  \deskRestAuto s2.*2
+  \deskRestCenter s2.
+  \deskRestAuto s2.*13
+  \deskRestCenter s2.*3
+  \deskRestAuto s2.*17
+  \deskRestCenter s2.*3
+  \deskRestAuto s2.*5
+}
 clarinetsModeTimeline = {
-  \partCombineApart s2.*111
+  % 1-48: two voices; the label at 48 is unnecessary.
+  \partCombineApart s2.*47
+  % I from the second beat of 48 through 50; a2 starts at 51.
+  \partCombineSoloI s2.*3
+  \partCombineUnisono s2.*2
+  \partCombineApart s2.*16
+  % Rehearsal 15, bars 69-76: first clarinet only.
+  \partCombineSoloI s2.*8
+  % Rehearsal 16: independent voices, no redundant label.
+  \partCombineApart s2.*8
+  % Rehearsal 17, bars 85-92: first clarinet only.
+  \partCombineSoloI s2.*8
+  % 93-94: both clarinets, explicit label.
+  \partCombineApart s2.*2
+  % 95-100: both voices; upper voice must retain its full-bar rests.
+  \partCombineApart s2.*6
+  \partCombineApart s2.*11
+  % 112-114: second clarinet only.
   \partCombineSoloII s2.*3
   \partCombineApart s2.*38
 }
-clarinetsInATogether = \partCombine #'(0 . 0)
-  { << { \clarinetInAOneMusicCombined } { \clarinetsModeTimeline } >> }
-  { \clarinetInATwoMusicCombined }
+% Keep the two slur engravers independent. partCombine can extend slurs
+% across desk-mode transitions (48-70, 77-101) in this score.
+clarinetsInATogether = <<
+  \new Voice = "clarinetI" { \voiceOne \clarinetInAOneMusicCombined }
+  \new Voice = "clarinetII" { \voiceTwo \clarinetInATwoMusicCombined }
+>>
 clarinetsInATogetherPlayback = << \new Voice { \voiceOne \clarinetInAOneMusicPlayback } \new Voice { \voiceTwo \clarinetInATwoMusicPlayback } >>
 
 bassoonsTogether = \partCombine #'(0 . 0)

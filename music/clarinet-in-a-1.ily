@@ -23,7 +23,7 @@ clarinetInAOneOpening = {
  
  e''4 f''4.( e''8 |
  c'''2.~ |
- c'''4) a''4( b''4 |
+ c'''4) a''4( \f \tag #'combined { ^\markup \italic "I" } b''4 |
  
   % Bars 49-52
  c'''4 b''4 a''4 |
@@ -79,15 +79,16 @@ clarinetInAOneOpening = {
  R2. |
  
  b''8( \ff c'''8 b''8 a''8 fis''8 dis''8 |
- b'4) r4 r4 |
+ b'4) \tag #'combined { \override Rest.staff-position = #0 } r4 r4 \tag #'combined { \revert Rest.staff-position } |
  
  R2.*2 |
  b''8( \ff c'''8 b''8 a''8 fis''8 dis''8 |
- b'4) r4 r4 |
+ b'4) \tag #'combined { \override Rest.staff-position = #0 } r4 r4 \tag #'combined { \revert Rest.staff-position } |
  R2.*2 |
  e'''8( \ff f'''8 e'''8 d'''8 b''8 gis''8 |
  e''4) r4 r4 |
- R2.*4 |
+ R2. |
+ \tag #'solo { R2.*3 } \tag #'combined { s2.*3 } |
  g''8( \ff b''8) b''4-. a''4-. |
  g''4-. r4 r4 |
 }
@@ -133,7 +134,7 @@ clarinetInAOneBridge = {
  b'4-.)) b'4-. b'4-. |
  b'4-. a'4.( b'8 |
  g'2.~ |
- g'4) r4 r4 |
+ g'4) \tag #'combined { \override Rest.staff-position = #0 } r4 r4 \tag #'combined { \revert Rest.staff-position } |
 }
 
 clarinetInAOneMusic = \keepWithTag #'solo { \clarinetInAOneOpening \clarinetInAOneBridge }
@@ -141,15 +142,15 @@ clarinetInAOneMusicCombined = \keepWithTag #'combined { \clarinetInAOneOpening \
 clarinetInAOneMusicPlayback = \scorePlayback
   { \keepWithTag #'solo \clarinetInAOneOpening } \clarinetInAOneBridge
 
-% Printed labels on the combined desk only; no invisible noteheads.
+% Explicit desk labels only where they resolve ambiguity.
 clarinetsDeskCues = {
-  s2.*47
+  s2.*50
+  \textMark \markup \italic "a2" s2.
+  s2.*17
   \textMark \markup \italic "I" s2.
-  s2.*28
-  \textMark \markup \italic "I,II" s2.
   s2.*15
-  \textMark \markup \italic "I,II" s2.
-  s2.*21
-  \textMark \markup \italic "I,II" s2.
-  s2.*37
+  \textMark \markup \italic "I" s2.
+  s2.*7
+  \textMark \markup \center-column { \italic "I" \italic "II" } s2.
+  s2.*59
 }

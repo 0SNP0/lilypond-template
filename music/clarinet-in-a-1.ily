@@ -23,7 +23,7 @@ clarinetInAOneOpening = {
  
  e''4 f''4.( e''8 |
  c'''2.~ |
- c'''4) a''4( b''4 |
+ c'''4) a''4( \f \tag #'combined { ^\markup \italic "I" } b''4 |
  
   % Bars 49-52
  c'''4 b''4 a''4 |
@@ -144,9 +144,9 @@ clarinetInAOneMusicPlayback = \scorePlayback
 
 % Explicit desk labels only where they resolve ambiguity.
 clarinetsDeskCues = {
-  s2.*48
+  s2.*50
   \textMark \markup \italic "a2" s2.
-  s2.*19
+  s2.*17
   \textMark \markup \italic "I" s2.
   s2.*15
   \textMark \markup \italic "I" s2.

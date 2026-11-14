@@ -27,12 +27,10 @@ clarinetInATwoOpening = {
  e'4) r4 r4 |
  r4 r4 r4 |
  r4 r4 r4 |
-  % Bars 49-52: identical a2 phrase. In combined score print only I's
-  % notes and slur; the solo II part still contains its own notes.
+  % 49-50: clarinet I alone. 51-52: a2, shared notes printed by I.
+ \tag #'solo { R2.*2 }
  \tag #'combined { s2.*4 }
  \tag #'solo {
- c'''4( b''4 a''4 |
- g''4 e''4 c''4) |
  b'4( g''4-.) fis''4-. |
  e''4-. r4 r4 |
  }

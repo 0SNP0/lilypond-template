@@ -32,8 +32,9 @@ clarinetsRestLayout = {
 clarinetsModeTimeline = {
   % 1-48: two voices; the label at 48 is unnecessary.
   \partCombineApart s2.*47
-  % Keep the complete 48-50 slur in I's single engraving voice.
-  \partCombineSoloI s2.*5
+  % I from the second beat of 48 through 50; a2 starts at 51.
+  \partCombineSoloI s2.*3
+  \partCombineUnisono s2.*2
   \partCombineApart s2.*16
   % Rehearsal 15, bars 69-76: first clarinet only.
   \partCombineSoloI s2.*8

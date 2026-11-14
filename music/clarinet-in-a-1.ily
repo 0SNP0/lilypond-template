@@ -79,11 +79,11 @@ clarinetInAOneOpening = {
  R2. |
  
  b''8( \ff c'''8 b''8 a''8 fis''8 dis''8 |
- b'4) \tag #'combined { \once \override Rest.staff-position = #0 } r4 r4 |
+ b'4) \tag #'combined { \override Rest.staff-position = #0 } r4 r4 \tag #'combined { \revert Rest.staff-position } |
  
  R2.*2 |
  b''8( \ff c'''8 b''8 a''8 fis''8 dis''8 |
- b'4) \tag #'combined { \once \override Rest.staff-position = #0 } r4 r4 |
+ b'4) \tag #'combined { \override Rest.staff-position = #0 } r4 r4 \tag #'combined { \revert Rest.staff-position } |
  R2.*2 |
  e'''8( \ff f'''8 e'''8 d'''8 b''8 gis''8 |
  e''4) r4 r4 |
@@ -134,7 +134,7 @@ clarinetInAOneBridge = {
  b'4-.)) b'4-. b'4-. |
  b'4-. a'4.( b'8 |
  g'2.~ |
- g'4) \tag #'combined { \once \override Rest.staff-position = #0 } r4 r4 |
+ g'4) \tag #'combined { \override Rest.staff-position = #0 } r4 r4 \tag #'combined { \revert Rest.staff-position } |
 }
 
 clarinetInAOneMusic = \keepWithTag #'solo { \clarinetInAOneOpening \clarinetInAOneBridge }

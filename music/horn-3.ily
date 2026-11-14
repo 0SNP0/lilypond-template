@@ -4,11 +4,11 @@ hornThreeOpening = {
   \key c \major
   \time 3/4
   % Bars 1-4
- dis'8 \f dis'8 dis'4 r4 |
+ dis'8 \tag #'combined { \once \override DynamicText.stencil = ##f } \f dis'8 dis'4 r4 |
  dis'8 dis'8 dis'4 r4 |
  dis'8 dis'8 dis'4 r4 |
  R2.*73 |
- gis'4-. \ff r4 gis'4-. |
+ gis'4-. \tag #'combined { \once \override DynamicText.stencil = ##f } \ff r4 gis'4-. |
  gis'4-. r4 gis'4-. |
  gis'4-. r4 gis'4-. |
  gis'4-. r4 gis'4-. |
@@ -17,7 +17,7 @@ hornThreeOpening = {
  fisis'4-. r4 fisis'4-. |
  gis'4-. r4 r4 |
  R2.*17 |
- r4 fisis'4-. \ff fisis'4-. |
+ r4 fisis'4-. \tag #'combined { \once \override DynamicText.stencil = ##f } \ff fisis'4-. |
  r4 fisis'4-. fisis'4-. |
  r4 gis'4-. gis'4-. |
  r4 gis'4-. gis'4-. |
@@ -32,7 +32,7 @@ hornThreeOpening = {
  r4 gis'4-. gis'4-. |
  r4 gis'4-. gis'4-. |
   % Bars 113-116
- gis'4-> \ff r4 r4 |
+ gis'4-> \tag #'combined { \once \override DynamicText.stencil = ##f } \ff r4 r4 |
  gis'4-> r4 r4 |
  R2.*2 |
 }
@@ -42,5 +42,6 @@ hornThreeBridge = {
  R2.*36 |
 }
 
-hornThreeMusic = { \hornThreeOpening \hornThreeBridge }
-hornThreeMusicPlayback = \scorePlayback \hornThreeOpening \hornThreeBridge
+hornThreeMusicCombined = \keepWithTag #'combined { \hornThreeOpening \hornThreeBridge }
+hornThreeMusic = \keepWithTag #'solo { \hornThreeOpening \hornThreeBridge }
+hornThreeMusicPlayback = \scorePlayback { \keepWithTag #'solo \hornThreeOpening } \hornThreeBridge

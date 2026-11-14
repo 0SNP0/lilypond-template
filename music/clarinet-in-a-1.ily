@@ -87,7 +87,8 @@ clarinetInAOneOpening = {
  R2.*2 |
  e'''8( \ff f'''8 e'''8 d'''8 b''8 gis''8 |
  e''4) r4 r4 |
- R2.*4 |
+ R2. |
+ \tag #'solo { R2.*3 } \tag #'combined { s2.*3 } |
  g''8( \ff b''8) b''4-. a''4-. |
  g''4-. r4 r4 |
 }
@@ -150,6 +151,6 @@ clarinetsDeskCues = {
   s2.*15
   \textMark \markup \italic "I" s2.
   s2.*7
-  \textMark \markup \italic "I" s2.
+  \textMark \markup \italic "I,II" s2.
   s2.*59
 }

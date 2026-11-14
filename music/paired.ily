@@ -30,7 +30,7 @@ clarinetsModeTimeline = {
   % 1-48: two voices; the label at 48 is unnecessary.
   \partCombineApart s2.*48
   % 49-52: identical a2 phrase.
-  \partCombineUnisono s2.*4
+  \partCombineSoloI s2.*4
   \partCombineApart s2.*16
   % Rehearsal 15, bars 69-76: first clarinet only.
   \partCombineSoloI s2.*8
@@ -40,8 +40,8 @@ clarinetsModeTimeline = {
   \partCombineSoloI s2.*8
   % 93-94: both clarinets, explicit label.
   \partCombineApart s2.*2
-  % 95-100: second clarinet only; do not print the upper full-bar rests.
-  \partCombineSoloII s2.*6
+  % 95-100: both voices; upper voice must retain its full-bar rests.
+  \partCombineApart s2.*6
   \partCombineApart s2.*11
   % 112-114: second clarinet only.
   \partCombineSoloII s2.*3

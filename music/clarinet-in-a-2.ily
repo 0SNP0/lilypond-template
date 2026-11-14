@@ -27,8 +27,12 @@ clarinetInATwoOpening = {
  e'4) r4 r4 |
  r4 r4 r4 |
  r4 r4 r4 |
-  % Bars 49-52
- R2.*28 |
+  % Bars 49-52: both clarinets play the same a2 phrase.
+ c'''4( b''4 a''4 |
+ g''4 e''4 c''4) |
+ b'4( g''4-.) fis''4-. |
+ e''4-. r4 r4 |
+ R2.*24 |
  g'4-. \tag #'combined { \once \override DynamicText.stencil = ##f } \ff r8 b'8-. e''4-. |
  g''4-. r8 fis''8-. e''4-. |
  c''4-. r8 e''8-. a''4-. |
@@ -38,7 +42,7 @@ clarinetInATwoOpening = {
  dis''4 r4 dis''4 |
  e''4 s2 |
  R2.*9 |
- e''2.~ |
+ e''2.~ \tag #'combined { _\markup \italic { "II" } } |
  e''4 f''4. e''8 |
  c'''2.~ |
  c'''4 a''4( b''4 |
@@ -57,7 +61,7 @@ clarinetInATwoOpening = {
  e''8( \tag #'combined { \once \override DynamicText.stencil = ##f } \ff f''8 e''8 d''8 b'8 gis'8 |
  e'4) s2 |
  R2. |
- r4 ^\markup \italic { "II" } a''4 \ff b''4 |
+ r4 \tag #'combined { _\markup \italic { "II" } } a''4 \ff b''4 |
   % Bars 113-116
  c'''4 b''4 a''4 |
  g''4 e''4 c''4 |

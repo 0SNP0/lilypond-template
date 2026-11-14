@@ -141,15 +141,13 @@ clarinetInAOneMusicCombined = \keepWithTag #'combined { \clarinetInAOneOpening \
 clarinetInAOneMusicPlayback = \scorePlayback
   { \keepWithTag #'solo \clarinetInAOneOpening } \clarinetInAOneBridge
 
-% Printed labels on the combined desk only; no invisible noteheads.
+% Explicit desk labels only where they resolve ambiguity.
 clarinetsDeskCues = {
-  s2.*47
+  s2.*68
   \textMark \markup \italic "I" s2.
-  s2.*28
-  \textMark \markup \italic "I,II" s2.
   s2.*15
-  \textMark \markup \italic "I,II" s2.
-  s2.*21
-  \textMark \markup \italic "I,II" s2.
-  s2.*37
+  \textMark \markup \italic "I" s2.
+  s2.*7
+  \textMark \markup \italic "I" s2.
+  s2.*59
 }

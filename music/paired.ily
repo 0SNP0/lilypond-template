@@ -9,6 +9,23 @@ oboesTogether = \partCombine #'(0 . 0)
   { \oboeTwoMusicCombined }
 oboesTogetherPlayback = << \new Voice { \voiceOne \oboeOneMusicPlayback } \new Voice { \voiceTwo \oboeTwoMusicPlayback } >>
 
+% Combined clarinet staff only: centered shared rests, default otherwise.
+clarinetsRestLayout = {
+  \deskRestCenter s2.*36
+  \deskRestAuto s2.*16
+  \deskRestCenter s2.*16
+  \deskRestAuto s2.*34
+  \deskRestCenter s2.*2
+  \deskRestAuto s2.*2
+  \deskRestCenter s2.*2
+  \deskRestAuto s2.*2
+  \deskRestCenter s2.
+  \deskRestAuto s2.*13
+  \deskRestCenter s2.*3
+  \deskRestAuto s2.*17
+  \deskRestCenter s2.*3
+  \deskRestAuto s2.*5
+}
 clarinetsModeTimeline = {
   % 1-48: two voices; the label at 48 is unnecessary.
   \partCombineApart s2.*48

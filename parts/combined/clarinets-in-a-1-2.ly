@@ -18,7 +18,8 @@ clarinetsRestLayout = {
   \deskRestAuto   s2.*16  % 37-52: independent music / a2
   \deskRestCenter s2.*16  % 53-68: both silent
   \deskRestAuto   s2.*26  % 69-94
-  \deskRestUpper #6 s2.*6 % 95-100: upper clarinet rests, II plays
+  \deskRestUpper #10 s2.*3 % 95-97: clear lower melody
+  \deskRestUpper #6 s2.*3  % 98-100
   \deskRestAuto   s2.*2   % 101-102
   \deskRestCenter s2.*2   % 103-104: both silent
   \deskRestAuto   s2.*2   % 105-106
@@ -32,5 +33,5 @@ clarinetsRestLayout = {
   \deskRestAuto   s2.*5   % 148-152
 }
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Clarinets in A I–II" tagline = ##f }
-\score { \new Staff \with { \consists Merge_rests_engraver printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \partCombine #'(0 . 0) { << { \clarinetInAOneMusicCombined } { \partCombineApart s2.*48 \partCombineSoloI s2.*4 \partCombineApart s2.*16 \partCombineSoloI s2.*8 \partCombineApart s2.*8 \partCombineSoloI s2.*8 \partCombineApart s2.*8 \partCombineApart s2.*11 \partCombineSoloII s2.*3 \partCombineApart s2.*38 } >> } { \clarinetInATwoMusicCombined } } { \clarinetsDeskCues } { \clarinetsRestLayout } >> \partPrintLayout }
+\score { \new Staff \with { \consists Merge_rests_engraver printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \partCombine #'(0 . 0) { << { \clarinetInAOneMusicCombined } { \partCombineApart s2.*47 \partCombineSoloI s2.*5 \partCombineApart s2.*16 \partCombineSoloI s2.*8 \partCombineApart s2.*8 \partCombineSoloI s2.*8 \partCombineApart s2.*8 \partCombineApart s2.*11 \partCombineSoloII s2.*3 \partCombineApart s2.*38 } >> } { \clarinetInATwoMusicCombined } } { \clarinetsDeskCues } { \clarinetsRestLayout } >> \partPrintLayout }
 \score { \new Staff \with { \consists Merge_rests_engraver printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \partCombine #'(0 . 0) { << { \clarinetInAOneMusic } { \partCombineApart s2.*152 } >> } { \clarinetInATwoMusic } } >> \midi { } }

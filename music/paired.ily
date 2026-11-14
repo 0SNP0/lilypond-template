@@ -15,7 +15,8 @@ clarinetsRestLayout = {
   \deskRestAuto s2.*16
   \deskRestCenter s2.*16
   \deskRestAuto s2.*26
-  \deskRestUpper #6 s2.*6
+  \deskRestUpper #10 s2.*3
+  \deskRestUpper #6 s2.*3
   \deskRestAuto s2.*2
   \deskRestCenter s2.*2
   \deskRestAuto s2.*2
@@ -30,9 +31,9 @@ clarinetsRestLayout = {
 }
 clarinetsModeTimeline = {
   % 1-48: two voices; the label at 48 is unnecessary.
-  \partCombineApart s2.*48
-  % 49-52: identical a2 phrase.
-  \partCombineSoloI s2.*4
+  \partCombineApart s2.*47
+  % Keep the complete 48-50 slur in I's single engraving voice.
+  \partCombineSoloI s2.*5
   \partCombineApart s2.*16
   % Rehearsal 15, bars 69-76: first clarinet only.
   \partCombineSoloI s2.*8

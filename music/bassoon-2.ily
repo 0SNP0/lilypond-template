@@ -5,7 +5,7 @@ bassoonTwoOpening = {
   \time 3/4
   % Bars 1-4
  R2.*52 |
- a2. \tag #'solo { \f } \tag #'combined { \once \override DynamicText.stencil = ##f \f } |
+ a2. \tag #'combined { \once \override DynamicText.stencil = ##f } \f |
  gis2. |
  fis2. |
  e2. |
@@ -35,7 +35,7 @@ bassoonTwoOpening = {
  eis,2. |
  fis,2. |
   % Bars 77-80
- gis,4 \tag #'solo { \ff } \tag #'combined { \once \override DynamicText.stencil = ##f \ff } r4 gis,4 |
+ gis,4 \tag #'combined { \once \override DynamicText.stencil = ##f } \ff r4 gis,4 |
  gis,4 r4 gis,4 |
  fis,4 r4 fis,4 |
  fis,4 r4 fis,4 |
@@ -46,7 +46,7 @@ bassoonTwoOpening = {
  cis,4-. r4 r4 |
   % Bars 85-88
  R2.*16 |
- dis4 ^\markup \italic { "a2" } \tag #'solo { \f } \tag #'combined { \once \override DynamicText.stencil = ##f \f } r4 r4 |
+ dis4 ^\markup \italic { "a2" } \tag #'combined { \once \override DynamicText.stencil = ##f } \f r4 r4 |
  gis,4 r4 r4 |
  cis4 r4 r4 |
  e4 r4 r4 |
@@ -69,7 +69,7 @@ bassoonTwoOpening = {
 
 bassoonTwoBridge = {
   % Bars 117-120
- \clef tenor e'2.~( \tag #'solo { \pp } \tag #'combined { \once \override DynamicText.stencil = ##f \pp } |
+ \clef tenor e'2.~( \tag #'combined { \once \override DynamicText.stencil = ##f } \pp |
  e'2. |
  cis'2.~ |
  cis'2.) |
@@ -85,7 +85,7 @@ bassoonTwoBridge = {
  e'2~ e'8 r8 |
   % Bars 129-132
  R2.*8 |
- e'2.~( \tag #'solo { \pp } \tag #'combined { \once \override DynamicText.stencil = ##f \pp } |
+ e'2.~( \tag #'combined { \once \override DynamicText.stencil = ##f } \pp |
  e'2. |
  cis'2.~ |
  cis'2.) |
@@ -95,7 +95,7 @@ bassoonTwoBridge = {
  e'2.~ |
  e'4) r4 r4 |
   % Bars 145-148
- e'4-. \tag #'solo { \mp } \tag #'combined { \once \override DynamicText.stencil = ##f \mp } e'4-. e'4-. |
+ e'4-. \tag #'combined { \once \override DynamicText.stencil = ##f } \mp e'4-. e'4-. |
  e'4-. r4 r4 |
  e'4-. e'4-. e'4-. |
  e'4-. r4 r4 |

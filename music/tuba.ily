@@ -9,7 +9,7 @@ tubaOpening = {
   % Bars 5-8
  cis,4-. r4 r4 |
  R2.*47 |
- a,4 \tag #'solo { \mf } \tag #'combined { \once \override DynamicText.stencil = ##f \mf } r4 r4 |
+ a,4 \tag #'combined { \once \override DynamicText.stencil = ##f } \mf r4 r4 |
  gis,4 r4 r4 |
  fis,4 r4 r4 |
  e,4 r4 r4 |
@@ -39,7 +39,7 @@ tubaOpening = {
  eis,,4 r4 r4 |
  fis,,4 r4 r4 |
   % Bars 77-80
- gis,,4 \tag #'solo { \sf } \tag #'combined { \once \override DynamicText.stencil = ##f \sf } r4 r4 |
+ gis,,4 \tag #'combined { \once \override DynamicText.stencil = ##f } \sf r4 r4 |
  R2.*5 |
  cis4-. ^\markup \italic { "Tuba sola" } \mf gis,4-. e,4-. |
  cis,4-. r4 r4 |
@@ -47,7 +47,7 @@ tubaOpening = {
  R2.*13 |
  gis2. |
  R2.*16 |
- gis,,4-. \tag #'solo { \f } \tag #'combined { \once \override DynamicText.stencil = ##f \f } r4 gis,,4-. |
+ gis,,4-. \tag #'combined { \once \override DynamicText.stencil = ##f } \f r4 gis,,4-. |
  cis,4-. r4 r4 |
 }
 

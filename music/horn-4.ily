@@ -4,13 +4,13 @@ hornFourOpening = {
   \key c \major
   \time 3/4
   % Bars 1-4
- dis'8 \tag #'solo { \f } \tag #'combined { \once \override DynamicText.stencil = ##f \f } dis'8 dis'4 r4 |
+ dis'8 \tag #'combined { \once \override DynamicText.stencil = ##f } \f dis'8 dis'4 r4 |
  dis'8 dis'8 dis'4 r4 |
  dis'8 dis'8 dis'4 r4 |
  R2.*42 |
  d''2. |
  R2.*30 |
- dis'4-. \tag #'solo { \ff } \tag #'combined { \once \override DynamicText.stencil = ##f \ff } r4 dis'4-. |
+ dis'4-. \tag #'combined { \once \override DynamicText.stencil = ##f } \ff r4 dis'4-. |
  dis'4-. r4 dis'4-. |
  e'4-. r4 e'4-. |
  e'4-. r4 e'4-. |
@@ -19,7 +19,7 @@ hornFourOpening = {
  dis'4-. r4 dis'4-. |
  dis'4-. r4 r4 |
  R2.*17 |
- r4 dis'4-. \tag #'solo { \ff } \tag #'combined { \once \override DynamicText.stencil = ##f \ff } dis'4-. |
+ r4 dis'4-. \tag #'combined { \once \override DynamicText.stencil = ##f } \ff dis'4-. |
  r4 dis'4-. dis'4-. |
  r4 dis'4-. dis'4-. |
  r4 dis'4-. dis'4-. |
@@ -34,7 +34,7 @@ hornFourOpening = {
  r4 e'4-. e'4-. |
  r4 e'4-. e'4-. |
   % Bars 113-116
- e'4-> \tag #'solo { \ff } \tag #'combined { \once \override DynamicText.stencil = ##f \ff } r4 r4 |
+ e'4-> \tag #'combined { \once \override DynamicText.stencil = ##f } \ff r4 r4 |
  e'4-> r4 r4 |
  R2.*2 |
 }

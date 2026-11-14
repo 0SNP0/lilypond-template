@@ -150,6 +150,6 @@ clarinetsDeskCues = {
   s2.*15
   \textMark \markup \italic "I" s2.
   s2.*7
-  \textMark \markup \italic "I,II" s2.
+  \textMark \markup \italic "I" s2.
   s2.*59
 }

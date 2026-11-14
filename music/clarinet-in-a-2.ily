@@ -5,7 +5,7 @@ clarinetInATwoOpening = {
   \time 3/4
   % Bars 1-4
  R2.*36 |
- b'8( \tag #'solo { \f } c''8 b'8 a'8 fis'8 dis'8 |
+ b'8( \tag #'solo { \f } \tag #'combined { \once \override DynamicText.stencil = ##f \f } c''8 b'8 a'8 fis'8 dis'8 |
  b4)
   r4
   r4 |
@@ -29,7 +29,7 @@ clarinetInATwoOpening = {
  r4 r4 r4 |
   % Bars 49-52
  R2.*28 |
- g'4-. \tag #'solo { \ff } r8 b'8-. e''4-. |
+ g'4-. \tag #'solo { \ff } \tag #'combined { \once \override DynamicText.stencil = ##f \ff } r8 b'8-. e''4-. |
  g''4-. r8 fis''8-. e''4-. |
  c''4-. r8 e''8-. a''4-. |
  a''4-. r8 b''8-. a''4-. |
@@ -48,26 +48,26 @@ clarinetInATwoOpening = {
  d''4 c''4 b'4 |
  a'4 g'4. fis'8 |
   % Bars 101-104
- b'8 \tag #'solo { \ff } c''8 b'8 a'8 fis'8 dis'8 |
+ b'8 \tag #'solo { \ff } \tag #'combined { \once \override DynamicText.stencil = ##f \ff } c''8 b'8 a'8 fis'8 dis'8 |
  b4) s2 |
  R2.*2 |
- b'8( \tag #'solo { \ff } c''8 b'8 a'8 fis'8 dis'8 |
+ b'8( \tag #'solo { \ff } \tag #'combined { \once \override DynamicText.stencil = ##f \ff } c''8 b'8 a'8 fis'8 dis'8 |
  b4) s2 |
  R2.*2 |
- e''8( \tag #'solo { \ff } f''8 e''8 d''8 b'8 gis'8 |
+ e''8( \tag #'solo { \ff } \tag #'combined { \once \override DynamicText.stencil = ##f \ff } f''8 e''8 d''8 b'8 gis'8 |
  e'4) s2 |
  R2. |
  r4 ^\markup \italic { "II" } a''4 \ff b''4 |
   % Bars 113-116
  c'''4 b''4 a''4 |
  g''4 e''4 c''4 |
- b'8( \tag #'solo { \ff } g''8) g''4-. fis''4-. |
+ b'8( \tag #'solo { \ff } \tag #'combined { \once \override DynamicText.stencil = ##f \ff } g''8) g''4-. fis''4-. |
  e''4-. s2 |
 }
 
 clarinetInATwoBridge = {
   % Bars 117-120
- g'2.( \tag #'solo { \pp } |
+ g'2.( \tag #'solo { \pp } \tag #'combined { \once \override DynamicText.stencil = ##f \pp } |
  b'2. |
  g'2.~ |
  g'2.) |
@@ -78,7 +78,7 @@ clarinetInATwoBridge = {
  b'4) r4 r4 |
   % Bars 125-128
  R2.*3 |
- r4 b'4( \tag #'solo { \mf } cis''4 |
+ r4 b'4( \tag #'solo { \mf } \tag #'combined { \once \override DynamicText.stencil = ##f \mf } cis''4 |
   % Bars 129-132
  d''4-.) d''4-. d''4-. |
  d''4-. cis''4.( d''8 |
@@ -87,10 +87,10 @@ clarinetInATwoBridge = {
   % Bars 133-136
  b'2.~ \p |
  b'2. |
- b'2.~ \tag #'solo { \mp } |
+ b'2.~ \tag #'solo { \mp } \tag #'combined { \once \override DynamicText.stencil = ##f \mp } |
  b'2. \> |
   % Bars 137-140
- g'2.( \tag #'solo { \pp } |
+ g'2.( \tag #'solo { \pp } \tag #'combined { \once \override DynamicText.stencil = ##f \pp } |
  b'2. |
  g'2.~ |
  g'2.) |
@@ -101,7 +101,7 @@ clarinetInATwoBridge = {
  b'4) r4 r4 |
   % Bars 145-148
  R2.*3 |
- r4 e'4(( \tag #'solo { \mp } fis'4 |
+ r4 e'4(( \tag #'solo { \mp } \tag #'combined { \once \override DynamicText.stencil = ##f \mp } fis'4 |
   % Bars 149-152
  g'4-.)) g'4-. g'4-. |
  g'4-. fis'2 |

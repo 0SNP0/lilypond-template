@@ -33,5 +33,10 @@ clarinetsRestLayout = {
   \deskRestAuto   s2.*5   % 148-152
 }
 \header { title = \workTitle subtitle = \workSubtitle composer = \composerCredit instrument = "Clarinets in A I–II" tagline = ##f }
-\score { \new Staff \with { \consists Merge_rests_engraver printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \compressEmptyMeasures \partCombine #'(0 . 0) { << { \clarinetInAOneMusicCombined } { \partCombineApart s2.*47 \partCombineSoloI s2.*5 \partCombineApart s2.*16 \partCombineSoloI s2.*8 \partCombineApart s2.*8 \partCombineSoloI s2.*8 \partCombineApart s2.*8 \partCombineApart s2.*11 \partCombineSoloII s2.*3 \partCombineApart s2.*38 } >> } { \clarinetInATwoMusicCombined } } { \clarinetsDeskCues } { \clarinetsRestLayout } >> \partPrintLayout }
+\score { \new Staff \with { \consists Merge_rests_engraver printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \compressEmptyMeasures
+  <<
+    \new Voice = "clarinetI" { \voiceOne \clarinetInAOneMusicCombined }
+    \new Voice = "clarinetII" { \voiceTwo \clarinetInATwoMusicCombined }
+  >>
+ } { \clarinetsDeskCues } { \clarinetsRestLayout } >> \partPrintLayout }
 \score { \new Staff \with { \consists Merge_rests_engraver printPartCombineTexts = ##f } << { \global } { \rehearsalMarks } { \partCombine #'(0 . 0) { << { \clarinetInAOneMusic } { \partCombineApart s2.*152 } >> } { \clarinetInATwoMusic } } >> \midi { } }

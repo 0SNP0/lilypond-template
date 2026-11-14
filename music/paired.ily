@@ -50,9 +50,12 @@ clarinetsModeTimeline = {
   \partCombineSoloII s2.*3
   \partCombineApart s2.*38
 }
-clarinetsInATogether = \partCombine #'(0 . 0)
-  { << { \clarinetInAOneMusicCombined } { \clarinetsModeTimeline } >> }
-  { \clarinetInATwoMusicCombined }
+% Keep the two slur engravers independent. partCombine can extend slurs
+% across desk-mode transitions (48-70, 77-101) in this score.
+clarinetsInATogether = <<
+  \new Voice = "clarinetI" { \voiceOne \clarinetInAOneMusicCombined }
+  \new Voice = "clarinetII" { \voiceTwo \clarinetInATwoMusicCombined }
+>>
 clarinetsInATogetherPlayback = << \new Voice { \voiceOne \clarinetInAOneMusicPlayback } \new Voice { \voiceTwo \clarinetInATwoMusicPlayback } >>
 
 bassoonsTogether = \partCombine #'(0 . 0)

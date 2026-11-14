@@ -7,9 +7,7 @@
 oboesTogether = \partCombine #'(0 . 0)
   { << { \oboeOneMusicCombined } { \partCombineApart s2.*152 } >> }
   { \oboeTwoMusicCombined }
-oboesTogetherPlayback = \partCombine #'(0 . 0)
-  { << { \oboeOneMusicPlayback } { \partCombineApart s2.*268 } >> }
-  { \oboeTwoMusicPlayback }
+oboesTogetherPlayback = << \new Voice { \voiceOne \oboeOneMusicPlayback } \new Voice { \voiceTwo \oboeTwoMusicPlayback } >>
 
 clarinetsModeTimeline = {
   \partCombineApart s2.*111
@@ -19,47 +17,33 @@ clarinetsModeTimeline = {
 clarinetsInATogether = \partCombine #'(0 . 0)
   { << { \clarinetInAOneMusicCombined } { \clarinetsModeTimeline } >> }
   { \clarinetInATwoMusicCombined }
-clarinetsInATogetherPlayback = \partCombine #'(0 . 0)
-  { << { \clarinetInAOneMusicPlayback } { \partCombineApart s2.*268 } >> }
-  { \clarinetInATwoMusicPlayback }
+clarinetsInATogetherPlayback = << \new Voice { \voiceOne \clarinetInAOneMusicPlayback } \new Voice { \voiceTwo \clarinetInATwoMusicPlayback } >>
 
 bassoonsTogether = \partCombine #'(0 . 0)
   { << { \bassoonOneMusic } { \partCombineApart s2.*152 } >> }
   { \bassoonTwoMusicCombined }
-bassoonsTogetherPlayback = \partCombine #'(0 . 0)
-  { << { \bassoonOneMusicPlayback } { \partCombineApart s2.*268 } >> }
-  { \bassoonTwoMusicPlayback }
+bassoonsTogetherPlayback = << \new Voice { \voiceOne \bassoonOneMusicPlayback } \new Voice { \voiceTwo \bassoonTwoMusicPlayback } >>
 
 hornsOneThreeTogether = \partCombine #'(0 . 0)
   { << { \hornOneMusic } { \partCombineApart s2.*152 } >> }
   { \hornThreeMusicCombined }
-hornsOneThreeTogetherPlayback = \partCombine #'(0 . 0)
-  { << { \hornOneMusicPlayback } { \partCombineApart s2.*268 } >> }
-  { \hornThreeMusicPlayback }
+hornsOneThreeTogetherPlayback = << \new Voice { \voiceOne \hornOneMusicPlayback } \new Voice { \voiceTwo \hornThreeMusicPlayback } >>
 
 hornsTwoFourTogether = \partCombine #'(0 . 0)
   { << { \hornTwoMusic } { \partCombineApart s2.*152 } >> }
   { \hornFourMusicCombined }
-hornsTwoFourTogetherPlayback = \partCombine #'(0 . 0)
-  { << { \hornTwoMusicPlayback } { \partCombineApart s2.*268 } >> }
-  { \hornFourMusicPlayback }
+hornsTwoFourTogetherPlayback = << \new Voice { \voiceOne \hornTwoMusicPlayback } \new Voice { \voiceTwo \hornFourMusicPlayback } >>
 
 trumpetsTogether = << \new Voice { \voiceOne \trumpetOneMusic } \new Voice { \voiceTwo \trumpetTwoMusicCombined } >>
 
-trumpetsTogetherPlayback = \partCombine #'(0 . 0)
-  { << { \trumpetOneMusicPlayback } { \partCombineApart s2.*268 } >> }
-  { \trumpetTwoMusicPlayback }
+trumpetsTogetherPlayback = << \new Voice { \voiceOne \trumpetOneMusicPlayback } \new Voice { \voiceTwo \trumpetTwoMusicPlayback } >>
 
 trombonesTogether = \partCombine #'(0 . 0)
   { << { \tromboneOneMusic } { \partCombineApart s2.*152 } >> }
   { \tromboneTwoMusicCombined }
-trombonesTogetherPlayback = \partCombine #'(0 . 0)
-  { << { \tromboneOneMusicPlayback } { \partCombineApart s2.*268 } >> }
-  { \tromboneTwoMusicPlayback }
+trombonesTogetherPlayback = << \new Voice { \voiceOne \tromboneOneMusicPlayback } \new Voice { \voiceTwo \tromboneTwoMusicPlayback } >>
 
 tromboneThreeTubaTogether = \partCombine #'(0 . 0)
   { << { \tromboneThreeMusic } { \partCombineApart s2.*152 } >> }
   { \tubaMusicCombined }
-tromboneThreeTubaTogetherPlayback = \partCombine #'(0 . 0)
-  { << { \tromboneThreeMusicPlayback } { \partCombineApart s2.*268 } >> }
-  { \tubaMusicPlayback }
+tromboneThreeTubaTogetherPlayback = << \new Voice { \voiceOne \tromboneThreeMusicPlayback } \new Voice { \voiceTwo \tubaMusicPlayback } >>

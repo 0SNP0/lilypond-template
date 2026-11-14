@@ -5,7 +5,7 @@ tromboneTwoOpening = {
   \time 3/4
   % Bars 1-4
  R2.*52 |
- r4 cis'4-. \mf cis'4-. |
+ r4 cis'4-. \tag #'solo { \mf } cis'4-. |
  r4 cis'4-. cis'4-. |
  r4 a4-. a4-. |
  r4 gis4-. gis4-. |
@@ -35,12 +35,12 @@ tromboneTwoOpening = {
  r4 b4-. b4-. |
  r4 a4-. a4-. |
   % Bars 77-80
- gis4-. \sf r4 r4 |
+ gis4-. \tag #'solo { \sf } r4 r4 |
  R2.*30 |
  gis2. |
   % Bars 109-112
  R2.*6 |
- gis4-. \f r4 gis4-. |
+ gis4-. \tag #'solo { \f } r4 gis4-. |
  gis4-. r4 r4 |
 }
 
@@ -49,5 +49,6 @@ tromboneTwoBridge = {
  R2.*36 |
 }
 
+tromboneTwoMusicCombined = \keepWithTag #'combined { \tromboneTwoOpening \tromboneTwoBridge }
 tromboneTwoMusic = { \tromboneTwoOpening \tromboneTwoBridge }
 tromboneTwoMusicPlayback = \scorePlayback \tromboneTwoOpening \tromboneTwoBridge

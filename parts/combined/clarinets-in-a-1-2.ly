@@ -17,7 +17,9 @@ clarinetsRestLayout = {
   \deskRestCenter s2.*36  % 1-36: both silent
   \deskRestAuto   s2.*16  % 37-52: independent music / a2
   \deskRestCenter s2.*16  % 53-68: both silent
-  \deskRestAuto   s2.*34  % 69-102: solo / independent voices
+  \deskRestAuto   s2.*26  % 69-94
+  \deskRestUpper #6 s2.*6 % 95-100: upper clarinet rests, II plays
+  \deskRestAuto   s2.*2   % 101-102
   \deskRestCenter s2.*2   % 103-104: both silent
   \deskRestAuto   s2.*2   % 105-106
   \deskRestCenter s2.*2   % 107-108: both silent

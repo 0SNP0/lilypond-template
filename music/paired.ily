@@ -14,7 +14,9 @@ clarinetsRestLayout = {
   \deskRestCenter s2.*36
   \deskRestAuto s2.*16
   \deskRestCenter s2.*16
-  \deskRestAuto s2.*34
+  \deskRestAuto s2.*26
+  \deskRestUpper #6 s2.*6
+  \deskRestAuto s2.*2
   \deskRestCenter s2.*2
   \deskRestAuto s2.*2
   \deskRestCenter s2.*2
